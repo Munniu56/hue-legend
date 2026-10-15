@@ -4,51 +4,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>HueLegend — Không Gian Quản Trị & Truy Xuất Nguồn Gốc Đặc Sản Huế Trên Blockchain</title>
+  <title>HueLegend — Không Gian Quản Trị & Truy Xuất Nguồn Gốc Đặc Sản Huế</title>
 
-  <!-- Google Fonts: Playfair Display, Cinzel, Plus Jakarta Sans, Be Vietnam Pro -->
+  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
     rel="stylesheet">
 
-  <!-- Ethers.js v5.7.2 CDN chuan Web3 -->
+  <!-- Ethers.js v5.7.2 CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-  <!-- QRCode.js de render tem QR dong -->
+  <!-- QRCode.js de render tem QR -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <!-- Html5Qrcode de quet QR bang Camera truc tiep -->
+  <!-- Html5Qrcode de quet QR qua Camera -->
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
   <style>
     /* ==========================================================================
-       BANG MAU CHUAN HUELEGEND THEME THEO ANH GIAO DIEN
-       Mau chu dao: Tim Tim Co Do (#4A3459) | Tim Pastel (#F3EEF7) | Nen Sang (#FFFFFF)
+       HUELEGEND DESIGN SYSTEM - CHUAN THEO ANH GIAO DIEN 100%
        ========================================================================== */
     :root {
-      --primary: #4A3459;
+      --primary: #4A355A;
       --primary-hover: #382544;
-      --primary-light: #F3EEF7;
+      --primary-light: #F3EFF8;
       --primary-tint: #FAF7FC;
-      --primary-border: #E6DDF0;
-      --royal-gold: #D4AF37;
-      --royal-gold-dark: #A17A16;
-      --royal-gold-light: #FEF9E7;
-      --text-main: #241432;
+      --primary-border: #E8DFEE;
+      --text-main: #1E1226;
+      --text-body: #4A3B56;
       --text-muted: #786A85;
-      --text-light: #9B8EA8;
-      --bg-body: #FAFAFC;
+      --text-light: #9487A2;
+      --bg-body: #FBFBFC;
       --bg-sidebar: #FFFFFF;
       --bg-card: #FFFFFF;
       --border-color: #EFEBF4;
-      --border-dark: #D8CEE3;
-      --shadow-sm: 0 1px 3px rgba(74, 52, 89, 0.04);
-      --shadow-card: 0 4px 20px -2px rgba(74, 52, 89, 0.05);
-      --shadow-hover: 0 8px 25px -4px rgba(74, 52, 89, 0.1);
+      --border-subtle: #F2EEF7;
+      --royal-gold: #D4AF37;
+      --royal-gold-dark: #A17A16;
+      --shadow-sm: 0 1px 3px rgba(74, 53, 90, 0.04);
+      --shadow-card: 0 2px 12px rgba(74, 53, 90, 0.04);
       --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 18px;
-      --radius-xl: 24px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 22px;
       --sidebar-width: 260px;
     }
 
@@ -60,7 +58,7 @@
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', 'Be Vietnam Pro', -apple-system, sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background-color: var(--bg-body);
       color: var(--text-main);
       min-height: 100vh;
@@ -68,7 +66,7 @@
       display: flex;
     }
 
-    /* ================= APP LAYOUT ================= */
+    /* ================= APP SIDEBAR ================= */
     .app-sidebar {
       width: var(--sidebar-width);
       background: var(--bg-sidebar);
@@ -80,21 +78,10 @@
       bottom: 0;
       left: 0;
       z-index: 120;
-      padding: 1.5rem 1.25rem;
+      padding: 1.75rem 1.25rem 1.5rem;
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .app-main {
-      flex: 1;
-      margin-left: var(--sidebar-width);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      background: var(--bg-body);
-      min-width: 0;
-    }
-
-    /* ================= SIDEBAR BRAND ================= */
     .brand-area {
       display: flex;
       align-items: center;
@@ -104,32 +91,31 @@
       color: inherit;
     }
 
-    .brand-icon-svg {
-      width: 44px;
-      height: 44px;
+    .brand-logo-icon {
+      width: 40px;
+      height: 40px;
       color: var(--primary);
       flex-shrink: 0;
     }
 
-    .brand-title {
-      font-family: 'Cinzel', 'Playfair Display', serif;
+    .brand-name {
       font-size: 1.35rem;
       font-weight: 800;
-      letter-spacing: -0.3px;
       color: var(--primary);
       line-height: 1.1;
+      letter-spacing: -0.2px;
     }
 
-    .brand-subtitle {
+    .brand-tagline {
       font-size: 0.62rem;
       font-weight: 700;
-      letter-spacing: 1.6px;
-      color: var(--text-muted);
+      letter-spacing: 1.5px;
+      color: var(--text-light);
       text-transform: uppercase;
       margin-top: 3px;
     }
 
-    .sidebar-section-label {
+    .sidebar-section-title {
       font-size: 0.7rem;
       font-weight: 700;
       color: var(--text-light);
@@ -142,7 +128,7 @@
     .sidebar-nav {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 4px;
       flex: 1;
     }
 
@@ -162,7 +148,7 @@
       text-align: left;
       cursor: pointer;
       position: relative;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
     }
 
     .sidebar-nav-item:hover {
@@ -178,8 +164,8 @@
 
     .sidebar-nav-item.active::after {
       content: "";
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       background: var(--primary);
       position: absolute;
@@ -188,10 +174,9 @@
       transform: translateY(-50%);
     }
 
-    .nav-icon {
-      font-size: 1.15rem;
-      width: 22px;
-      height: 22px;
+    .nav-svg-icon {
+      width: 18px;
+      height: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -199,7 +184,7 @@
     }
 
     /* Sidebar Footer Info Card */
-    .sidebar-bottom-card {
+    .sidebar-bottom-box {
       background: #FFFFFF;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
@@ -207,11 +192,11 @@
       margin-top: auto;
     }
 
-    .sidebar-bottom-title {
+    .sidebar-bottom-heading {
       font-size: 0.72rem;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
       color: var(--primary);
       margin-bottom: 4px;
     }
@@ -222,11 +207,22 @@
       line-height: 1.4;
     }
 
+    /* ================= MAIN CONTAINER ================= */
+    .app-main {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--bg-body);
+      min-width: 0;
+    }
+
     /* ================= TOP HEADER ================= */
     .app-header {
       background: #FFFFFF;
       border-bottom: 1px solid var(--border-color);
-      padding: 0.9rem 2rem;
+      padding: 0.85rem 2.25rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -236,7 +232,7 @@
       z-index: 100;
     }
 
-    .header-breadcrumb {
+    .header-breadcrumb-row {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -244,23 +240,26 @@
       color: var(--text-muted);
     }
 
-    .header-breadcrumb strong {
+    .header-breadcrumb-row .slash {
+      color: #C0B7C9;
+    }
+
+    .header-breadcrumb-row strong {
       color: var(--text-main);
       font-weight: 600;
     }
 
-    .header-actions {
+    .header-right-actions {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 16px;
     }
 
-    /* Demo Experience Dropdown */
     .demo-dropdown-wrap {
       position: relative;
     }
 
-    .btn-demo-dropdown {
+    .btn-dropdown-demo {
       background: none;
       border: none;
       display: flex;
@@ -270,17 +269,15 @@
       font-weight: 600;
       color: var(--text-muted);
       cursor: pointer;
-      padding: 6px 10px;
+      padding: 6px 8px;
       border-radius: var(--radius-sm);
-      transition: background 0.2s ease;
     }
 
-    .btn-demo-dropdown:hover {
-      background: var(--primary-tint);
+    .btn-dropdown-demo:hover {
       color: var(--primary);
     }
 
-    .dropdown-menu {
+    .dropdown-menu-box {
       position: absolute;
       top: 100%;
       right: 0;
@@ -289,18 +286,17 @@
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-      min-width: 250px;
+      min-width: 240px;
       padding: 0.5rem 0;
       display: none;
       z-index: 110;
     }
 
-    .dropdown-menu.show {
+    .dropdown-menu-box.show {
       display: block;
-      animation: fadeIn 0.2s ease;
     }
 
-    .dropdown-item {
+    .menu-item {
       padding: 0.65rem 1rem;
       font-size: 0.82rem;
       color: var(--text-main);
@@ -311,18 +307,18 @@
       transition: background 0.15s;
     }
 
-    .dropdown-item:hover {
+    .menu-item:hover {
       background: var(--primary-tint);
       color: var(--primary);
     }
 
-    .dropdown-divider {
+    .menu-divider {
       height: 1px;
       background: var(--border-color);
       margin: 0.35rem 0;
     }
 
-    .dropdown-header {
+    .menu-header {
       font-size: 0.7rem;
       text-transform: uppercase;
       font-weight: 700;
@@ -345,15 +341,13 @@
       align-items: center;
       gap: 8px;
       transition: all 0.2s ease;
-      box-shadow: var(--shadow-sm);
     }
 
     .btn-connect-wallet:hover {
       background: var(--primary-hover);
-      transform: translateY(-1px);
     }
 
-    .wallet-connected-pill {
+    .wallet-connected-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -366,19 +360,18 @@
       color: var(--primary);
     }
 
-    .online-indicator-dot {
-      width: 8px;
-      height: 8px;
+    .online-dot {
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: #10B981;
-      box-shadow: 0 0 6px #10B981;
     }
 
-    /* ================= DEMO NOTICE BANNER ================= */
-    .demo-notice-bar {
+    /* ================= DEMO BANNER ================= */
+    .demo-alert-bar {
       background: #FAF8FC;
       border-bottom: 1px solid var(--border-color);
-      padding: 0.55rem 2rem;
+      padding: 0.55rem 2.25rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -386,49 +379,47 @@
       color: var(--text-muted);
     }
 
-    .notice-left {
+    .alert-left {
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .notice-purple-dot {
-      width: 7px;
-      height: 7px;
+    .alert-dot {
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: var(--primary);
       display: inline-block;
     }
 
-    .notice-left strong {
+    .alert-left strong {
       color: var(--primary);
       font-weight: 700;
     }
 
-    .btn-reset-demo {
+    .btn-reset-link {
       background: none;
       border: none;
       color: var(--text-muted);
       cursor: pointer;
       font-size: 0.78rem;
       text-decoration: underline;
-      transition: color 0.15s;
     }
 
-    .btn-reset-demo:hover {
+    .btn-reset-link:hover {
       color: var(--primary);
     }
 
-    /* ================= MAIN CONTENT WRAPPER ================= */
-    .content-container {
-      padding: 2rem 2.5rem 4rem;
+    /* ================= MAIN CONTENT ================= */
+    .content-wrapper {
+      padding: 2.25rem 2.5rem 4rem;
       max-width: 1240px;
       width: 100%;
       margin: 0 auto;
     }
 
-    /* Page Title & Action Header */
-    .page-title-row {
+    .page-header-row {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
@@ -436,7 +427,7 @@
       gap: 15px;
     }
 
-    .page-category-tag {
+    .page-category-overline {
       font-size: 0.72rem;
       font-weight: 800;
       letter-spacing: 1.2px;
@@ -445,25 +436,24 @@
       margin-bottom: 4px;
     }
 
-    .page-main-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.9rem;
+    .page-title {
+      font-size: 2.1rem;
       font-weight: 800;
       color: var(--text-main);
-      line-height: 1.2;
+      line-height: 1.15;
     }
 
-    .page-main-subtitle {
-      font-size: 0.9rem;
+    .page-subtitle {
+      font-size: 0.92rem;
       color: var(--text-muted);
-      margin-top: 4px;
+      margin-top: 5px;
     }
 
-    .btn-create-batch-top {
+    .btn-create-batch-header {
       background: var(--primary);
       color: #FFFFFF;
       border: none;
-      padding: 0.65rem 1.4rem;
+      padding: 0.65rem 1.35rem;
       border-radius: var(--radius-md);
       font-size: 0.88rem;
       font-weight: 700;
@@ -471,21 +461,20 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      transition: all 0.2s ease;
       white-space: nowrap;
+      transition: all 0.2s;
     }
 
-    .btn-create-batch-top:hover {
+    .btn-create-batch-header:hover {
       background: var(--primary-hover);
-      transform: translateY(-1px);
     }
 
-    /* ================= HERO FEATURE CARD ================= */
-    .hero-feature-card {
+    /* ================= HERO CARD (MATCH SCREENSHOT) ================= */
+    .hero-card {
       background: var(--primary-light);
       border: 1px solid var(--primary-border);
       border-radius: var(--radius-xl);
-      padding: 2.5rem 3rem;
+      padding: 2.75rem 3.25rem;
       margin-bottom: 2rem;
       display: grid;
       grid-template-columns: 1.15fr 0.85fr;
@@ -496,7 +485,7 @@
     }
 
     .hero-tag {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 800;
       letter-spacing: 1.5px;
       text-transform: uppercase;
@@ -504,9 +493,9 @@
       margin-bottom: 0.75rem;
     }
 
-    .hero-headline {
+    .hero-title {
       font-family: 'Playfair Display', serif;
-      font-size: 2.35rem;
+      font-size: 2.45rem;
       font-weight: 700;
       color: var(--text-main);
       line-height: 1.2;
@@ -515,13 +504,13 @@
 
     .hero-desc {
       font-size: 0.95rem;
-      color: var(--text-muted);
+      color: var(--text-body);
       line-height: 1.5;
-      margin-bottom: 1.8rem;
+      margin-bottom: 2rem;
       max-width: 480px;
     }
 
-    .hero-btn-group {
+    .hero-btn-row {
       display: flex;
       align-items: center;
       gap: 12px;
@@ -532,7 +521,7 @@
       background: var(--primary);
       color: #FFFFFF;
       border: none;
-      padding: 0.75rem 1.6rem;
+      padding: 0.75rem 1.65rem;
       border-radius: 999px;
       font-size: 0.9rem;
       font-weight: 700;
@@ -545,13 +534,12 @@
 
     .btn-hero-primary:hover {
       background: var(--primary-hover);
-      transform: translateY(-1px);
     }
 
     .btn-hero-secondary {
       background: #FFFFFF;
       color: var(--primary);
-      border: 1px solid var(--border-dark);
+      border: 1px solid #DDD3E5;
       padding: 0.75rem 1.5rem;
       border-radius: 999px;
       font-size: 0.9rem;
@@ -564,102 +552,87 @@
     }
 
     .btn-hero-secondary:hover {
-      background: #FFFFFF;
       border-color: var(--primary);
-      transform: translateY(-1px);
+      background: #FFFFFF;
     }
 
-    /* Vector Art Container */
-    .hero-illustration-wrap {
+    /* Hero Illustration Vector Wrap */
+    .hero-art-container {
       display: flex;
       justify-content: center;
       align-items: center;
-      position: relative;
     }
 
-    .hero-art-svg {
+    .hero-vector-svg {
       width: 100%;
-      max-width: 380px;
+      max-width: 390px;
       height: auto;
-      filter: drop-shadow(0 4px 12px rgba(74, 52, 89, 0.05));
     }
 
-    /* ================= METRIC / STAT CARDS ROW ================= */
-    .stats-grid-row {
+    /* ================= STAT CARDS ROW (MATCH SCREENSHOT 1:1) ================= */
+    .stats-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1.25rem;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2.25rem;
     }
 
-    .stat-card {
+    .stat-box {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 1.25rem 1.4rem;
+      padding: 1.35rem 1.5rem;
       box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.2s, box-shadow 0.2s;
+      min-height: 110px;
     }
 
-    .stat-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-card);
-    }
-
-    .stat-card-header {
+    .stat-box-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.5rem;
     }
 
-    .stat-card-title {
-      font-size: 0.8rem;
+    .stat-box-label {
+      font-size: 0.82rem;
       font-weight: 600;
       color: var(--text-muted);
     }
 
-    .stat-card-icon-box {
-      width: 32px;
-      height: 32px;
-      border-radius: var(--radius-sm);
-      background: #F7F5FA;
+    .stat-box-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: #F6F3F9;
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--text-muted);
-      font-size: 1rem;
+      font-size: 0.95rem;
     }
 
-    .stat-card-value {
-      font-size: 1.85rem;
+    .stat-box-val {
+      font-size: 2.1rem;
       font-weight: 800;
       color: var(--text-main);
-      line-height: 1.1;
-      margin-bottom: 4px;
+      line-height: 1;
       font-feature-settings: "tnum";
     }
 
-    .stat-card-sub {
-      font-size: 0.72rem;
-      color: var(--text-light);
-      font-weight: 500;
-    }
-
-    /* ================= SECTION WHITE CARDS ================= */
-    .content-card {
+    /* ================= WHITE CONTAINER CARDS ================= */
+    .card-container {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 1.75rem;
+      padding: 1.75rem 2rem;
       box-shadow: var(--shadow-sm);
       margin-bottom: 2rem;
     }
 
-    .content-card-header {
+    .card-header-flex {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -668,33 +641,33 @@
       border-bottom: 1px solid var(--border-color);
     }
 
-    .card-title-main {
+    .card-title-lg {
       font-size: 1.15rem;
       font-weight: 700;
       color: var(--text-main);
     }
 
-    .card-title-sub {
+    .card-title-muted {
       font-size: 0.8rem;
       color: var(--text-muted);
       margin-top: 2px;
     }
 
-    /* Modern Table Styles */
+    /* Table */
     .table-responsive {
       overflow-x: auto;
-      margin: 0 -1.75rem;
-      padding: 0 1.75rem;
+      margin: 0 -2rem;
+      padding: 0 2rem;
     }
 
-    .modern-table {
+    .app-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.85rem;
       text-align: left;
     }
 
-    .modern-table th {
+    .app-table th {
       padding: 0.75rem 1rem;
       font-weight: 700;
       color: var(--text-muted);
@@ -705,13 +678,13 @@
       letter-spacing: 0.5px;
     }
 
-    .modern-table td {
+    .app-table td {
       padding: 1rem;
       border-bottom: 1px solid var(--border-color);
       vertical-align: middle;
     }
 
-    .modern-table tr:hover td {
+    .app-table tr:hover td {
       background: #FAF9FC;
     }
 
@@ -728,7 +701,7 @@
       color: var(--primary);
     }
 
-    .status-pill {
+    .status-badge {
       display: inline-flex;
       align-items: center;
       gap: 5px;
@@ -738,27 +711,21 @@
       font-weight: 700;
     }
 
-    .badge-status-verified {
+    .badge-verified {
       background: #ECFDF5;
       color: #047857;
       border: 1px solid #A7F3D0;
     }
 
-    .badge-status-pending {
+    .badge-pending {
       background: #FFFBEB;
       color: #B45309;
       border: 1px solid #FDE68A;
     }
 
-    .table-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-action-sm {
+    .btn-sm-action {
       border: none;
-      padding: 5px 10px;
+      padding: 5px 11px;
       border-radius: var(--radius-sm);
       font-size: 0.78rem;
       font-weight: 600;
@@ -766,26 +733,26 @@
       transition: all 0.15s;
     }
 
-    .btn-action-view {
+    .btn-sm-view {
       background: var(--primary-light);
       color: var(--primary);
     }
 
-    .btn-action-view:hover {
+    .btn-sm-view:hover {
       background: var(--primary);
       color: #FFFFFF;
     }
 
-    .btn-action-qr {
+    .btn-sm-qr {
       background: #F1F5F9;
       color: var(--text-main);
     }
 
-    .btn-action-qr:hover {
+    .btn-sm-qr:hover {
       background: #E2E8F0;
     }
 
-    /* ================= FORMS & INPUTS ================= */
+    /* Forms */
     .form-grid-2 {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -828,7 +795,7 @@
     .form-textarea:focus {
       border-color: var(--primary);
       background: #FFFFFF;
-      box-shadow: 0 0 0 3px rgba(74, 52, 89, 0.1);
+      box-shadow: 0 0 0 3px rgba(74, 53, 90, 0.08);
     }
 
     .form-textarea {
@@ -843,33 +810,33 @@
       display: block;
     }
 
-    /* ================= SEARCH & LOOKUP SECTION ================= */
-    .lookup-box {
+    /* Lookup Box */
+    .lookup-card {
       background: #FFFFFF;
-      border: 1.5px solid var(--border-dark);
+      border: 1.5px solid #DDD3E5;
       border-radius: var(--radius-lg);
       padding: 1.5rem;
       margin-bottom: 2rem;
     }
 
-    .lookup-input-row {
+    .lookup-row {
       display: flex;
       gap: 10px;
       flex-direction: column;
     }
 
     @media (min-width: 640px) {
-      .lookup-input-row {
+      .lookup-row {
         flex-direction: row;
       }
     }
 
-    .lookup-input-wrapper {
+    .lookup-input-wrap {
       position: relative;
       flex: 1;
     }
 
-    .lookup-input-wrapper span {
+    .lookup-input-wrap span {
       position: absolute;
       left: 14px;
       top: 50%;
@@ -892,10 +859,10 @@
     .lookup-input:focus {
       border-color: var(--primary);
       background: #FFFFFF;
-      box-shadow: 0 0 0 3px rgba(74, 52, 89, 0.1);
+      box-shadow: 0 0 0 3px rgba(74, 53, 90, 0.08);
     }
 
-    .lookup-preset-row {
+    .preset-pill-row {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -905,7 +872,7 @@
       color: var(--text-muted);
     }
 
-    .preset-pill-btn {
+    .preset-btn {
       background: var(--primary-light);
       border: 1px solid var(--primary-border);
       color: var(--primary);
@@ -917,25 +884,24 @@
       transition: all 0.2s;
     }
 
-    .preset-pill-btn:hover {
+    .preset-btn:hover {
       background: var(--primary);
       color: #FFFFFF;
     }
 
-    /* ================= ROYAL CERTIFICATE CARD ================= */
-    .certificate-card {
+    /* Certificate Card */
+    .cert-card {
       background: #FFFFFF;
       border: 2px solid var(--royal-gold);
       border-radius: var(--radius-lg);
       padding: 2.5rem;
       margin-bottom: 2.5rem;
       position: relative;
-      box-shadow: 0 15px 35px -5px rgba(212, 175, 55, 0.15);
-      background-image: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 60%);
+      box-shadow: 0 15px 35px -5px rgba(212, 175, 55, 0.12);
       display: none;
     }
 
-    .cert-seal {
+    .cert-seal-badge {
       position: absolute;
       top: 25px;
       right: 25px;
@@ -953,31 +919,30 @@
       font-weight: 800;
       line-height: 1.2;
       transform: rotate(8deg);
-      background: var(--royal-gold-light);
+      background: #FEFAF0;
     }
 
-    .cert-seal span {
+    .cert-seal-badge span {
       font-size: 1.2rem;
       margin-bottom: 2px;
     }
 
-    .cert-heading {
+    .cert-head {
       text-align: center;
       margin-bottom: 2rem;
       padding-bottom: 1.25rem;
       border-bottom: 1px dashed var(--royal-gold);
     }
 
-    .cert-super-tag {
-      font-family: 'Cinzel', serif;
+    .cert-tag {
       font-size: 0.8rem;
       font-weight: 800;
-      letter-spacing: 2.5px;
+      letter-spacing: 2px;
       color: var(--royal-gold-dark);
       margin-bottom: 4px;
     }
 
-    .cert-product-title {
+    .cert-title {
       font-family: 'Playfair Display', serif;
       font-size: 2rem;
       font-weight: 800;
@@ -985,21 +950,21 @@
       margin-bottom: 4px;
     }
 
-    .cert-grid-info {
+    .cert-info-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 1.25rem;
       margin-bottom: 1.75rem;
     }
 
-    .cert-item-box {
-      background: #FAF8F5;
+    .cert-box {
+      background: #FCFAF6;
       border: 1px solid rgba(212, 175, 55, 0.25);
       border-radius: var(--radius-md);
       padding: 1rem 1.25rem;
     }
 
-    .cert-item-label {
+    .cert-box-lbl {
       font-size: 0.72rem;
       font-weight: 700;
       text-transform: uppercase;
@@ -1008,20 +973,20 @@
       margin-bottom: 4px;
     }
 
-    .cert-item-val {
+    .cert-box-val {
       font-size: 1.05rem;
       font-weight: 700;
       color: var(--text-main);
     }
 
-    .cert-item-sub {
+    .cert-box-sub {
       font-size: 0.8rem;
       color: var(--text-muted);
       margin-top: 2px;
     }
 
-    /* ================= VERTICAL TIMELINE ================= */
-    .timeline-wrap-card {
+    /* Timeline */
+    .timeline-card-wrap {
       background: #FFFFFF;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
@@ -1030,32 +995,32 @@
       display: none;
     }
 
-    .timeline-title-area {
+    .timeline-head {
       text-align: center;
       margin-bottom: 2.5rem;
     }
 
-    .timeline-main-title {
-      font-family: 'Cinzel', 'Playfair Display', serif;
+    .timeline-title-text {
+      font-family: 'Playfair Display', serif;
       font-size: 1.6rem;
       font-weight: 800;
       color: var(--primary);
       margin-bottom: 4px;
     }
 
-    .timeline-sub-title {
+    .timeline-desc-text {
       font-size: 0.88rem;
       color: var(--text-muted);
     }
 
-    .timeline-container {
+    .timeline-vertical {
       position: relative;
       max-width: 820px;
       margin: 0 auto;
       padding: 1rem 0;
     }
 
-    .timeline-container::before {
+    .timeline-vertical::before {
       content: "";
       position: absolute;
       top: 15px;
@@ -1066,13 +1031,13 @@
       border-radius: 3px;
     }
 
-    .timeline-item {
+    .timeline-step {
       position: relative;
       margin-bottom: 2.2rem;
       padding-left: 60px;
     }
 
-    .timeline-node {
+    .timeline-step-node {
       position: absolute;
       left: 6px;
       top: 0;
@@ -1086,10 +1051,10 @@
       justify-content: center;
       font-size: 1rem;
       z-index: 2;
-      box-shadow: 0 0 10px rgba(74, 52, 89, 0.15);
+      box-shadow: 0 0 10px rgba(74, 53, 90, 0.15);
     }
 
-    .timeline-node.active-pulse {
+    .timeline-step-node.active-pulse {
       border-color: #10B981;
       animation: pulseGreen 2s infinite;
     }
@@ -1108,15 +1073,14 @@
       }
     }
 
-    .timeline-card {
+    .timeline-step-body {
       background: #FAF9FC;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
       padding: 1.25rem 1.5rem;
-      box-shadow: var(--shadow-sm);
     }
 
-    .timeline-header {
+    .timeline-step-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -1125,7 +1089,7 @@
       gap: 8px;
     }
 
-    .step-role-badge {
+    .step-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -1135,46 +1099,46 @@
       font-weight: 700;
     }
 
-    .role-producer {
+    .step-badge.role-producer {
       background: #F3E8FF;
       color: #6B21A8;
     }
 
-    .role-logistics {
+    .step-badge.role-logistics {
       background: #EFF6FF;
       color: #1E40AF;
     }
 
-    .role-retailer {
+    .step-badge.role-retailer {
       background: #ECFDF5;
       color: #065F46;
     }
 
-    .role-inspector {
+    .step-badge.role-inspector {
       background: #FFFBEB;
       color: #92400E;
     }
 
-    .timeline-time {
+    .timeline-time-text {
       font-size: 0.78rem;
       color: var(--text-muted);
     }
 
-    .timeline-step-name {
+    .step-title-name {
       font-size: 1.05rem;
       font-weight: 700;
       color: var(--text-main);
       margin-bottom: 0.4rem;
     }
 
-    .timeline-action-text {
+    .step-action-desc {
       font-size: 0.88rem;
-      color: var(--text-muted);
+      color: var(--text-body);
       line-height: 1.5;
       margin-bottom: 0.85rem;
     }
 
-    .timeline-meta-box {
+    .step-meta-box {
       background: #FFFFFF;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-sm);
@@ -1185,35 +1149,35 @@
       font-size: 0.8rem;
     }
 
-    .meta-row {
+    .meta-line {
       display: flex;
       gap: 8px;
       color: var(--text-muted);
     }
 
-    .meta-row strong {
+    .meta-line strong {
       color: var(--text-main);
       min-width: 75px;
     }
 
-    .hash-code {
+    .hash-text {
       font-family: monospace;
       font-size: 0.75rem;
       word-break: break-all;
     }
 
-    .hash-link {
+    .hash-link-item {
       color: var(--primary);
       text-decoration: none;
       font-weight: 600;
     }
 
-    .hash-link:hover {
+    .hash-link-item:hover {
       text-decoration: underline;
     }
 
-    /* ================= MODALS ================= */
-    .modal-overlay {
+    /* Modal */
+    .modal-backdrop {
       position: fixed;
       top: 0;
       left: 0;
@@ -1228,7 +1192,7 @@
       padding: 1.5rem;
     }
 
-    .modal-box {
+    .modal-content-panel {
       background: #FFFFFF;
       border-radius: var(--radius-lg);
       max-width: 480px;
@@ -1239,21 +1203,21 @@
       position: relative;
     }
 
-    .modal-header {
+    .modal-head-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1.25rem;
     }
 
-    .modal-title {
+    .modal-heading {
       font-family: 'Playfair Display', serif;
       font-size: 1.25rem;
       font-weight: 700;
       color: var(--primary);
     }
 
-    .modal-close {
+    .modal-close-btn {
       background: none;
       border: none;
       font-size: 24px;
@@ -1261,7 +1225,7 @@
       color: var(--text-muted);
     }
 
-    .qr-canvas-center {
+    .qr-canvas-center-wrap {
       display: flex;
       justify-content: center;
       margin: 1.5rem 0;
@@ -1271,8 +1235,8 @@
       border: 1px dashed var(--primary-border);
     }
 
-    /* ================= TOAST NOTIFICATIONS ================= */
-    .toast-container {
+    /* Toast */
+    .toast-tray {
       position: fixed;
       bottom: 24px;
       right: 24px;
@@ -1367,7 +1331,7 @@
       display: inline-block;
       width: 16px;
       height: 16px;
-      border: 2px solid rgba(74, 52, 89, 0.2);
+      border: 2px solid rgba(74, 53, 90, 0.2);
       border-radius: 50%;
       border-top-color: var(--primary);
       animation: spin 0.8s linear infinite;
@@ -1379,8 +1343,8 @@
       }
     }
 
-    /* Mobile Drawer Overlay */
-    .mobile-menu-btn {
+    /* Mobile */
+    .mobile-menu-toggle {
       display: none;
       background: none;
       border: none;
@@ -1389,7 +1353,7 @@
       color: var(--primary);
     }
 
-    .sidebar-overlay {
+    .mobile-backdrop {
       position: fixed;
       top: 0;
       left: 0;
@@ -1400,18 +1364,17 @@
       display: none;
     }
 
-    /* ================= RESPONSIVE ================= */
     @media (max-width: 1024px) {
-      .stats-grid-row {
+      .stats-row {
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .hero-feature-card {
+      .hero-card {
         grid-template-columns: 1fr;
-        padding: 2rem;
+        padding: 2.25rem;
       }
 
-      .hero-illustration-wrap {
+      .hero-art-container {
         order: -1;
       }
     }
@@ -1429,20 +1392,20 @@
         margin-left: 0;
       }
 
-      .mobile-menu-btn {
+      .mobile-menu-toggle {
         display: block;
       }
 
-      .stats-grid-row {
+      .stats-row {
         grid-template-columns: 1fr;
       }
 
-      .content-container {
+      .content-wrapper {
         padding: 1.5rem 1rem 3rem;
       }
 
       .form-grid-2,
-      .cert-grid-info {
+      .cert-info-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -1451,38 +1414,37 @@
 
 <body>
   <!-- Overlay danh cho di dong khi mo Menu -->
-  <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
+  <div id="sidebarOverlay" class="mobile-backdrop" onclick="toggleMobileSidebar()"></div>
 
   <!-- ================= LEFT SIDEBAR (THANH DIEU HUONG BEN TRAI) ================= -->
   <aside id="appSidebar" class="app-sidebar">
     <!-- Brand Logo HueLegend -->
     <a href="index.html" class="brand-area">
       <!-- SVG bieu tuong Ngo Mon Hoang Thanh Hue -->
-      <svg class="brand-icon-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="6" y="32" width="36" height="8" rx="2" stroke="currentColor" stroke-width="2.5" fill="none" />
-        <path d="M12 32V24M24 32V24M36 32V24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
-        <path d="M4 24L24 16L44 24" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" />
-        <path d="M10 16L24 10L38 16" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
-        <path d="M18 32C18 28.6863 20.6863 26 24 26C27.3137 26 30 28.6863 30 32" stroke="currentColor"
-          stroke-width="2" />
-        <circle cx="24" cy="7" r="1.5" fill="currentColor" />
+      <svg class="brand-logo-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 22L22 14L40 22" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" />
+        <path d="M10 14L22 8L34 14" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+        <line x1="12" y1="22" x2="12" y2="34" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+        <line x1="22" y1="22" x2="22" y2="34" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+        <line x1="32" y1="22" x2="32" y2="34" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+        <path d="M6 34H38" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+        <rect x="17" y="27" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8" />
       </svg>
       <div>
-        <div class="brand-title">HueLegend</div>
-        <div class="brand-subtitle">TINH HOA CÓ NGUỒN CỘI</div>
+        <div class="brand-name">HueLegend</div>
+        <div class="brand-tagline">TINH HOA CÓ NGUỒN CỘI</div>
       </div>
     </a>
 
     <!-- Nhan muc khong gian lam viec -->
-    <div class="sidebar-section-label">KHÔNG GIAN LÀM VIỆC</div>
+    <div class="sidebar-section-title">KHÔNG GIAN LÀM VIỆC</div>
 
     <!-- Danh sach tab dieu huong -->
     <nav class="sidebar-nav">
       <button class="sidebar-nav-item active" data-tab="overview" onclick="switchTab('overview')">
-        <span class="nav-icon">
+        <span class="nav-svg-icon">
           <!-- 4 square grid icon -->
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <rect x="3" y="3" width="7" height="7" rx="1.5" />
             <rect x="14" y="3" width="7" height="7" rx="1.5" />
             <rect x="14" y="14" width="7" height="7" rx="1.5" />
@@ -1493,10 +1455,9 @@
       </button>
 
       <button class="sidebar-nav-item" data-tab="lookup" onclick="switchTab('lookup')">
-        <span class="nav-icon">
-          <!-- QR / Search origin icon -->
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round">
+        <span class="nav-svg-icon">
+          <!-- QR / Scan icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <rect x="3" y="3" width="6" height="6" rx="1" />
             <rect x="15" y="3" width="6" height="6" rx="1" />
             <rect x="3" y="15" width="6" height="6" rx="1" />
@@ -1507,22 +1468,20 @@
       </button>
 
       <button class="sidebar-nav-item" data-tab="create" onclick="switchTab('create')">
-        <span class="nav-icon">
+        <span class="nav-svg-icon">
           <!-- Plus icon -->
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round" />
+            <line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round" />
           </svg>
         </span>
         <span>Tạo lô hàng</span>
       </button>
 
       <button class="sidebar-nav-item" data-tab="checkpoints" onclick="switchTab('checkpoints')">
-        <span class="nav-icon">
-          <!-- Nodes / Checkpoints icon -->
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round">
+        <span class="nav-svg-icon">
+          <!-- Route nodes icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <circle cx="6" cy="6" r="3" />
             <circle cx="18" cy="18" r="3" />
             <path d="M6 9v3a6 6 0 0 0 6 6h3" />
@@ -1532,22 +1491,20 @@
       </button>
 
       <button class="sidebar-nav-item" data-tab="verify" onclick="switchTab('verify')">
-        <span class="nav-icon">
+        <span class="nav-svg-icon">
           <!-- Shield check icon -->
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            <path d="m9 12 2 2 4-4" />
+            <path d="m9 12 2 2 4-4" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </span>
         <span>Kiểm định</span>
       </button>
 
       <button class="sidebar-nav-item" data-tab="stake" onclick="switchTab('stake')">
-        <span class="nav-icon">
-          <!-- Vault / Lock / Escrow icon -->
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round">
+        <span class="nav-svg-icon">
+          <!-- Vault / Lock icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <rect x="3" y="11" width="18" height="11" rx="2" />
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
@@ -1556,10 +1513,9 @@
       </button>
 
       <button class="sidebar-nav-item" data-tab="admin" onclick="switchTab('admin')">
-        <span class="nav-icon">
+        <span class="nav-svg-icon">
           <!-- Admin Key icon -->
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <path
               d="M21 2l-2 2m-1.5 1.5L16 7l-2-2m-3 3l-1.5 1.5a6 6 0 1 1-8.5 8.5 6 6 0 0 1 8.5-8.5L16 3l5 5-2 2-3.5-3.5" />
           </svg>
@@ -1569,8 +1525,8 @@
     </nav>
 
     <!-- The thong tin o goc duoi sidebar -->
-    <div class="sidebar-bottom-card">
-      <div class="sidebar-bottom-title">TỪ LÀNG NGHỀ ĐẾN TAY BẠN</div>
+    <div class="sidebar-bottom-box">
+      <div class="sidebar-bottom-heading">TỪ LÀNG NGHỀ ĐẾN TAY BẠN</div>
       <div class="sidebar-bottom-desc">
         Minh bạch từng chặng sản xuất, vận chuyển và phân phối đặc sản xứ Huế trên chuỗi khối Ethereum.
       </div>
@@ -1582,45 +1538,45 @@
     <!-- Top Header -->
     <header class="app-header">
       <div style="display: flex; align-items: center; gap: 12px;">
-        <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Mở Menu">☰</button>
-        <div class="header-breadcrumb">
+        <button class="mobile-menu-toggle" onclick="toggleMobileSidebar()" aria-label="Mở Menu">☰</button>
+        <div class="header-breadcrumb-row">
           <span>Không gian làm việc</span>
-          <span>/</span>
+          <span class="slash">/</span>
           <strong id="headerBreadcrumbTab">Tổng quan</strong>
         </div>
       </div>
 
-      <div class="header-actions">
+      <div class="header-right-actions">
         <!-- Dropdown Trai Nghiem Mau -->
         <div id="demoDropdownWrapper" class="demo-dropdown-wrap">
-          <button class="btn-demo-dropdown" onclick="toggleDemoDropdown()">
+          <button class="btn-dropdown-demo" onclick="toggleDemoDropdown()">
             <span>Trải nghiệm mẫu</span>
             <span style="font-size: 0.7rem;">▼</span>
           </button>
-          <div id="demoDropdownMenu" class="dropdown-menu">
-            <div class="dropdown-header">Chế độ vận hành</div>
-            <div class="dropdown-item" onclick="setDemoRole('ALL')">
+          <div id="demoDropdownMenu" class="dropdown-menu-box">
+            <div class="menu-header">Chế độ vận hành</div>
+            <div class="menu-item" onclick="setDemoRole('ALL')">
               <span>⚡</span> Chế độ Dữ liệu mẫu (Demo Mock)
             </div>
-            <div class="dropdown-divider"></div>
-            <div class="dropdown-header">Giả lập vai trò</div>
-            <div class="dropdown-item" onclick="setDemoRole('PRODUCER')">
+            <div class="menu-divider"></div>
+            <div class="menu-header">Giả lập vai trò</div>
+            <div class="menu-item" onclick="setDemoRole('PRODUCER')">
               <span>🏭</span> Cơ sở sản xuất (PRODUCER)
             </div>
-            <div class="dropdown-item" onclick="setDemoRole('LOGISTICS')">
+            <div class="menu-item" onclick="setDemoRole('LOGISTICS')">
               <span>🚚</span> Đơn vị vận chuyển (LOGISTICS)
             </div>
-            <div class="dropdown-item" onclick="setDemoRole('RETAILER')">
+            <div class="menu-item" onclick="setDemoRole('RETAILER')">
               <span>🏪</span> Đại lý bán lẻ (RETAILER)
             </div>
-            <div class="dropdown-item" onclick="setDemoRole('INSPECTOR')">
+            <div class="menu-item" onclick="setDemoRole('INSPECTOR')">
               <span>🛡️</span> Kiểm định viên OCOP (INSPECTOR)
             </div>
-            <div class="dropdown-item" onclick="setDemoRole('ADMIN')">
+            <div class="menu-item" onclick="setDemoRole('ADMIN')">
               <span>👑</span> Quản trị viên (ADMIN)
             </div>
-            <div class="dropdown-divider"></div>
-            <div class="dropdown-item" onclick="resetDemoData()">
+            <div class="menu-divider"></div>
+            <div class="menu-item" onclick="resetDemoData()">
               <span>🔄</span> Đặt lại dữ liệu gốc (6 lô)
             </div>
           </div>
@@ -1636,45 +1592,45 @@
         </button>
 
         <!-- Badge vi khi da ket noi -->
-        <div id="walletBadge" class="wallet-connected-pill" style="display: none;">
-          <span class="online-indicator-dot"></span>
+        <div id="walletBadge" class="wallet-connected-badge" style="display: none;">
+          <span class="online-dot"></span>
           <span id="walletAddressText" class="font-code">0x...</span>
         </div>
       </div>
     </header>
 
     <!-- Thong bao che do mau -->
-    <div class="demo-notice-bar">
-      <div class="notice-left">
-        <span class="notice-purple-dot"></span>
+    <div class="demo-alert-bar">
+      <div class="alert-left">
+        <span class="alert-dot"></span>
         <span><strong>CHẾ ĐỘ MẪU</strong> · Dữ liệu minh hoạ, không phải hồ sơ blockchain · Không dùng ETH thật</span>
       </div>
-      <button class="btn-reset-demo" onclick="resetDemoData()">Đặt lại dữ liệu mẫu</button>
+      <button class="btn-reset-link" onclick="resetDemoData()">Đặt lại dữ liệu mẫu</button>
     </div>
 
     <!-- ================= TAB 1: TONG QUAN (MATCH SCREENSHOT 1:1) ================= -->
-    <main id="view-overview" class="content-container tab-view-container">
+    <main id="view-overview" class="content-wrapper tab-view-container">
       <!-- Title row -->
-      <div class="page-title-row">
+      <div class="page-header-row">
         <div>
-          <div class="page-category-tag">HUELEGEND / TỔNG QUAN</div>
-          <h1 class="page-main-title">Tổng quan</h1>
-          <p class="page-main-subtitle">Theo dõi hành trình đặc sản Huế, từ nguồn cội đến điểm bán.</p>
+          <div class="page-category-overline">HUELEGEND / TỔNG QUAN</div>
+          <h1 class="page-title">Tổng quan</h1>
+          <p class="page-subtitle">Theo dõi hành trình đặc sản Huế, từ nguồn cội đến điểm bán.</p>
         </div>
-        <button class="btn-create-batch-top" onclick="switchTab('create')">
+        <button class="btn-create-batch-header" onclick="switchTab('create')">
           <span>+ Tạo lô hàng</span>
         </button>
       </div>
 
       <!-- Hero Feature Banner (Lavender Card with Ngọ Môn Art) -->
-      <section class="hero-feature-card">
-        <div class="hero-content-col">
+      <section class="hero-card">
+        <div>
           <div class="hero-tag">ĐẶC SẢN HUẾ · NGUỒN GỐC MINH BẠCH</div>
-          <h2 class="hero-headline">Mỗi đặc sản,<br>một hành trình rõ ràng.</h2>
+          <h2 class="hero-title">Mỗi đặc sản,<br>một hành trình rõ ràng.</h2>
           <p class="hero-desc">
             Kết nối làng nghề, đơn vị vận chuyển và người mua qua những thông tin có thể đối chiếu.
           </p>
-          <div class="hero-btn-group">
+          <div class="hero-btn-row">
             <button class="btn-hero-primary" onclick="switchTab('lookup')">
               <span>🔍</span> Tra cứu nguồn gốc
             </button>
@@ -1684,9 +1640,9 @@
           </div>
         </div>
 
-        <div class="hero-illustration-wrap">
+        <div class="hero-art-container">
           <!-- Exact Vector Line-Art of Hue Citadel (Ngo Mon Gate) -->
-          <svg class="hero-art-svg" viewBox="0 0 460 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg class="hero-vector-svg" viewBox="0 0 460 300" fill="none" xmlns="http://www.w3.org/2000/svg">
             <!-- Vong hao quang mat troi sau Hoang Thanh -->
             <circle cx="230" cy="125" r="75" stroke="#9B8EA8" stroke-width="1.2" stroke-dasharray="4 4"
               opacity="0.45" />
@@ -1746,7 +1702,7 @@
             <line x1="40" y1="225" x2="420" y2="225" stroke="#786A85" stroke-width="1.8" stroke-linecap="round" />
 
             <!-- Dong chu HUE · VIETNAM thanh tao -->
-            <text x="230" y="248" font-family="'Playfair Display', serif" font-size="11" font-weight="700"
+            <text x="230" y="248" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700"
               fill="#786A85" letter-spacing="7" text-anchor="middle">H U E · V I E T N A M</text>
             <line x1="70" y1="245" x2="145" y2="245" stroke="#786A85" stroke-width="0.8" opacity="0.6" />
             <line x1="315" y1="245" x2="390" y2="245" stroke="#786A85" stroke-width="0.8" opacity="0.6" />
@@ -1758,51 +1714,47 @@
         </div>
       </section>
 
-      <!-- 4 Stat Cards Row (Match Screenshot) -->
-      <section class="stats-grid-row">
-        <div class="stat-card">
-          <div class="stat-card-header">
-            <span class="stat-card-title">Lô hàng trên hệ thống</span>
-            <span class="stat-card-icon-box">📦</span>
+      <!-- 4 Stat Cards Row (Match Screenshot 1:1) -->
+      <section class="stats-row">
+        <div class="stat-box">
+          <div class="stat-box-top">
+            <span class="stat-box-label">Lô hàng trên hệ thống</span>
+            <span class="stat-box-icon">📦</span>
           </div>
-          <div id="statTotalBatches" class="stat-card-value">6</div>
-          <div class="stat-card-sub">100% hồ sơ minh bạch</div>
+          <div id="statTotalBatches" class="stat-box-val">6</div>
         </div>
 
-        <div class="stat-card">
-          <div class="stat-card-header">
-            <span class="stat-card-title">Đã kiểm định</span>
-            <span class="stat-card-icon-box">🛡️</span>
+        <div class="stat-box">
+          <div class="stat-box-top">
+            <span class="stat-box-label">Đã kiểm định</span>
+            <span class="stat-box-icon">🛡️</span>
           </div>
-          <div id="statVerifiedBatches" class="stat-card-value">3</div>
-          <div class="stat-card-sub">Đạt chuẩn OCOP & ATTP</div>
+          <div id="statVerifiedBatches" class="stat-box-val">3</div>
         </div>
 
-        <div class="stat-card">
-          <div class="stat-card-header">
-            <span class="stat-card-title">Phí tạo lô</span>
-            <span class="stat-card-icon-box">💳</span>
+        <div class="stat-box">
+          <div class="stat-box-top">
+            <span class="stat-box-label">Phí tạo lô</span>
+            <span class="stat-box-icon">💳</span>
           </div>
-          <div id="statBatchFee" class="stat-card-value">0.001</div>
-          <div class="stat-card-sub">ETH nộp Quỹ Bảo tồn OCOP</div>
+          <div id="statBatchFee" class="stat-box-val">0.001</div>
         </div>
 
-        <div class="stat-card">
-          <div class="stat-card-header">
-            <span class="stat-card-title">Mức cọc tối thiểu</span>
-            <span class="stat-card-icon-box">🔒</span>
+        <div class="stat-box">
+          <div class="stat-box-top">
+            <span class="stat-box-label">Mức cọc tối thiểu</span>
+            <span class="stat-box-icon">🔒</span>
           </div>
-          <div id="statMinStake" class="stat-card-value">0.05</div>
-          <div class="stat-card-sub">ETH bảo chứng uy tín 30 ngày</div>
+          <div id="statMinStake" class="stat-box-val">0.05</div>
         </div>
       </section>
 
       <!-- Bang Danh Sach Lo Hang Gan Day -->
-      <section class="content-card">
-        <div class="content-card-header">
+      <section class="card-container">
+        <div class="card-header-flex">
           <div>
-            <h3 class="card-title-main">Danh Sách Lô Đặc Sản Gần Đây</h3>
-            <p class="card-title-sub">Theo dõi các lô Mè xửng, Tôm chua, Trà sen Cung đình, Nón bài thơ...</p>
+            <h3 class="card-title-lg">Danh Sách Lô Đặc Sản Gần Đây</h3>
+            <p class="card-title-muted">Theo dõi các lô Mè xửng, Tôm chua, Trà sen Cung đình, Nón bài thơ...</p>
           </div>
           <button class="btn-hero-secondary" style="padding: 6px 14px; font-size: 0.8rem;"
             onclick="renderOverviewDashboard()">
@@ -1811,7 +1763,7 @@
         </div>
 
         <div class="table-responsive">
-          <table class="modern-table">
+          <table class="app-table">
             <thead>
               <tr>
                 <th>Mã Lô Hàng</th>
@@ -1821,29 +1773,26 @@
                 <th>Thao Tác</th>
               </tr>
             </thead>
-            <tbody id="overviewBatchesTbody">
-              <!-- Render dong tu JavaScript -->
-            </tbody>
+            <tbody id="overviewBatchesTbody"></tbody>
           </table>
         </div>
       </section>
     </main>
 
     <!-- ================= TAB 2: TRA CUU NGUON GOC ================= -->
-    <main id="view-lookup" class="content-container tab-view-container" style="display: none;">
-      <div class="page-title-row">
+    <main id="view-lookup" class="content-wrapper tab-view-container" style="display: none;">
+      <div class="page-header-row">
         <div>
-          <div class="page-category-tag">HUELEGEND / TRA CỨU NGUỒN GỐC</div>
-          <h1 class="page-main-title">Tra cứu nguồn gốc</h1>
-          <p class="page-main-subtitle">Nhập mã lô hoặc quét mã tem QR để xác minh chứng thư di sản và hành trình 3
-            chặng.</p>
+          <div class="page-category-overline">HUELEGEND / TRA CỨU NGUỒN GỐC</div>
+          <h1 class="page-title">Tra cứu nguồn gốc</h1>
+          <p class="page-subtitle">Nhập mã lô hoặc quét mã tem QR để xác minh chứng thư di sản và hành trình 3 chặng.</p>
         </div>
       </div>
 
       <!-- Hop tim kiem -->
-      <div class="lookup-box">
-        <div class="lookup-input-row">
-          <div class="lookup-input-wrapper">
+      <div class="lookup-card">
+        <div class="lookup-row">
+          <div class="lookup-input-wrap">
             <span>🔍</span>
             <input type="text" id="lookupInput" class="lookup-input"
               placeholder="Nhập mã lô hàng (Ví dụ: HL-MEXUNG-2026-001)..." />
@@ -1852,92 +1801,85 @@
           <button class="btn-hero-secondary" onclick="openQrScannerModal()">📷 Quét Mã QR</button>
         </div>
 
-        <div class="lookup-preset-row">
+        <div class="preset-pill-row">
           <span>Gợi ý nhanh:</span>
-          <button class="preset-pill-btn" onclick="quickSearch('HL-MEXUNG-2026-001')">HL-MEXUNG-2026-001 (Mè
-            xửng)</button>
-          <button class="preset-pill-btn" onclick="quickSearch('HL-TOMCHUA-2026-002')">HL-TOMCHUA-2026-002 (Tôm
-            chua)</button>
-          <button class="preset-pill-btn" onclick="quickSearch('HL-TRASEN-2026-003')">HL-TRASEN-2026-003 (Trà
-            sen)</button>
-          <button class="preset-pill-btn" onclick="quickSearch('HL-NONLA-2026-004')">HL-NONLA-2026-004 (Nón lá)</button>
+          <button class="preset-btn" onclick="quickSearch('HL-MEXUNG-2026-001')">HL-MEXUNG-2026-001 (Mè xửng)</button>
+          <button class="preset-btn" onclick="quickSearch('HL-TOMCHUA-2026-002')">HL-TOMCHUA-2026-002 (Tôm chua)</button>
+          <button class="preset-btn" onclick="quickSearch('HL-TRASEN-2026-003')">HL-TRASEN-2026-003 (Trà sen)</button>
+          <button class="preset-btn" onclick="quickSearch('HL-NONLA-2026-004')">HL-NONLA-2026-004 (Nón lá)</button>
         </div>
       </div>
 
       <!-- The Chung Thu Nguon Goc (Certificate) -->
-      <article id="certificateCard" class="certificate-card">
-        <div class="cert-seal">
+      <article id="certificateCard" class="cert-card">
+        <div class="cert-seal-badge">
           <span>⚜️</span>
           ĐÃ XÁC THỰC<br>BLOCKCHAIN
         </div>
 
-        <div class="cert-heading">
-          <div class="cert-super-tag">✦ CHỨNG THƯ DI SẢN ĐẶC SẢN CỐ ĐÔ HUẾ ✦</div>
-          <h2 id="certProductName" class="cert-product-title">Mè Xửng Thiên Hương Thượng Hạng</h2>
+        <div class="cert-head">
+          <div class="cert-tag">✦ CHỨNG THƯ DI SẢN ĐẶC SẢN CỐ ĐÔ HUẾ ✦</div>
+          <h2 id="certProductName" class="cert-title">Mè Xửng Thiên Hương Thượng Hạng</h2>
           <p style="font-size: 0.88rem; color: var(--text-muted);">
             Dữ liệu nguồn gốc được chứng thực vĩnh viễn trên hợp đồng thông minh Ethereum Sepolia
           </p>
         </div>
 
-        <div class="cert-grid-info">
-          <div class="cert-item-box">
-            <div class="cert-item-label">🏷️ Mã Lô Hàng (Batch ID)</div>
-            <div id="certBatchCode" class="cert-item-val font-code">HL-MEXUNG-2026-001</div>
-            <div class="cert-item-sub">Mã định danh không thể làm giả</div>
+        <div class="cert-info-grid">
+          <div class="cert-box">
+            <div class="cert-box-lbl">🏷️ Mã Lô Hàng (Batch ID)</div>
+            <div id="certBatchCode" class="cert-box-val font-code">HL-MEXUNG-2026-001</div>
+            <div class="cert-box-sub">Mã định danh không thể làm giả</div>
           </div>
 
-          <div class="cert-item-box">
-            <div class="cert-item-label">🏡 Cơ Sở Sản Xuất & Làng Nghề</div>
-            <div id="certOrigin" class="cert-item-val">20 Chi Lăng, Phường Phú Hậu, TP Huế</div>
-            <div id="certProducerAddress" class="cert-item-sub font-code">0x82d0...19A7</div>
+          <div class="cert-box">
+            <div class="cert-box-lbl">🏡 Cơ Sở Sản Xuất & Làng Nghề</div>
+            <div id="certOrigin" class="cert-box-val">20 Chi Lăng, Phường Phú Hậu, TP Huế</div>
+            <div id="certProducerAddress" class="cert-box-sub font-code">0x82d0...19A7</div>
           </div>
 
-          <div class="cert-item-box">
-            <div class="cert-item-label">📅 Thời Điểm Khởi Tạo</div>
-            <div id="certCreatedAt" class="cert-item-val">--/--/---- --:--</div>
-            <div class="cert-item-sub">Ghi nhận chính xác qua khối giao dịch Sepolia</div>
+          <div class="cert-box">
+            <div class="cert-box-lbl">📅 Thời Điểm Khởi Tạo</div>
+            <div id="certCreatedAt" class="cert-box-val">--/--/---- --:--</div>
+            <div class="cert-box-sub">Ghi nhận chính xác qua khối giao dịch Sepolia</div>
           </div>
 
-          <div class="cert-item-box">
-            <div class="cert-item-label">📦 Số Lượng Đăng Ký</div>
-            <div id="certQuantity" class="cert-item-val">1.000 hộp</div>
-            <div class="cert-item-sub">Quy cách đóng gói đạt chuẩn xuất khẩu</div>
+          <div class="cert-box">
+            <div class="cert-box-lbl">📦 Số Lượng Đăng Ký</div>
+            <div id="certQuantity" class="cert-box-val">1.000 hộp</div>
+            <div class="cert-box-sub">Quy cách đóng gói đạt chuẩn xuất khẩu</div>
           </div>
         </div>
 
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <span class="status-pill badge-status-verified">✓ Đã Xác Thực Trên Blockchain</span>
-          <span id="certOcopBadge" class="status-pill badge-status-pending">★ OCOP 4 Sao Tỉnh Thừa Thiên Huế</span>
-          <span class="status-pill badge-status-verified">🌿 Tiêu Chuẩn VietGAP & ATTP</span>
+          <span class="status-badge badge-verified">✓ Đã Xác Thực Trên Blockchain</span>
+          <span id="certOcopBadge" class="status-badge badge-pending">★ OCOP 4 Sao Tỉnh Thừa Thiên Huế</span>
+          <span class="status-badge badge-verified">🌿 Tiêu Chuẩn VietGAP & ATTP</span>
         </div>
       </article>
 
       <!-- Vertical Visual Timeline (Hanh trinh 3 chang) -->
-      <section id="timelineSection" class="timeline-wrap-card">
-        <div class="timeline-title-area">
-          <h3 class="timeline-main-title">HÀNH TRÌNH CHUỖI CUNG ỨNG 3 CHẶNG</h3>
-          <p class="timeline-sub-title">Nhật ký truy xuất thời gian thực được ký duyệt bởi đúng vai trò theo Smart
-            Contract</p>
+      <section id="timelineSection" class="timeline-card-wrap">
+        <div class="timeline-head">
+          <h3 class="timeline-title-text">HÀNH TRÌNH CHUỖI CUNG ỨNG 3 CHẶNG</h3>
+          <p class="timeline-desc-text">Nhật ký truy xuất thời gian thực được ký duyệt bởi đúng vai trò theo Smart Contract</p>
         </div>
 
-        <div id="timelineContainer" class="timeline-container">
-          <!-- Render dong qua JS -->
-        </div>
+        <div id="timelineContainer" class="timeline-vertical"></div>
       </section>
     </main>
 
     <!-- ================= TAB 3: TAO LO HANG (PRODUCER WORKSPACE) ================= -->
-    <main id="view-create" class="content-container tab-view-container" style="display: none;">
-      <div class="page-title-row">
+    <main id="view-create" class="content-wrapper tab-view-container" style="display: none;">
+      <div class="page-header-row">
         <div>
-          <div class="page-category-tag">HUELEGEND / TẠO LÔ HÀNG</div>
-          <h1 class="page-main-title">Tạo Lô Hàng Mới</h1>
-          <p class="page-main-subtitle">Khởi tạo dữ liệu lô hàng gốc, nộp phí 0.001 ETH vào Quỹ OCOP và xuất tem QR Code.
-          </p>
+          <div class="page-category-overline">HUELEGEND / TẠO LÔ HÀNG</div>
+          <h1 class="page-title">Tạo Lô Hàng Mới</h1>
+          <p class="page-subtitle">Khởi tạo dữ liệu lô hàng gốc, nộp phí 0.001 ETH vào Quỹ OCOP và xuất tem QR Code.</p>
         </div>
       </div>
 
-      <div class="content-card">
+      <div class="card-container">
         <form id="createBatchForm" onsubmit="handleCreateBatchSubmit(event)">
           <div class="form-grid-2">
             <div class="form-group">
@@ -1961,8 +1903,7 @@
 
             <div class="form-group">
               <label>Số Lượng & Quy Cách Đóng Gói <span>*</span></label>
-              <input type="text" id="inpQuantity" class="form-input" placeholder="Ví dụ: 1.000 hộp (Loại 500g)"
-                required />
+              <input type="text" id="inpQuantity" class="form-input" placeholder="Ví dụ: 1.000 hộp (Loại 500g)" required />
             </div>
           </div>
 
@@ -1976,7 +1917,7 @@
             <div style="font-size: 0.85rem; color: var(--primary); font-weight: 700;">
               Phí tạo lô bắt buộc: <strong>0.001 ETH</strong> (Nộp vào Quỹ bảo tồn OCOP Huế)
             </div>
-            <button type="submit" class="btn-create-batch-top">
+            <button type="submit" class="btn-create-batch-header">
               <span>Khởi Tạo Lô Trên Blockchain</span>
             </button>
           </div>
@@ -1984,16 +1925,16 @@
       </div>
 
       <!-- Bang Quan Ly Lo Hang Da Tao -->
-      <div class="content-card">
-        <div class="content-card-header">
+      <div class="card-container">
+        <div class="card-header-flex">
           <div>
-            <h3 class="card-title-main">Danh Sách Lô Hàng Đã Tạo</h3>
-            <p class="card-title-sub">Quản lý và xuất tem QR Code truy xuất cho từng lô sản phẩm</p>
+            <h3 class="card-title-lg">Danh Sách Lô Hàng Đã Tạo</h3>
+            <p class="card-title-muted">Quản lý và xuất tem QR Code truy xuất cho từng lô sản phẩm</p>
           </div>
         </div>
 
         <div class="table-responsive">
-          <table class="modern-table">
+          <table class="app-table">
             <thead>
               <tr>
                 <th>Mã Lô Hàng</th>
@@ -2011,17 +1952,16 @@
     </main>
 
     <!-- ================= TAB 4: GHI NHAN CHANG (CHECKPOINTS WORKSPACE) ================= -->
-    <main id="view-checkpoints" class="content-container tab-view-container" style="display: none;">
-      <div class="page-title-row">
+    <main id="view-checkpoints" class="content-wrapper tab-view-container" style="display: none;">
+      <div class="page-header-row">
         <div>
-          <div class="page-category-tag">HUELEGEND / GHI NHẬN CHẶNG</div>
-          <h1 class="page-main-title">Ghi Nhận Chặng Chuỗi Cung Ứng</h1>
-          <p class="page-main-subtitle">Cập nhật lộ trình vận chuyển, kiểm soát nhiệt độ kho lạnh hoặc xác nhận nhập kho
-            đại lý.</p>
+          <div class="page-category-overline">HUELEGEND / GHI NHẬN CHẶNG</div>
+          <h1 class="page-title">Ghi Nhận Chặng Chuỗi Cung Ứng</h1>
+          <p class="page-subtitle">Cập nhật lộ trình vận chuyển, kiểm soát nhiệt độ kho lạnh hoặc xác nhận nhập kho đại lý.</p>
         </div>
       </div>
 
-      <div class="content-card">
+      <div class="card-container">
         <form id="addCheckpointForm" onsubmit="handleAddCheckpointSubmit(event)">
           <div class="form-grid-2">
             <div class="form-group">
@@ -2047,8 +1987,7 @@
             <div class="form-group">
               <label>Hành Động Thực Hiện <span>*</span></label>
               <input type="text" id="checkpointAction" class="form-input"
-                placeholder="Ví dụ: Tiếp nhận lô hàng, kiểm tra niêm phong kẹp chì, theo dõi nhiệt độ bảo quản..."
-                required />
+                placeholder="Ví dụ: Tiếp nhận lô hàng, kiểm tra niêm phong kẹp chì, theo dõi nhiệt độ bảo quản..." required />
             </div>
           </div>
 
@@ -2058,7 +1997,7 @@
               placeholder="Nhiệt độ thùng xe 22°C - 25°C, độ ẩm < 40%, không va đập..."></textarea>
           </div>
 
-          <button type="submit" class="btn-create-batch-top">
+          <button type="submit" class="btn-create-batch-header">
             <span>Ký Giao Dịch Ghi Nhận Chặng</span>
           </button>
         </form>
@@ -2066,17 +2005,16 @@
     </main>
 
     <!-- ================= TAB 5: KIEM DINH (INSPECTOR WORKSPACE) ================= -->
-    <main id="view-verify" class="content-container tab-view-container" style="display: none;">
-      <div class="page-title-row">
+    <main id="view-verify" class="content-wrapper tab-view-container" style="display: none;">
+      <div class="page-header-row">
         <div>
-          <div class="page-category-tag">HUELEGEND / KIỂM ĐỊNH CHẤT LƯỢNG</div>
-          <h1 class="page-main-title">Kiểm Định & Chứng Thực OCOP</h1>
-          <p class="page-main-subtitle">Cơ quan kiểm định độc lập kiểm tra chất lượng vệ sinh ATTP và cấp tem OCOP
-            on-chain.</p>
+          <div class="page-category-overline">HUELEGEND / KIỂM ĐỊNH CHẤT LƯỢNG</div>
+          <h1 class="page-title">Kiểm Định & Chứng Thực OCOP</h1>
+          <p class="page-subtitle">Cơ quan kiểm định độc lập kiểm tra chất lượng vệ sinh ATTP và cấp tem OCOP on-chain.</p>
         </div>
       </div>
 
-      <div class="content-card">
+      <div class="card-container">
         <div class="form-grid-2">
           <div class="form-group">
             <label>Chọn Lô Hàng Cần Đánh Giá <span>*</span></label>
@@ -2108,31 +2046,34 @@
     </main>
 
     <!-- ================= TAB 6: KY QUY (STAKE ESCROW WORKSPACE) ================= -->
-    <main id="view-stake" class="content-container tab-view-container" style="display: none;">
-      <div class="page-title-row">
+    <main id="view-stake" class="content-wrapper tab-view-container" style="display: none;">
+      <div class="page-header-row">
         <div>
-          <div class="page-category-tag">HUELEGEND / KÝ QUỸ UY TÍN</div>
-          <h1 class="page-main-title">Ký Quỹ & Bảo Chứng Kinh Tế</h1>
-          <p class="page-main-subtitle">Khóa 0.05 ETH trong 30 ngày để cam kết chất lượng đặc sản, cơ chế phạt 50% trích
-            thưởng người tố giác.</p>
+          <div class="page-category-overline">HUELEGEND / KÝ QUỸ UY TÍN</div>
+          <h1 class="page-title">Ký Quỹ & Bảo Chứng Kinh Tế</h1>
+          <p class="page-subtitle">Khóa 0.05 ETH trong 30 ngày để cam kết chất lượng đặc sản, cơ chế phạt 50% trích thưởng người tố giác.</p>
         </div>
       </div>
 
-      <div class="stats-grid-row">
-        <div class="stat-card">
-          <div class="stat-card-title">Số Dư Ký Quỹ Hiện Tại</div>
-          <div id="stakeCurrentBalance" class="stat-card-value">0.05 ETH</div>
-          <div class="stat-card-sub">Đã đạt mức cọc tối thiểu</div>
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-box-top">
+            <span class="stat-box-label">Số Dư Ký Quỹ Hiện Tại</span>
+            <span class="stat-box-icon">🔒</span>
+          </div>
+          <div id="stakeCurrentBalance" class="stat-box-val">0.05 ETH</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-card-title">Thời Gian Khóa An Toàn</div>
-          <div class="stat-card-value">30 Ngày</div>
-          <div class="stat-card-sub">Chống rút vốn đột ngột (Lab 9)</div>
+        <div class="stat-box">
+          <div class="stat-box-top">
+            <span class="stat-box-label">Thời Gian Khóa An Toàn</span>
+            <span class="stat-box-icon">🕒</span>
+          </div>
+          <div class="stat-box-val">30 Ngày</div>
         </div>
       </div>
 
-      <div class="content-card">
-        <h3 class="card-title-main" style="margin-bottom: 1rem;">Nạp Tiền Ký Quỹ Mới (Deposit Stake)</h3>
+      <div class="card-container">
+        <h3 class="card-title-lg" style="margin-bottom: 1rem;">Nạp Tiền Ký Quỹ Mới (Deposit Stake)</h3>
         <div style="display: flex; gap: 12px; align-items: flex-end; max-width: 500px;">
           <div class="form-group" style="flex: 1; margin-bottom: 0;">
             <label>Số lượng ETH cần ký quỹ</label>
@@ -2151,24 +2092,23 @@
     </main>
 
     <!-- ================= TAB 7: QUAN TRI (ADMIN WORKSPACE) ================= -->
-    <main id="view-admin" class="content-container tab-view-container" style="display: none;">
-      <div class="page-title-row">
+    <main id="view-admin" class="content-wrapper tab-view-container" style="display: none;">
+      <div class="page-header-row">
         <div>
-          <div class="page-category-tag">HUELEGEND / QUẢN TRỊ HỆ THỐNG</div>
-          <h1 class="page-main-title">Quản Trị Phân Quyền & Tham Số</h1>
-          <p class="page-main-subtitle">Phân bổ vai trò OpenZeppelin AccessControl và điều chỉnh tham số kinh tế Smart
-            Contract.</p>
+          <div class="page-category-overline">HUELEGEND / QUẢN TRỊ HỆ THỐNG</div>
+          <h1 class="page-title">Quản Trị Phân Quyền & Tham Số</h1>
+          <p class="page-subtitle">Phân bổ vai trò OpenZeppelin AccessControl và điều chỉnh tham số kinh tế Smart Contract.</p>
         </div>
       </div>
 
-      <div class="content-card">
-        <h3 class="card-title-main" style="margin-bottom: 1rem;">Điều Chỉnh Phí Tạo Lô (setBatchCreationFee)</h3>
+      <div class="card-container">
+        <h3 class="card-title-lg" style="margin-bottom: 1rem;">Điều Chỉnh Phí Tạo Lô (setBatchCreationFee)</h3>
         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
           Áp dụng trần Circuit Breaker: Tối đa 0.01 ETH để bảo vệ các hợp tác xã làng nghề nhỏ.
         </p>
         <div style="display: flex; gap: 12px; max-width: 450px;">
           <input type="text" id="adminNewFeeInput" class="form-input" value="0.001" placeholder="Ví dụ: 0.002" />
-          <button class="btn-create-batch-top" onclick="showToast('Cập nhật phí tạo lô thành công!', 'success')">
+          <button class="btn-create-batch-header" onclick="showToast('Cập nhật phí tạo lô thành công!', 'success')">
             Cập Nhật Phí
           </button>
         </div>
@@ -2177,18 +2117,18 @@
   </div>
 
   <!-- ================= MODAL TEM QR CODE DONG ================= -->
-  <div id="qrModal" class="modal-overlay">
-    <div class="modal-box">
-      <div class="modal-header">
-        <h4 class="modal-title">Tem Truy Xuất Nguồn Gốc Blockchain</h4>
-        <button class="modal-close" onclick="closeQrModal()">&times;</button>
+  <div id="qrModal" class="modal-backdrop">
+    <div class="modal-content-panel">
+      <div class="modal-head-row">
+        <h4 class="modal-heading">Tem Truy Xuất Nguồn Gốc Blockchain</h4>
+        <button class="modal-close-btn" onclick="closeQrModal()">&times;</button>
       </div>
       <div style="text-align: center;">
         <h3 id="qrModalProductName" style="font-family: 'Playfair Display', serif; color: var(--primary);">--</h3>
         <p id="qrModalBatchCode" class="font-code font-bold text-primary" style="margin: 4px 0;">--</p>
         <p id="qrModalOrigin" style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">--</p>
 
-        <div id="qrCanvasContainer" class="qr-canvas-center"></div>
+        <div id="qrCanvasContainer" class="qr-canvas-center-wrap"></div>
 
         <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1.5rem;">
           Tem chứa liên kết thông minh trỏ trực tiếp đến hồ sơ bất biến trên chuỗi khối Sepolia.
@@ -2203,11 +2143,11 @@
   </div>
 
   <!-- ================= MODAL QUET QR CAMERA ================= -->
-  <div id="qrScannerModal" class="modal-overlay">
-    <div class="modal-box">
-      <div class="modal-header">
-        <h4 class="modal-title">Quét Mã Tem QR Bằng Camera</h4>
-        <button class="modal-close" onclick="closeQrScannerModal()">&times;</button>
+  <div id="qrScannerModal" class="modal-backdrop">
+    <div class="modal-content-panel">
+      <div class="modal-head-row">
+        <h4 class="modal-heading">Quét Mã Tem QR Bằng Camera</h4>
+        <button class="modal-close-btn" onclick="closeQrScannerModal()">&times;</button>
       </div>
       <div id="qrReaderBox" style="width: 100%; border-radius: var(--radius-md); overflow: hidden;"></div>
       <p style="font-size: 0.82rem; color: var(--text-muted); text-align: center; margin: 12px 0;">
@@ -2220,7 +2160,7 @@
   </div>
 
   <!-- Toast Container -->
-  <div id="toastContainer" class="toast-container"></div>
+  <div id="toastContainer" class="toast-tray"></div>
 
   <!-- Web3 Core Engine Script -->
   <script src="app.js"></script>
