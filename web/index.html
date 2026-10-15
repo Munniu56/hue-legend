@@ -25,28 +25,28 @@
        HUELEGEND DESIGN SYSTEM - CHUAN THEO ANH GIAO DIEN 100%
        ========================================================================== */
     :root {
-      --primary: #4A355A;
-      --primary-hover: #382544;
-      --primary-light: #F3EFF8;
-      --primary-tint: #FAF7FC;
-      --primary-border: #E8DFEE;
-      --text-main: #1E1226;
-      --text-body: #4A3B56;
-      --text-muted: #786A85;
-      --text-light: #9487A2;
-      --bg-body: #FBFBFC;
-      --bg-sidebar: #FFFFFF;
+      --primary: #264939;
+      --primary-hover: #1c372b;
+      --primary-light: #E0ECE4;
+      --primary-tint: #F2F6F3;
+      --primary-border: #CCD8CF;
+      --text-main: #1A2820;
+      --text-body: #3B4D43;
+      --text-muted: #5E7166;
+      --text-light: #8A9D92;
+      --bg-body: #F4F1EA;
+      --bg-sidebar: #FAF9F5;
       --bg-card: #FFFFFF;
-      --border-color: #EFEBF4;
-      --border-subtle: #F2EEF7;
-      --royal-gold: #D4AF37;
-      --royal-gold-dark: #A17A16;
-      --shadow-sm: 0 1px 3px rgba(74, 53, 90, 0.04);
-      --shadow-card: 0 2px 12px rgba(74, 53, 90, 0.04);
+      --border-color: #E6E1D7;
+      --border-subtle: #EDE9E0;
+      --royal-gold: #C29B38;
+      --royal-gold-dark: #8C6D1F;
+      --shadow-sm: 0 1px 3px rgba(38, 73, 57, 0.05);
+      --shadow-card: 0 2px 12px rgba(38, 73, 57, 0.06);
       --radius-sm: 8px;
       --radius-md: 10px;
       --radius-lg: 16px;
-      --radius-xl: 22px;
+      --radius-xl: 24px;
       --sidebar-width: 260px;
     }
 
@@ -140,8 +140,8 @@
       align-items: center;
       gap: 12px;
       padding: 0.75rem 1rem;
-      border-radius: var(--radius-md);
-      color: var(--text-muted);
+      border-radius: 12px;
+      color: #5B6C62;
       font-size: 0.9rem;
       font-weight: 600;
       text-decoration: none;
@@ -155,20 +155,20 @@
     }
 
     .sidebar-nav-item:hover {
-      background: var(--primary-tint);
+      background: #EFF3EF;
       color: var(--primary);
     }
 
     .sidebar-nav-item.active {
       background: var(--primary-light);
-      color: var(--primary);
+      color: #224335;
       font-weight: 700;
     }
 
     .sidebar-nav-item.active::after {
       content: "";
-      width: 5px;
-      height: 5px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: var(--primary);
       position: absolute;
@@ -186,13 +186,15 @@
       color: inherit;
     }
 
-    /* Sidebar Footer Info Card */
+    /* The thong tin o goc duoi sidebar */
     .sidebar-bottom-box {
-      background: #FFFFFF;
+      background: var(--bg-sidebar);
       border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 1rem;
+      border-radius: 16px;
+      padding: 1rem 1.15rem;
       margin-top: auto;
+      position: relative;
+      overflow: hidden;
     }
 
     .sidebar-bottom-heading {
@@ -202,12 +204,27 @@
       letter-spacing: 0.5px;
       color: var(--primary);
       margin-bottom: 4px;
+      position: relative;
+      z-index: 2;
     }
 
     .sidebar-bottom-desc {
       font-size: 0.75rem;
-      color: var(--text-muted);
-      line-height: 1.4;
+      color: #738379;
+      line-height: 1.45;
+      position: relative;
+      z-index: 2;
+    }
+
+    .sidebar-lotus-watermark {
+      position: absolute;
+      right: 2px;
+      bottom: 0px;
+      width: 52px;
+      height: 52px;
+      opacity: 0.65;
+      pointer-events: none;
+      z-index: 1;
     }
 
     /* ================= MAIN CONTAINER ================= */
@@ -219,11 +236,12 @@
       min-height: 100vh;
       background: var(--bg-body);
       min-width: 0;
+      position: relative;
     }
 
     /* ================= TOP HEADER ================= */
     .app-header {
-      background: #FFFFFF;
+      background: var(--bg-sidebar);
       border-bottom: 1px solid var(--border-color);
       padding: 0.85rem 2.25rem;
       display: flex;
@@ -240,11 +258,11 @@
       align-items: center;
       gap: 8px;
       font-size: 0.85rem;
-      color: var(--text-muted);
+      color: #6F8075;
     }
 
     .header-breadcrumb-row .slash {
-      color: #C0B7C9;
+      color: #CCD5CF;
     }
 
     .header-breadcrumb-row strong {
@@ -270,7 +288,7 @@
       gap: 6px;
       font-size: 0.85rem;
       font-weight: 600;
-      color: var(--text-muted);
+      color: #3B4D43;
       cursor: pointer;
       padding: 6px 8px;
       border-radius: var(--radius-sm);
@@ -330,13 +348,13 @@
       letter-spacing: 0.5px;
     }
 
-    /* Connect Wallet Button */
+    /* Nut ket noi vi */
     .btn-connect-wallet {
       background: var(--primary);
       color: #FFFFFF;
       border: none;
-      padding: 0.6rem 1.25rem;
-      border-radius: var(--radius-md);
+      padding: 0.65rem 1.25rem;
+      border-radius: 10px;
       font-size: 0.85rem;
       font-weight: 700;
       cursor: pointer;
@@ -372,14 +390,14 @@
 
     /* ================= DEMO BANNER ================= */
     .demo-alert-bar {
-      background: #FAF8FC;
-      border-bottom: 1px solid var(--border-color);
+      background: #EBE8DE;
+      border-bottom: 1px solid #DFD9CD;
       padding: 0.55rem 2.25rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       font-size: 0.78rem;
-      color: var(--text-muted);
+      color: #5F7065;
     }
 
     .alert-left {
@@ -404,7 +422,7 @@
     .btn-reset-link {
       background: none;
       border: none;
-      color: var(--text-muted);
+      color: #4F6055;
       cursor: pointer;
       font-size: 0.78rem;
       text-decoration: underline;
@@ -472,19 +490,20 @@
       background: var(--primary-hover);
     }
 
-    /* ================= HERO CARD (MATCH SCREENSHOT) ================= */
+    /* ================= HERO CARD (MATCH SCREENSHOT 1:1) ================= */
     .hero-card {
-      background: var(--primary-light);
-      border: 1px solid var(--primary-border);
+      background: linear-gradient(135deg, #E6EEE6 0%, #DCE6DC 60%, #E3E9DC 100%);
+      border: 1px solid #CCD8CF;
       border-radius: var(--radius-xl);
       padding: 2.75rem 3.25rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       display: grid;
       grid-template-columns: 1.15fr 0.85fr;
       align-items: center;
-      gap: 30px;
+      gap: 24px;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 4px 20px rgba(38, 73, 57, 0.04);
     }
 
     .hero-tag {
@@ -492,7 +511,7 @@
       font-weight: 800;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: var(--text-muted);
+      color: #486053;
       margin-bottom: 0.75rem;
     }
 
@@ -500,14 +519,14 @@
       font-family: 'Playfair Display', serif;
       font-size: 2.45rem;
       font-weight: 700;
-      color: var(--text-main);
+      color: #1A2820;
       line-height: 1.2;
       margin-bottom: 1rem;
     }
 
     .hero-desc {
       font-size: 0.95rem;
-      color: var(--text-body);
+      color: #3B4D43;
       line-height: 1.5;
       margin-bottom: 2rem;
       max-width: 480px;
@@ -533,16 +552,18 @@
       align-items: center;
       gap: 8px;
       transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(38, 73, 57, 0.15);
     }
 
     .btn-hero-primary:hover {
       background: var(--primary-hover);
+      transform: translateY(-1px);
     }
 
     .btn-hero-secondary {
-      background: #FFFFFF;
+      background: #FAF9F5;
       color: var(--primary);
-      border: 1px solid #DDD3E5;
+      border: 1px solid #CCD8CF;
       padding: 0.75rem 1.5rem;
       border-radius: 999px;
       font-size: 0.9rem;
@@ -557,19 +578,56 @@
     .btn-hero-secondary:hover {
       border-color: var(--primary);
       background: #FFFFFF;
+      transform: translateY(-1px);
     }
 
-    /* Hero Illustration Vector Wrap */
+    /* Khung tranh minh hoa hoang thanh Ngo Mon Hue */
     .hero-art-container {
       display: flex;
-      justify-content: center;
+      justify-content: flex-end;
       align-items: center;
+      position: relative;
     }
 
-    .hero-vector-svg {
+    .hero-art-img {
       width: 100%;
-      max-width: 390px;
+      max-width: 440px;
       height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(38, 73, 57, 0.05));
+    }
+
+    /* Bang tranh toan canh Cau Truong Tien va Song Huong */
+    .hue-landscape-row {
+      margin-top: -0.5rem;
+      margin-bottom: 2.25rem;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid #DCE3DC;
+      box-shadow: 0 3px 12px rgba(38, 73, 57, 0.05);
+      height: 72px;
+      background: #E8ECE5;
+      position: relative;
+    }
+
+    .hue-landscape-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center bottom;
+      display: block;
+    }
+
+    /* Canh truc xanh trang tri o goc tren phai */
+    .bamboo-top-right-decor {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 135px;
+      height: auto;
+      pointer-events: none;
+      z-index: 105;
+      opacity: 0.85;
     }
 
     /* ================= STAT CARDS ROW (MATCH SCREENSHOT 1:1) ================= */
@@ -609,7 +667,7 @@
       width: 34px;
       height: 34px;
       border-radius: 10px;
-      background: #F6F3F9;
+      background: #EFF4F0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -816,7 +874,7 @@
     /* Lookup Box */
     .lookup-card {
       background: #FFFFFF;
-      border: 1.5px solid #DDD3E5;
+      border: 1.5px solid #CCD8CF;
       border-radius: var(--radius-lg);
       padding: 1.5rem;
       margin-bottom: 2rem;
@@ -1743,13 +1801,13 @@
     <a href="index.html" class="brand-area">
       <!-- SVG bieu tuong Ngo Mon Hoang Thanh Hue -->
       <svg class="brand-logo-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4 22L22 14L40 22" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" />
-        <path d="M10 14L22 8L34 14" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
-        <line x1="12" y1="22" x2="12" y2="34" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
-        <line x1="22" y1="22" x2="22" y2="34" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
-        <line x1="32" y1="22" x2="32" y2="34" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
-        <path d="M6 34H38" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
-        <rect x="17" y="27" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8" />
+        <path d="M11 12L22 4L33 12" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M4 22L22 13L40 22" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+        <line x1="10" y1="23" x2="10" y2="36" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+        <line x1="34" y1="23" x2="34" y2="36" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+        <path d="M16 36V28H28V36" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        <line x1="22" y1="23" x2="22" y2="36" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+        <line x1="4" y1="36" x2="40" y2="36" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" />
       </svg>
       <div>
         <div class="brand-name">HueLegend</div>
@@ -1851,11 +1909,14 @@
       <div class="sidebar-bottom-desc">
         Minh bạch từng chặng sản xuất, vận chuyển và phân phối đặc sản xứ Huế trên chuỗi khối Ethereum.
       </div>
+      <img src="assets/lotus_transparent.png" alt="Hoa sen" class="sidebar-lotus-watermark">
     </div>
   </aside>
 
   <!-- ================= MAIN APP WRAPPER ================= -->
   <div class="app-main">
+    <!-- Canh truc xanh ru nhe o goc tren phai -->
+    <img src="assets/bamboo_branch_top_right.png" alt="Truc xanh" class="bamboo-top-right-decor">
     <!-- Top Header -->
     <header class="app-header">
       <div style="display: flex; align-items: center; gap: 12px;">
@@ -1962,77 +2023,14 @@
         </div>
 
         <div class="hero-art-container">
-          <!-- Exact Vector Line-Art of Hue Citadel (Ngo Mon Gate) -->
-          <svg class="hero-vector-svg" viewBox="0 0 460 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Vong hao quang mat troi sau Hoang Thanh -->
-            <circle cx="230" cy="125" r="75" stroke="#9B8EA8" stroke-width="1.2" stroke-dasharray="4 4"
-              opacity="0.45" />
-
-            <!-- The huy hieu kiem dinh checkmark phia tren ben phai -->
-            <g transform="translate(330, 48)">
-              <path d="M22 4L6 10V20C6 31 22 39 22 39C22 39 38 31 38 20V10L22 4Z" fill="#FAF7FD" stroke="#786A85"
-                stroke-width="1.8" />
-              <path d="M15 20L20 25L29 15" stroke="#4A3459" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </g>
-
-            <!-- Mai ngoi hoang cung tang tren cung (Co lau Ngũ Phụng) -->
-            <path d="M170 82L230 62L290 82H170Z" fill="#FAF7FC" stroke="#786A85" stroke-width="1.8"
-              stroke-linejoin="round" />
-            <path d="M162 82C170 82 178 78 184 72" stroke="#786A85" stroke-width="1.5" stroke-linecap="round" />
-            <path d="M298 82C290 82 282 78 276 72" stroke="#786A85" stroke-width="1.5" stroke-linecap="round" />
-            <line x1="230" y1="56" x2="230" y2="62" stroke="#786A85" stroke-width="2" />
-            <circle cx="230" cy="54" r="2.5" fill="#4A3459" />
-
-            <!-- Tang co lau thu hai voi cot go -->
-            <rect x="180" y="82" width="100" height="28" fill="#FAF7FC" stroke="#786A85" stroke-width="1.6" />
-            <line x1="195" y1="82" x2="195" y2="110" stroke="#786A85" stroke-width="1.5" />
-            <line x1="210" y1="82" x2="210" y2="110" stroke="#786A85" stroke-width="1.5" />
-            <line x1="230" y1="82" x2="230" y2="110" stroke="#786A85" stroke-width="1.5" />
-            <line x1="250" y1="82" x2="250" y2="110" stroke="#786A85" stroke-width="1.5" />
-            <line x1="265" y1="82" x2="265" y2="110" stroke="#786A85" stroke-width="1.5" />
-
-            <!-- Mai ha Ngo Mon re canh phong khoang -->
-            <path d="M125 125L230 106L335 125H125Z" fill="#FAF7FC" stroke="#786A85" stroke-width="2"
-              stroke-linejoin="round" />
-            <path d="M115 125C125 125 135 120 142 112" stroke="#786A85" stroke-width="1.8" stroke-linecap="round" />
-            <path d="M345 125C335 125 325 120 318 112" stroke="#786A85" stroke-width="1.8" stroke-linecap="round" />
-
-            <!-- Tang lau chinh voi lan can va cot dinh -->
-            <rect x="140" y="125" width="180" height="38" fill="#FAF7FC" stroke="#786A85" stroke-width="1.8" />
-            <line x1="140" y1="135" x2="320" y2="135" stroke="#786A85" stroke-width="1" stroke-dasharray="2 2" />
-            <line x1="160" y1="125" x2="160" y2="163" stroke="#786A85" stroke-width="1.5" />
-            <line x1="190" y1="125" x2="190" y2="163" stroke="#786A85" stroke-width="1.5" />
-            <line x1="230" y1="125" x2="230" y2="163" stroke="#786A85" stroke-width="1.5" />
-            <line x1="270" y1="125" x2="270" y2="163" stroke="#786A85" stroke-width="1.5" />
-            <line x1="300" y1="125" x2="300" y2="163" stroke="#786A85" stroke-width="1.5" />
-
-            <!-- Dai nen da Thanh Ngo Mon hinh chu U -->
-            <path d="M100 220L125 163H335L360 220H100Z" fill="#FAF7FC" stroke="#786A85" stroke-width="2"
-              stroke-linejoin="round" />
-
-            <!-- 3 Cua vom Ngo Mon (Cua Ta Giap, Cua Ngo Mon, Cua Huu Giap) -->
-            <path d="M165 220V192C165 186 172 182 180 182C188 182 195 186 195 192V220" stroke="#786A85"
-              stroke-width="1.8" fill="#FAF7FC" />
-            <path d="M212 220V186C212 178 220 172 230 172C240 172 248 178 248 186V220" stroke="#4A3459"
-              stroke-width="2.2" fill="#FAF7FC" />
-            <path d="M265 220V192C265 186 272 182 280 182C288 182 295 186 295 192V220" stroke="#786A85"
-              stroke-width="1.8" fill="#FAF7FC" />
-
-            <!-- Duong ke goc nen va song Huong / Song Kim Thuy -->
-            <line x1="40" y1="225" x2="420" y2="225" stroke="#786A85" stroke-width="1.8" stroke-linecap="round" />
-
-            <!-- Dong chu HUE · VIETNAM thanh tao -->
-            <text x="230" y="248" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700"
-              fill="#786A85" letter-spacing="7" text-anchor="middle">H U E · V I E T N A M</text>
-            <line x1="70" y1="245" x2="145" y2="245" stroke="#786A85" stroke-width="0.8" opacity="0.6" />
-            <line x1="315" y1="245" x2="390" y2="245" stroke="#786A85" stroke-width="0.8" opacity="0.6" />
-
-            <!-- Nuoc gon song diem xuyen -->
-            <path d="M120 262C150 260 170 264 200 262M260 262C290 260 310 264 340 262" stroke="#9B8EA8" stroke-width="1"
-              stroke-linecap="round" opacity="0.6" />
-          </svg>
+          <!-- Tranh minh hoa Hoang Thanh Ngo Mon Hue chuan theo anh chup -->
+          <img src="assets/hero_illustration_faded.png" alt="Hoang Thanh Ngo Mon Hue" class="hero-art-img">
         </div>
+      </section>
+
+      <!-- Dai phong canh Song Huong Cau Truong Tien va Thap Thien Mu -->
+      <section class="hue-landscape-row">
+        <img src="assets/hue_landscape_banner.png" alt="Toan canh Cau Truong Tien va Song Huong Hue" class="hue-landscape-img">
       </section>
 
       <!-- 4 Stat Cards Row (Match Screenshot 1:1) -->

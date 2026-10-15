@@ -1293,7 +1293,7 @@ function openBatchQrModal(batchCode) {
     text: traceUrl,
     width: 220,
     height: 220,
-    colorDark: "#4A3459",
+    colorDark: "#264939",
     colorLight: "#FFFFFF",
     correctLevel: QRCode.CorrectLevel.H
   });
