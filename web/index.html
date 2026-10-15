@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>HueLegend — Cổng Tra Cứu Nguồn Gốc Đặc Sản Hoàng Gia Huế Trên Blockchain</title>
+  <title>HueLegend — Không Gian Quản Trị & Truy Xuất Nguồn Gốc Đặc Sản Huế Trên Blockchain</title>
 
   <!-- Google Fonts: Playfair Display, Cinzel, Plus Jakarta Sans, Be Vietnam Pro -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,37 +13,43 @@
     href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"
     rel="stylesheet">
 
-  <!-- Ethers.js v5.7.2 CDN chuan theo dac ta ky thuat -->
+  <!-- Ethers.js v5.7.2 CDN chuan Web3 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-  <!-- QRCode.js de render ma QR -->
+  <!-- QRCode.js de render tem QR dong -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <!-- Html5Qrcode de quet QR qua Camera truc tiep -->
+  <!-- Html5Qrcode de quet QR bang Camera truc tiep -->
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
   <style>
     /* ==========================================================================
-       BANG MAU HOANG GIA CO DO HUE (ROYAL IMPERIAL THEME)
-       Do do Kinh Thanh: #800020 | Vang Hoang Gia: #D4AF37 | Nen xam ngoc anh: #F8FAFC
+       BANG MAU CHUAN HUELEGEND THEME THEO ANH GIAO DIEN
+       Mau chu dao: Tim Tim Co Do (#4A3459) | Tim Pastel (#F3EEF7) | Nen Sang (#FFFFFF)
        ========================================================================== */
     :root {
-      --color-crimson: #800020;
-      --color-crimson-dark: #4d0013;
-      --color-crimson-light: #9e1432;
-      --color-crimson-glow: rgba(128, 0, 32, 0.4);
-      --color-gold: #D4AF37;
-      --color-gold-light: #F3E5AB;
-      --color-gold-dark: #AA771C;
-      --color-gold-glow: rgba(212, 175, 55, 0.35);
-      --color-slate-bg: #F8FAFC;
-      --color-slate-card: #FFFFFF;
-      --color-text-main: #1E293B;
-      --color-text-muted: #64748B;
-      --color-border: #E2E8F0;
-      --color-border-gold: rgba(212, 175, 55, 0.45);
-      --royal-gradient: linear-gradient(135deg, #800020 0%, #4d0013 100%);
-      --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #AA771C 100%);
-      --shadow-royal: 0 10px 25px -5px rgba(128, 0, 32, 0.15), 0 8px 10px -6px rgba(128, 0, 32, 0.1);
-      --shadow-certificate: 0 20px 40px -15px rgba(0, 0, 0, 0.12), 0 0 30px rgba(212, 175, 55, 0.15);
+      --primary: #4A3459;
+      --primary-hover: #382544;
+      --primary-light: #F3EEF7;
+      --primary-tint: #FAF7FC;
+      --primary-border: #E6DDF0;
+      --royal-gold: #D4AF37;
+      --royal-gold-dark: #A17A16;
+      --royal-gold-light: #FEF9E7;
+      --text-main: #241432;
+      --text-muted: #786A85;
+      --text-light: #9B8EA8;
+      --bg-body: #FAFAFC;
+      --bg-sidebar: #FFFFFF;
+      --bg-card: #FFFFFF;
+      --border-color: #EFEBF4;
+      --border-dark: #D8CEE3;
+      --shadow-sm: 0 1px 3px rgba(74, 52, 89, 0.04);
+      --shadow-card: 0 4px 20px -2px rgba(74, 52, 89, 0.05);
+      --shadow-hover: 0 8px 25px -4px rgba(74, 52, 89, 0.1);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --sidebar-width: 260px;
     }
 
     * {
@@ -54,671 +60,1041 @@
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', 'Be Vietnam Pro', sans-serif;
-      background-color: var(--color-slate-bg);
-      color: var(--color-text-main);
+      font-family: 'Plus Jakarta Sans', 'Be Vietnam Pro', -apple-system, sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
       min-height: 100vh;
-      line-height: 1.6;
-      background-image:
-        radial-gradient(circle at 15% 15%, rgba(128, 0, 32, 0.04) 0%, transparent 40%),
-        radial-gradient(circle at 85% 85%, rgba(212, 175, 55, 0.05) 0%, transparent 40%);
-      background-attachment: fixed;
-    }
-
-    /* Hoa van hoang cung trang tri nen */
-    .royal-pattern-top {
-      height: 4px;
-      background: linear-gradient(90deg, #800020 0%, #D4AF37 50%, #800020 100%);
-      width: 100%;
-    }
-
-    /* ================= HEADER THANH DIEU HUONG ================= */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--color-border-gold);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-      padding: 0.8rem 1.5rem;
+      line-height: 1.5;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
     }
 
-    .brand-container {
+    /* ================= APP LAYOUT ================= */
+    .app-sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 120;
+      padding: 1.5rem 1.25rem;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .app-main {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--bg-body);
+      min-width: 0;
+    }
+
+    /* ================= SIDEBAR BRAND ================= */
+    .brand-area {
       display: flex;
       align-items: center;
       gap: 12px;
+      padding-bottom: 2rem;
       text-decoration: none;
       color: inherit;
     }
 
-    .brand-emblem {
+    .brand-icon-svg {
       width: 44px;
       height: 44px;
-      border-radius: 50%;
-      background: var(--royal-gradient);
-      border: 2px solid var(--color-gold);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 15px var(--color-gold-glow);
-      color: var(--color-gold);
-      font-size: 20px;
-      font-weight: 800;
-      font-family: 'Cinzel', serif;
+      color: var(--primary);
+      flex-shrink: 0;
     }
 
-    .brand-text h1 {
+    .brand-title {
       font-family: 'Cinzel', 'Playfair Display', serif;
       font-size: 1.35rem;
       font-weight: 800;
-      letter-spacing: 0.5px;
-      color: var(--color-crimson);
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      letter-spacing: -0.3px;
+      color: var(--primary);
+      line-height: 1.1;
     }
 
-    .brand-text p {
-      font-size: 0.75rem;
-      color: var(--color-gold-dark);
+    .brand-subtitle {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 1.6px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .sidebar-section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 0.75rem;
+      padding-left: 0.5rem;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      flex: 1;
+    }
+
+    .sidebar-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      font-size: 0.9rem;
       font-weight: 600;
-      letter-spacing: 0.3px;
+      text-decoration: none;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .sidebar-nav-item:hover {
+      background: var(--primary-tint);
+      color: var(--primary);
+    }
+
+    .sidebar-nav-item.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .sidebar-nav-item.active::after {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .nav-icon {
+      font-size: 1.15rem;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: inherit;
+    }
+
+    /* Sidebar Footer Info Card */
+    .sidebar-bottom-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-top: auto;
+    }
+
+    .sidebar-bottom-title {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .sidebar-bottom-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ================= TOP HEADER ================= */
+    .app-header {
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.9rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .header-breadcrumb strong {
+      color: var(--text-main);
+      font-weight: 600;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
 
-    .network-badge {
-      display: inline-flex;
+    /* Demo Experience Dropdown */
+    .demo-dropdown-wrap {
+      position: relative;
+    }
+
+    .btn-demo-dropdown {
+      background: none;
+      border: none;
+      display: flex;
       align-items: center;
       gap: 6px;
-      padding: 5px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      transition: background 0.2s ease;
+    }
+
+    .btn-demo-dropdown:hover {
+      background: var(--primary-tint);
+      color: var(--primary);
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 8px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      min-width: 250px;
+      padding: 0.5rem 0;
+      display: none;
+      z-index: 110;
+    }
+
+    .dropdown-menu.show {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .dropdown-item {
+      padding: 0.65rem 1rem;
+      font-size: 0.82rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .dropdown-item:hover {
+      background: var(--primary-tint);
+      color: var(--primary);
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 0.35rem 0;
+    }
+
+    .dropdown-header {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-light);
+      padding: 0.4rem 1rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* Connect Wallet Button */
+    .btn-connect-wallet {
+      background: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 0.6rem 1.25rem;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-connect-wallet:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .wallet-connected-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-light);
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--primary-border);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .online-indicator-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 6px #10B981;
+    }
+
+    /* ================= DEMO NOTICE BANNER ================= */
+    .demo-notice-bar {
+      background: #FAF8FC;
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.55rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .notice-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .notice-purple-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--primary);
+      display: inline-block;
+    }
+
+    .notice-left strong {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .btn-reset-demo {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.78rem;
+      text-decoration: underline;
+      transition: color 0.15s;
+    }
+
+    .btn-reset-demo:hover {
+      color: var(--primary);
+    }
+
+    /* ================= MAIN CONTENT WRAPPER ================= */
+    .content-container {
+      padding: 2rem 2.5rem 4rem;
+      max-width: 1240px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Page Title & Action Header */
+    .page-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 1.75rem;
+      gap: 15px;
+    }
+
+    .page-category-tag {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 4px;
+    }
+
+    .page-main-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .page-main-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .btn-create-batch-top {
+      background: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 0.65rem 1.4rem;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-create-batch-top:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    /* ================= HERO FEATURE CARD ================= */
+    .hero-feature-card {
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem 3rem;
+      margin-bottom: 2rem;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      align-items: center;
+      gap: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-tag {
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-headline {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.35rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .hero-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 1.8rem;
+      max-width: 480px;
+    }
+
+    .hero-btn-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-hero-primary {
+      background: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 0.75rem 1.6rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-hero-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-hero-secondary {
+      background: #FFFFFF;
+      color: var(--primary);
+      border: 1px solid var(--border-dark);
+      padding: 0.75rem 1.5rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-hero-secondary:hover {
+      background: #FFFFFF;
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    /* Vector Art Container */
+    .hero-illustration-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .hero-art-svg {
+      width: 100%;
+      max-width: 380px;
+      height: auto;
+      filter: drop-shadow(0 4px 12px rgba(74, 52, 89, 0.05));
+    }
+
+    /* ================= METRIC / STAT CARDS ROW ================= */
+    .stats-grid-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.4rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card);
+    }
+
+    .stat-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .stat-card-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .stat-card-icon-box {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      background: #F7F5FA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .stat-card-value {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.1;
+      margin-bottom: 4px;
+      font-feature-settings: "tnum";
+    }
+
+    .stat-card-sub {
+      font-size: 0.72rem;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    /* ================= SECTION WHITE CARDS ================= */
+    .content-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 2rem;
+    }
+
+    .content-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title-main {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .card-title-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Modern Table Styles */
+    .table-responsive {
+      overflow-x: auto;
+      margin: 0 -1.75rem;
+      padding: 0 1.75rem;
+    }
+
+    .modern-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+
+    .modern-table th {
+      padding: 0.75rem 1rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+      background: #FAFAFC;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.5px;
+    }
+
+    .modern-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    .modern-table tr:hover td {
+      background: #FAF9FC;
+    }
+
+    .font-code {
+      font-family: 'SFMono-Regular', Consolas, Menlo, monospace;
+      font-size: 0.82rem;
+    }
+
+    .font-bold {
+      font-weight: 700;
+    }
+
+    .text-primary {
+      color: var(--primary);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
       border-radius: 20px;
       font-size: 0.75rem;
-      font-weight: 600;
+      font-weight: 700;
+    }
+
+    .badge-status-verified {
       background: #ECFDF5;
       color: #047857;
       border: 1px solid #A7F3D0;
     }
 
-    .network-badge::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #10B981;
-      box-shadow: 0 0 8px #10B981;
-      display: inline-block;
-    }
-
-    .btn-connect-wallet {
-      background: var(--royal-gradient);
-      color: #FFFFFF;
-      border: 1px solid var(--color-gold);
-      padding: 0.55rem 1.1rem;
-      border-radius: 24px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px var(--color-crimson-glow);
-    }
-
-    .btn-connect-wallet:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px var(--color-crimson-glow);
-      border-color: #FFFFFF;
-    }
-
-    .wallet-connected-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #FFFBEB;
-      border: 1px solid var(--color-gold);
-      padding: 5px 14px;
-      border-radius: 24px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--color-crimson);
-    }
-
-    .wallet-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--color-gold-dark);
-    }
-
-    .btn-nav-admin {
-      background: #FFFFFF;
-      color: var(--color-crimson);
-      border: 1px solid var(--color-border-gold);
-      padding: 0.55rem 1rem;
-      border-radius: 24px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.25s ease;
-    }
-
-    .btn-nav-admin:hover {
-      background: #FFF1F2;
-      border-color: var(--color-crimson);
-      transform: translateY(-1px);
-    }
-
-    /* ================= MAIN CONTAINER ================= */
-    .container {
-      max-width: 1040px;
-      margin: 0 auto;
-      padding: 2rem 1.25rem 4rem;
-    }
-
-    /* ================= HERO & SEARCH SECTION ================= */
-    .hero-section {
-      text-align: center;
-      margin-bottom: 2.5rem;
-    }
-
-    .royal-tagline {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(128, 0, 32, 0.08);
-      color: var(--color-crimson);
-      padding: 4px 16px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin-bottom: 1rem;
-      border: 1px solid rgba(128, 0, 32, 0.2);
-    }
-
-    .hero-title {
-      font-family: 'Cinzel', 'Playfair Display', serif;
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: var(--color-crimson);
-      line-height: 1.3;
-      margin-bottom: 0.6rem;
-    }
-
-    .hero-subtitle {
-      font-size: 1rem;
-      color: var(--color-text-muted);
-      max-width: 680px;
-      margin: 0 auto 1.8rem;
-    }
-
-    /* Search Box & QR Button */
-    .search-card {
-      background: #FFFFFF;
-      border: 1px solid var(--color-border-gold);
-      border-radius: 20px;
-      padding: 1.5rem;
-      box-shadow: var(--shadow-royal);
-      max-width: 760px;
-      margin: 0 auto;
-      position: relative;
-    }
-
-    .search-input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    @media (min-width: 640px) {
-      .search-input-group {
-        flex-direction: row;
-      }
-    }
-
-    .search-input-wrapper {
-      position: relative;
-      flex: 1;
-    }
-
-    .search-input-icon {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--color-gold-dark);
-      font-size: 18px;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 0.85rem 1rem 0.85rem 2.8rem;
-      border: 1.5px solid var(--color-border);
-      border-radius: 12px;
-      font-size: 0.95rem;
-      font-family: inherit;
-      color: var(--color-text-main);
-      outline: none;
-      transition: all 0.25s ease;
-      background: #FAFAFA;
-    }
-
-    .search-input:focus {
-      border-color: var(--color-gold);
-      background: #FFFFFF;
-      box-shadow: 0 0 0 3px var(--color-gold-glow);
-    }
-
-    .btn-search {
-      background: var(--royal-gradient);
-      color: #FFFFFF;
-      border: 1px solid var(--color-gold);
-      padding: 0.85rem 1.6rem;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.25s ease;
-      box-shadow: 0 4px 12px var(--color-crimson-glow);
-    }
-
-    .btn-search:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px var(--color-crimson-glow);
-    }
-
-    .btn-qr-scan {
-      background: #FFFBEB;
-      color: var(--color-gold-dark);
-      border: 1.5px solid var(--color-gold);
-      padding: 0.85rem 1.25rem;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.25s ease;
-    }
-
-    .btn-qr-scan:hover {
-      background: #FEF3C7;
-      transform: translateY(-1px);
-    }
-
-    /* Quick Preset Batch Pills */
-    .preset-batches {
-      margin-top: 1rem;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-size: 0.8rem;
-      color: var(--color-text-muted);
-    }
-
-    .preset-pill {
-      background: #F1F5F9;
-      border: 1px solid #CBD5E1;
-      padding: 4px 10px;
-      border-radius: 16px;
-      color: var(--color-crimson);
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .preset-pill:hover {
-      background: #FFF1F2;
-      border-color: var(--color-crimson);
-      transform: translateY(-1px);
-    }
-
-    /* ================= WALLET REQUIRED NOTICE ================= */
-    .wallet-guard-banner {
-      background: #FEF2F2;
-      border: 1.5px dashed var(--color-crimson);
-      border-radius: 16px;
-      padding: 1.5rem;
-      text-align: center;
-      margin: 2rem auto;
-      max-width: 760px;
-      display: none;
-    }
-
-    .wallet-guard-banner h3 {
-      font-family: 'Playfair Display', serif;
-      color: var(--color-crimson);
-      margin-bottom: 0.4rem;
-      font-size: 1.2rem;
-    }
-
-    .wallet-guard-banner p {
-      color: #991B1B;
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-    }
-
-    /* ================= CERTIFICATE STYLE CARD ================= */
-    .certificate-card {
-      background: #FFFFFF;
-      border: 3px double var(--color-gold);
-      border-radius: 20px;
-      box-shadow: var(--shadow-certificate);
-      position: relative;
-      padding: 2.2rem 2rem;
-      margin-bottom: 2.5rem;
-      overflow: hidden;
-      display: none;
-    }
-
-    /* Hoa van goc trien hoang cung */
-    .cert-corner {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      border: 2px solid var(--color-gold);
-      pointer-events: none;
-    }
-
-    .cert-corner-tl {
-      top: 8px;
-      left: 8px;
-      border-right: none;
-      border-bottom: none;
-    }
-
-    .cert-corner-tr {
-      top: 8px;
-      right: 8px;
-      border-left: none;
-      border-bottom: none;
-    }
-
-    .cert-corner-bl {
-      bottom: 8px;
-      left: 8px;
-      border-right: none;
-      border-top: none;
-    }
-
-    .cert-corner-br {
-      bottom: 8px;
-      right: 8px;
-      border-left: none;
-      border-top: none;
-    }
-
-    /* An trien Hoang cung / Red Seal */
-    .royal-seal {
-      position: absolute;
-      top: 25px;
-      right: 25px;
-      width: 95px;
-      height: 95px;
-      border: 3px dashed #B91C1C;
-      border-radius: 50%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #B91C1C;
-      text-align: center;
-      transform: rotate(-8deg);
-      background: rgba(254, 242, 242, 0.7);
-      box-shadow: 0 0 15px rgba(185, 28, 28, 0.15);
-      pointer-events: none;
-    }
-
-    .royal-seal-inner {
-      font-family: 'Cinzel', serif;
-      font-weight: 900;
-      font-size: 0.65rem;
-      line-height: 1.1;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .royal-seal-icon {
-      font-size: 16px;
-      margin-bottom: 2px;
-    }
-
-    .cert-header {
-      text-align: center;
-      margin-bottom: 1.8rem;
-      padding-bottom: 1.2rem;
-      border-bottom: 1px dashed var(--color-border-gold);
-    }
-
-    .cert-header-tag {
-      font-family: 'Cinzel', serif;
-      font-size: 0.8rem;
-      font-weight: 800;
-      color: var(--color-gold-dark);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 0.3rem;
-    }
-
-    .cert-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.85rem;
-      font-weight: 800;
-      color: var(--color-crimson);
-      margin-bottom: 0.4rem;
-    }
-
-    .cert-subtitle {
-      font-size: 0.9rem;
-      color: var(--color-text-muted);
-    }
-
-    /* Thong tin san pham trong Chung chi */
-    .cert-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
-      margin-bottom: 1.8rem;
-    }
-
-    @media (min-width: 768px) {
-      .cert-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    .cert-item {
-      background: #FDFBF7;
-      border: 1px solid rgba(212, 175, 55, 0.25);
-      border-radius: 12px;
-      padding: 1rem 1.25rem;
-    }
-
-    .cert-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      font-weight: 700;
-      color: var(--color-gold-dark);
-      letter-spacing: 0.5px;
-      margin-bottom: 0.25rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .cert-value {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--color-text-main);
-    }
-
-    .cert-value-sub {
-      font-size: 0.85rem;
-      color: var(--color-text-muted);
-      font-weight: 500;
-      margin-top: 3px;
-    }
-
-    /* Badges OCOP & Blockchain */
-    .cert-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      padding-top: 1rem;
-      border-top: 1px dashed var(--color-border-gold);
-    }
-
-    .badge-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-
-    .badge-blockchain {
-      background: #EFF6FF;
-      color: #1D4ED8;
-      border: 1px solid #BFDBFE;
-    }
-
-    .badge-ocop {
+    .badge-status-pending {
       background: #FFFBEB;
       color: #B45309;
       border: 1px solid #FDE68A;
     }
 
-    .badge-vietgap {
-      background: #ECFDF5;
-      color: #047857;
-      border: 1px solid #A7F3D0;
+    .table-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    /* ================= VERTICAL VISUAL TIMELINE ================= */
-    .timeline-section {
+    .btn-action-sm {
+      border: none;
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-action-view {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .btn-action-view:hover {
+      background: var(--primary);
+      color: #FFFFFF;
+    }
+
+    .btn-action-qr {
+      background: #F1F5F9;
+      color: var(--text-main);
+    }
+
+    .btn-action-qr:hover {
+      background: #E2E8F0;
+    }
+
+    /* ================= FORMS & INPUTS ================= */
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .form-group label span {
+      color: #EF4444;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-family: inherit;
+      color: var(--text-main);
+      background: #FAFAFC;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--primary);
       background: #FFFFFF;
-      border: 1px solid var(--color-border);
-      border-radius: 20px;
-      padding: 2.2rem 1.75rem;
-      box-shadow: var(--shadow-royal);
-      display: none;
+      box-shadow: 0 0 0 3px rgba(74, 52, 89, 0.1);
     }
 
-    .timeline-title-wrap {
-      text-align: center;
+    .form-textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .form-tip {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      display: block;
+    }
+
+    /* ================= SEARCH & LOOKUP SECTION ================= */
+    .lookup-box {
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-dark);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
       margin-bottom: 2rem;
     }
 
-    .timeline-title {
-      font-family: 'Cinzel', 'Playfair Display', serif;
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--color-crimson);
-      margin-bottom: 0.3rem;
+    .lookup-input-row {
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
     }
 
-    .timeline-desc {
-      font-size: 0.9rem;
-      color: var(--color-text-muted);
+    @media (min-width: 640px) {
+      .lookup-input-row {
+        flex-direction: row;
+      }
     }
 
-    .timeline-list {
+    .lookup-input-wrapper {
       position: relative;
-      max-width: 800px;
+      flex: 1;
+    }
+
+    .lookup-input-wrapper span {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    .lookup-input {
+      width: 100%;
+      padding: 0.85rem 1rem 0.85rem 2.8rem;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      background: #FAFAFC;
+    }
+
+    .lookup-input:focus {
+      border-color: var(--primary);
+      background: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(74, 52, 89, 0.1);
+    }
+
+    .lookup-preset-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .preset-pill-btn {
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      color: var(--primary);
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .preset-pill-btn:hover {
+      background: var(--primary);
+      color: #FFFFFF;
+    }
+
+    /* ================= ROYAL CERTIFICATE CARD ================= */
+    .certificate-card {
+      background: #FFFFFF;
+      border: 2px solid var(--royal-gold);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+      box-shadow: 0 15px 35px -5px rgba(212, 175, 55, 0.15);
+      background-image: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 60%);
+      display: none;
+    }
+
+    .cert-seal {
+      position: absolute;
+      top: 25px;
+      right: 25px;
+      width: 90px;
+      height: 90px;
+      border: 2px dashed var(--royal-gold);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--royal-gold-dark);
+      text-align: center;
+      font-size: 0.62rem;
+      font-weight: 800;
+      line-height: 1.2;
+      transform: rotate(8deg);
+      background: var(--royal-gold-light);
+    }
+
+    .cert-seal span {
+      font-size: 1.2rem;
+      margin-bottom: 2px;
+    }
+
+    .cert-heading {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px dashed var(--royal-gold);
+    }
+
+    .cert-super-tag {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      color: var(--royal-gold-dark);
+      margin-bottom: 4px;
+    }
+
+    .cert-product-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .cert-grid-info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .cert-item-box {
+      background: #FAF8F5;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+    }
+
+    .cert-item-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--royal-gold-dark);
+      margin-bottom: 4px;
+    }
+
+    .cert-item-val {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .cert-item-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ================= VERTICAL TIMELINE ================= */
+    .timeline-wrap-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem 2rem;
+      box-shadow: var(--shadow-sm);
+      display: none;
+    }
+
+    .timeline-title-area {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .timeline-main-title {
+      font-family: 'Cinzel', 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .timeline-sub-title {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .timeline-container {
+      position: relative;
+      max-width: 820px;
       margin: 0 auto;
       padding: 1rem 0;
     }
 
-    /* Truc thang dung cua Timeline */
-    .timeline-list::before {
+    .timeline-container::before {
       content: "";
       position: absolute;
-      top: 10px;
-      bottom: 20px;
-      left: 20px;
+      top: 15px;
+      bottom: 25px;
+      left: 22px;
       width: 3px;
-      background: linear-gradient(180deg, var(--color-crimson) 0%, var(--color-gold) 50%, #10B981 100%);
-      border-radius: 2px;
-    }
-
-    @media (min-width: 640px) {
-      .timeline-list::before {
-        left: 24px;
-      }
+      background: linear-gradient(180deg, var(--primary) 0%, var(--royal-gold) 60%, #10B981 100%);
+      border-radius: 3px;
     }
 
     .timeline-item {
       position: relative;
-      margin-bottom: 2rem;
-      padding-left: 55px;
+      margin-bottom: 2.2rem;
+      padding-left: 60px;
     }
 
-    @media (min-width: 640px) {
-      .timeline-item {
-        padding-left: 65px;
-      }
-    }
-
-    .timeline-item:last-child {
-      margin-bottom: 0;
-    }
-
-    /* Node tron co bieu tuong tren truc */
     .timeline-node {
       position: absolute;
-      left: 7px;
+      left: 6px;
       top: 0;
-      width: 30px;
-      height: 30px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       background: #FFFFFF;
-      border: 3px solid var(--color-crimson);
+      border: 2px solid var(--primary);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      font-size: 1rem;
       z-index: 2;
-    }
-
-    @media (min-width: 640px) {
-      .timeline-node {
-        left: 10px;
-      }
+      box-shadow: 0 0 10px rgba(74, 52, 89, 0.15);
     }
 
     .timeline-node.active-pulse {
       border-color: #10B981;
-      animation: pulseNode 2s infinite;
+      animation: pulseGreen 2s infinite;
     }
 
-    @keyframes pulseNode {
+    @keyframes pulseGreen {
       0% {
         box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
       }
@@ -733,26 +1109,20 @@
     }
 
     .timeline-card {
-      background: #FDFBF7;
-      border: 1px solid var(--color-border-gold);
-      border-radius: 14px;
+      background: #FAF9FC;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
       padding: 1.25rem 1.5rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-      transition: all 0.25s ease;
-    }
-
-    .timeline-card:hover {
-      box-shadow: 0 8px 20px rgba(128, 0, 32, 0.08);
-      border-color: var(--color-gold);
+      box-shadow: var(--shadow-sm);
     }
 
     .timeline-header {
       display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 8px;
       margin-bottom: 0.6rem;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
     .step-role-badge {
@@ -760,116 +1130,112 @@
       align-items: center;
       gap: 6px;
       padding: 3px 10px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      border-radius: 14px;
+      font-size: 0.74rem;
+      font-weight: 700;
     }
 
     .role-producer {
-      background: #FEF2F2;
-      color: var(--color-crimson);
-      border: 1px solid #FECACA;
+      background: #F3E8FF;
+      color: #6B21A8;
     }
 
     .role-logistics {
       background: #EFF6FF;
-      color: #1D4ED8;
-      border: 1px solid #BFDBFE;
+      color: #1E40AF;
     }
 
     .role-retailer {
       background: #ECFDF5;
-      color: #047857;
-      border: 1px solid #A7F3D0;
+      color: #065F46;
+    }
+
+    .role-inspector {
+      background: #FFFBEB;
+      color: #92400E;
     }
 
     .timeline-time {
-      font-size: 0.8rem;
-      color: var(--color-text-muted);
-      font-weight: 600;
+      font-size: 0.78rem;
+      color: var(--text-muted);
     }
 
     .timeline-step-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       font-weight: 700;
-      color: var(--color-crimson);
+      color: var(--text-main);
       margin-bottom: 0.4rem;
     }
 
     .timeline-action-text {
-      font-size: 0.95rem;
-      color: var(--color-text-main);
+      font-size: 0.88rem;
+      color: var(--text-muted);
       line-height: 1.5;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.85rem;
     }
 
     .timeline-meta-box {
       background: #FFFFFF;
-      border: 1px solid #E2E8F0;
-      border-radius: 8px;
-      padding: 0.75rem;
-      font-size: 0.82rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1rem;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 4px;
+      font-size: 0.8rem;
     }
 
     .meta-row {
       display: flex;
-      align-items: flex-start;
-      gap: 6px;
+      gap: 8px;
+      color: var(--text-muted);
     }
 
     .meta-row strong {
-      color: var(--color-text-muted);
-      min-width: 80px;
+      color: var(--text-main);
+      min-width: 75px;
     }
 
     .hash-code {
       font-family: monospace;
-      color: var(--color-crimson);
+      font-size: 0.75rem;
       word-break: break-all;
     }
 
     .hash-link {
-      color: #2563EB;
+      color: var(--primary);
       text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
+      font-weight: 600;
     }
 
     .hash-link:hover {
       text-decoration: underline;
     }
 
-    /* ================= MODAL QUET QR CAMERA ================= */
+    /* ================= MODALS ================= */
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(4px);
       z-index: 200;
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 1rem;
+      padding: 1.5rem;
     }
 
     .modal-box {
       background: #FFFFFF;
-      border-radius: 20px;
-      max-width: 500px;
+      border-radius: var(--radius-lg);
+      max-width: 480px;
       width: 100%;
-      padding: 1.75rem;
-      border: 2px solid var(--color-gold);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      padding: 2rem;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border-color);
       position: relative;
     }
 
@@ -884,7 +1250,7 @@
       font-family: 'Playfair Display', serif;
       font-size: 1.25rem;
       font-weight: 700;
-      color: var(--color-crimson);
+      color: var(--primary);
     }
 
     .modal-close {
@@ -892,18 +1258,20 @@
       border: none;
       font-size: 24px;
       cursor: pointer;
-      color: var(--color-text-muted);
-      line-height: 1;
+      color: var(--text-muted);
     }
 
-    #qrReaderBox {
-      width: 100%;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 1rem;
+    .qr-canvas-center {
+      display: flex;
+      justify-content: center;
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background: #FAF8FC;
+      border-radius: var(--radius-md);
+      border: 1px dashed var(--primary-border);
     }
 
-    /* ================= TOAST NOTIFICATION CSS ================= */
+    /* ================= TOAST NOTIFICATIONS ================= */
     .toast-container {
       position: fixed;
       bottom: 24px;
@@ -920,14 +1288,14 @@
     .custom-toast {
       pointer-events: auto;
       background: #FFFFFF;
-      border-radius: 14px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
       padding: 12px 16px;
       display: flex;
       align-items: flex-start;
       gap: 12px;
-      border-left: 5px solid;
-      animation: slideToastIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      border-left: 4px solid var(--primary);
+      animation: slideToastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       transition: all 0.3s ease;
     }
 
@@ -949,8 +1317,8 @@
     }
 
     .toast-icon-box {
-      font-size: 18px;
-      margin-top: 1px;
+      font-size: 16px;
+      margin-top: 2px;
     }
 
     .toast-content {
@@ -961,12 +1329,12 @@
       font-weight: 700;
       font-size: 0.85rem;
       margin-bottom: 2px;
-      color: var(--color-text-main);
+      color: var(--text-main);
     }
 
     .toast-message {
       font-size: 0.8rem;
-      color: var(--color-text-muted);
+      color: var(--text-muted);
       line-height: 1.4;
       word-break: break-word;
     }
@@ -976,8 +1344,7 @@
       border: none;
       font-size: 18px;
       cursor: pointer;
-      color: #94A3B8;
-      line-height: 1;
+      color: var(--text-light);
     }
 
     .toast-success {
@@ -993,20 +1360,16 @@
     }
 
     .toast-info {
-      border-left-color: #3B82F6;
-    }
-
-    .toast-loading {
-      border-left-color: var(--color-gold);
+      border-left-color: var(--primary);
     }
 
     .toast-spinner {
       display: inline-block;
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(212, 175, 55, 0.3);
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(74, 52, 89, 0.2);
       border-radius: 50%;
-      border-top-color: var(--color-gold-dark);
+      border-top-color: var(--primary);
       animation: spin 0.8s linear infinite;
     }
 
@@ -1016,434 +1379,851 @@
       }
     }
 
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 2.5rem 1rem;
-      color: var(--color-text-muted);
-      font-size: 0.82rem;
-      border-top: 1px solid var(--color-border);
-      margin-top: 4rem;
+    /* Mobile Drawer Overlay */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--primary);
     }
 
-    .footer-brand {
-      font-family: 'Cinzel', serif;
-      font-weight: 700;
-      color: var(--color-crimson);
-      margin-bottom: 0.25rem;
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 115;
+      display: none;
+    }
+
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 1024px) {
+      .stats-grid-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero-feature-card {
+        grid-template-columns: 1fr;
+        padding: 2rem;
+      }
+
+      .hero-illustration-wrap {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .app-sidebar {
+        transform: translateX(-100%);
+      }
+
+      .app-sidebar.mobile-open {
+        transform: translateX(0);
+      }
+
+      .app-main {
+        margin-left: 0;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .stats-grid-row {
+        grid-template-columns: 1fr;
+      }
+
+      .content-container {
+        padding: 1.5rem 1rem 3rem;
+      }
+
+      .form-grid-2,
+      .cert-grid-info {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 
 <body>
-  <!-- Dai vien hoang gia tren cung -->
-  <div class="royal-pattern-top"></div>
+  <!-- Overlay danh cho di dong khi mo Menu -->
+  <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
 
-  <!-- Header thanh dieu huong -->
-  <header>
-    <a href="index.html" class="brand-container">
-      <div class="brand-emblem">HL</div>
-      <div class="brand-text">
-        <h1>HueLegend <span>⚜️</span></h1>
-        <p>Đặc Sản Cố Đô — Bất Biến Trên Blockchain</p>
+  <!-- ================= LEFT SIDEBAR (THANH DIEU HUONG BEN TRAI) ================= -->
+  <aside id="appSidebar" class="app-sidebar">
+    <!-- Brand Logo HueLegend -->
+    <a href="index.html" class="brand-area">
+      <!-- SVG bieu tuong Ngo Mon Hoang Thanh Hue -->
+      <svg class="brand-icon-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="32" width="36" height="8" rx="2" stroke="currentColor" stroke-width="2.5" fill="none" />
+        <path d="M12 32V24M24 32V24M36 32V24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+        <path d="M4 24L24 16L44 24" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" />
+        <path d="M10 16L24 10L38 16" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+        <path d="M18 32C18 28.6863 20.6863 26 24 26C27.3137 26 30 28.6863 30 32" stroke="currentColor"
+          stroke-width="2" />
+        <circle cx="24" cy="7" r="1.5" fill="currentColor" />
+      </svg>
+      <div>
+        <div class="brand-title">HueLegend</div>
+        <div class="brand-subtitle">TINH HOA CÓ NGUỒN CỘI</div>
       </div>
     </a>
 
-    <div class="header-actions">
-      <!-- Trang thai mang Sepolia -->
-      <div id="networkPill" class="network-badge" style="display: none;">Sepolia Testnet</div>
+    <!-- Nhan muc khong gian lam viec -->
+    <div class="sidebar-section-label">KHÔNG GIAN LÀM VIỆC</div>
 
-      <!-- Nut ket noi vi bat buoc theo yeu cau Lab 15 -->
-      <button id="btnConnectWallet" class="btn-connect-wallet" onclick="handleConnectWalletClick()">
-        <span>🦊</span> Kết nối ví MetaMask
+    <!-- Danh sach tab dieu huong -->
+    <nav class="sidebar-nav">
+      <button class="sidebar-nav-item active" data-tab="overview" onclick="switchTab('overview')">
+        <span class="nav-icon">
+          <!-- 4 square grid icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1.5" />
+            <rect x="14" y="3" width="7" height="7" rx="1.5" />
+            <rect x="14" y="14" width="7" height="7" rx="1.5" />
+            <rect x="3" y="14" width="7" height="7" rx="1.5" />
+          </svg>
+        </span>
+        <span>Tổng quan</span>
       </button>
 
-      <!-- Badge dia chi vi khi da ket noi -->
-      <div id="walletBadge" class="wallet-connected-badge" style="display: none;">
-        <span class="wallet-dot"></span>
-        <span id="walletAddressText">0x...</span>
-      </div>
+      <button class="sidebar-nav-item" data-tab="lookup" onclick="switchTab('lookup')">
+        <span class="nav-icon">
+          <!-- QR / Search origin icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="6" height="6" rx="1" />
+            <rect x="15" y="3" width="6" height="6" rx="1" />
+            <rect x="3" y="15" width="6" height="6" rx="1" />
+            <path d="M15 15h2v2h-2zM19 15h2v2h-2zM15 19h2v2h-2zM19 19h2v2h-2z" fill="currentColor" />
+          </svg>
+        </span>
+        <span>Tra cứu nguồn gốc</span>
+      </button>
 
-      <!-- Nut chuyen sang trang Quan tri -->
-      <a href="admin.html" class="btn-nav-admin" title="Dành cho Cơ sở sản xuất, Đơn vị vận chuyển và Đại lý">
-        <span>⚙️</span> Trang Quản Trị
-      </a>
+      <button class="sidebar-nav-item" data-tab="create" onclick="switchTab('create')">
+        <span class="nav-icon">
+          <!-- Plus icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </span>
+        <span>Tạo lô hàng</span>
+      </button>
+
+      <button class="sidebar-nav-item" data-tab="checkpoints" onclick="switchTab('checkpoints')">
+        <span class="nav-icon">
+          <!-- Nodes / Checkpoints icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="6" cy="6" r="3" />
+            <circle cx="18" cy="18" r="3" />
+            <path d="M6 9v3a6 6 0 0 0 6 6h3" />
+          </svg>
+        </span>
+        <span>Ghi nhận chặng</span>
+      </button>
+
+      <button class="sidebar-nav-item" data-tab="verify" onclick="switchTab('verify')">
+        <span class="nav-icon">
+          <!-- Shield check icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            <path d="m9 12 2 2 4-4" />
+          </svg>
+        </span>
+        <span>Kiểm định</span>
+      </button>
+
+      <button class="sidebar-nav-item" data-tab="stake" onclick="switchTab('stake')">
+        <span class="nav-icon">
+          <!-- Vault / Lock / Escrow icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+        </span>
+        <span>Ký quỹ</span>
+      </button>
+
+      <button class="sidebar-nav-item" data-tab="admin" onclick="switchTab('admin')">
+        <span class="nav-icon">
+          <!-- Admin Key icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M21 2l-2 2m-1.5 1.5L16 7l-2-2m-3 3l-1.5 1.5a6 6 0 1 1-8.5 8.5 6 6 0 0 1 8.5-8.5L16 3l5 5-2 2-3.5-3.5" />
+          </svg>
+        </span>
+        <span>Quản trị</span>
+      </button>
+    </nav>
+
+    <!-- The thong tin o goc duoi sidebar -->
+    <div class="sidebar-bottom-card">
+      <div class="sidebar-bottom-title">TỪ LÀNG NGHỀ ĐẾN TAY BẠN</div>
+      <div class="sidebar-bottom-desc">
+        Minh bạch từng chặng sản xuất, vận chuyển và phân phối đặc sản xứ Huế trên chuỗi khối Ethereum.
+      </div>
     </div>
-  </header>
+  </aside>
 
-  <!-- Container noi dung chinh -->
-  <main class="container">
-    <!-- Hero Title -->
-    <section class="hero-section">
-      <div class="royal-tagline">
-        <span>❖</span> NGUỒN GỐC MINH BẠCH — ĐẶC SẢN CHUẨN OCOP <span>❖</span>
+  <!-- ================= MAIN APP WRAPPER ================= -->
+  <div class="app-main">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Mở Menu">☰</button>
+        <div class="header-breadcrumb">
+          <span>Không gian làm việc</span>
+          <span>/</span>
+          <strong id="headerBreadcrumbTab">Tổng quan</strong>
+        </div>
       </div>
-      <h2 class="hero-title">TRUY XUẤT NGUỒN GỐC HOÀNG GIA HUẾ</h2>
-      <p class="hero-subtitle">
-        Khám phá toàn bộ hành trình 3 chặng khép kín: từ đồng ruộng và làng nghề truyền thống xứ Huế, qua vận chuyển bảo
-        quản nghiêm ngặt đến tay người tiêu dùng.
-      </p>
 
-      <!-- Thanh tim kiem & Quet QR -->
-      <div class="search-card">
-        <div class="search-input-group">
-          <div class="search-input-wrapper">
-            <span class="search-input-icon">🔍</span>
-            <input type="text" id="lookupInput" class="search-input"
+      <div class="header-actions">
+        <!-- Dropdown Trai Nghiem Mau -->
+        <div id="demoDropdownWrapper" class="demo-dropdown-wrap">
+          <button class="btn-demo-dropdown" onclick="toggleDemoDropdown()">
+            <span>Trải nghiệm mẫu</span>
+            <span style="font-size: 0.7rem;">▼</span>
+          </button>
+          <div id="demoDropdownMenu" class="dropdown-menu">
+            <div class="dropdown-header">Chế độ vận hành</div>
+            <div class="dropdown-item" onclick="setDemoRole('ALL')">
+              <span>⚡</span> Chế độ Dữ liệu mẫu (Demo Mock)
+            </div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-header">Giả lập vai trò</div>
+            <div class="dropdown-item" onclick="setDemoRole('PRODUCER')">
+              <span>🏭</span> Cơ sở sản xuất (PRODUCER)
+            </div>
+            <div class="dropdown-item" onclick="setDemoRole('LOGISTICS')">
+              <span>🚚</span> Đơn vị vận chuyển (LOGISTICS)
+            </div>
+            <div class="dropdown-item" onclick="setDemoRole('RETAILER')">
+              <span>🏪</span> Đại lý bán lẻ (RETAILER)
+            </div>
+            <div class="dropdown-item" onclick="setDemoRole('INSPECTOR')">
+              <span>🛡️</span> Kiểm định viên OCOP (INSPECTOR)
+            </div>
+            <div class="dropdown-item" onclick="setDemoRole('ADMIN')">
+              <span>👑</span> Quản trị viên (ADMIN)
+            </div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item" onclick="resetDemoData()">
+              <span>🔄</span> Đặt lại dữ liệu gốc (6 lô)
+            </div>
+          </div>
+        </div>
+
+        <!-- Nut ket noi vi MetaMask -->
+        <button id="btnConnectWallet" class="btn-connect-wallet" onclick="connectWallet()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <rect x="2" y="4" width="20" height="16" rx="3" />
+            <path d="M16 12h.01M2 10h20" />
+          </svg>
+          <span>Kết nối ví</span>
+        </button>
+
+        <!-- Badge vi khi da ket noi -->
+        <div id="walletBadge" class="wallet-connected-pill" style="display: none;">
+          <span class="online-indicator-dot"></span>
+          <span id="walletAddressText" class="font-code">0x...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Thong bao che do mau -->
+    <div class="demo-notice-bar">
+      <div class="notice-left">
+        <span class="notice-purple-dot"></span>
+        <span><strong>CHẾ ĐỘ MẪU</strong> · Dữ liệu minh hoạ, không phải hồ sơ blockchain · Không dùng ETH thật</span>
+      </div>
+      <button class="btn-reset-demo" onclick="resetDemoData()">Đặt lại dữ liệu mẫu</button>
+    </div>
+
+    <!-- ================= TAB 1: TONG QUAN (MATCH SCREENSHOT 1:1) ================= -->
+    <main id="view-overview" class="content-container tab-view-container">
+      <!-- Title row -->
+      <div class="page-title-row">
+        <div>
+          <div class="page-category-tag">HUELEGEND / TỔNG QUAN</div>
+          <h1 class="page-main-title">Tổng quan</h1>
+          <p class="page-main-subtitle">Theo dõi hành trình đặc sản Huế, từ nguồn cội đến điểm bán.</p>
+        </div>
+        <button class="btn-create-batch-top" onclick="switchTab('create')">
+          <span>+ Tạo lô hàng</span>
+        </button>
+      </div>
+
+      <!-- Hero Feature Banner (Lavender Card with Ngọ Môn Art) -->
+      <section class="hero-feature-card">
+        <div class="hero-content-col">
+          <div class="hero-tag">ĐẶC SẢN HUẾ · NGUỒN GỐC MINH BẠCH</div>
+          <h2 class="hero-headline">Mỗi đặc sản,<br>một hành trình rõ ràng.</h2>
+          <p class="hero-desc">
+            Kết nối làng nghề, đơn vị vận chuyển và người mua qua những thông tin có thể đối chiếu.
+          </p>
+          <div class="hero-btn-group">
+            <button class="btn-hero-primary" onclick="switchTab('lookup')">
+              <span>🔍</span> Tra cứu nguồn gốc
+            </button>
+            <button class="btn-hero-secondary" onclick="openQrScannerModal()">
+              <span>📷</span> Quét mã QR
+            </button>
+          </div>
+        </div>
+
+        <div class="hero-illustration-wrap">
+          <!-- Exact Vector Line-Art of Hue Citadel (Ngo Mon Gate) -->
+          <svg class="hero-art-svg" viewBox="0 0 460 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Vong hao quang mat troi sau Hoang Thanh -->
+            <circle cx="230" cy="125" r="75" stroke="#9B8EA8" stroke-width="1.2" stroke-dasharray="4 4"
+              opacity="0.45" />
+
+            <!-- The huy hieu kiem dinh checkmark phia tren ben phai -->
+            <g transform="translate(330, 48)">
+              <path d="M22 4L6 10V20C6 31 22 39 22 39C22 39 38 31 38 20V10L22 4Z" fill="#FAF7FD" stroke="#786A85"
+                stroke-width="1.8" />
+              <path d="M15 20L20 25L29 15" stroke="#4A3459" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </g>
+
+            <!-- Mai ngoi hoang cung tang tren cung (Co lau Ngũ Phụng) -->
+            <path d="M170 82L230 62L290 82H170Z" fill="#FAF7FC" stroke="#786A85" stroke-width="1.8"
+              stroke-linejoin="round" />
+            <path d="M162 82C170 82 178 78 184 72" stroke="#786A85" stroke-width="1.5" stroke-linecap="round" />
+            <path d="M298 82C290 82 282 78 276 72" stroke="#786A85" stroke-width="1.5" stroke-linecap="round" />
+            <line x1="230" y1="56" x2="230" y2="62" stroke="#786A85" stroke-width="2" />
+            <circle cx="230" cy="54" r="2.5" fill="#4A3459" />
+
+            <!-- Tang co lau thu hai voi cot go -->
+            <rect x="180" y="82" width="100" height="28" fill="#FAF7FC" stroke="#786A85" stroke-width="1.6" />
+            <line x1="195" y1="82" x2="195" y2="110" stroke="#786A85" stroke-width="1.5" />
+            <line x1="210" y1="82" x2="210" y2="110" stroke="#786A85" stroke-width="1.5" />
+            <line x1="230" y1="82" x2="230" y2="110" stroke="#786A85" stroke-width="1.5" />
+            <line x1="250" y1="82" x2="250" y2="110" stroke="#786A85" stroke-width="1.5" />
+            <line x1="265" y1="82" x2="265" y2="110" stroke="#786A85" stroke-width="1.5" />
+
+            <!-- Mai ha Ngo Mon re canh phong khoang -->
+            <path d="M125 125L230 106L335 125H125Z" fill="#FAF7FC" stroke="#786A85" stroke-width="2"
+              stroke-linejoin="round" />
+            <path d="M115 125C125 125 135 120 142 112" stroke="#786A85" stroke-width="1.8" stroke-linecap="round" />
+            <path d="M345 125C335 125 325 120 318 112" stroke="#786A85" stroke-width="1.8" stroke-linecap="round" />
+
+            <!-- Tang lau chinh voi lan can va cot dinh -->
+            <rect x="140" y="125" width="180" height="38" fill="#FAF7FC" stroke="#786A85" stroke-width="1.8" />
+            <line x1="140" y1="135" x2="320" y2="135" stroke="#786A85" stroke-width="1" stroke-dasharray="2 2" />
+            <line x1="160" y1="125" x2="160" y2="163" stroke="#786A85" stroke-width="1.5" />
+            <line x1="190" y1="125" x2="190" y2="163" stroke="#786A85" stroke-width="1.5" />
+            <line x1="230" y1="125" x2="230" y2="163" stroke="#786A85" stroke-width="1.5" />
+            <line x1="270" y1="125" x2="270" y2="163" stroke="#786A85" stroke-width="1.5" />
+            <line x1="300" y1="125" x2="300" y2="163" stroke="#786A85" stroke-width="1.5" />
+
+            <!-- Dai nen da Thanh Ngo Mon hinh chu U -->
+            <path d="M100 220L125 163H335L360 220H100Z" fill="#FAF7FC" stroke="#786A85" stroke-width="2"
+              stroke-linejoin="round" />
+
+            <!-- 3 Cua vom Ngo Mon (Cua Ta Giap, Cua Ngo Mon, Cua Huu Giap) -->
+            <path d="M165 220V192C165 186 172 182 180 182C188 182 195 186 195 192V220" stroke="#786A85"
+              stroke-width="1.8" fill="#FAF7FC" />
+            <path d="M212 220V186C212 178 220 172 230 172C240 172 248 178 248 186V220" stroke="#4A3459"
+              stroke-width="2.2" fill="#FAF7FC" />
+            <path d="M265 220V192C265 186 272 182 280 182C288 182 295 186 295 192V220" stroke="#786A85"
+              stroke-width="1.8" fill="#FAF7FC" />
+
+            <!-- Duong ke goc nen va song Huong / Song Kim Thuy -->
+            <line x1="40" y1="225" x2="420" y2="225" stroke="#786A85" stroke-width="1.8" stroke-linecap="round" />
+
+            <!-- Dong chu HUE · VIETNAM thanh tao -->
+            <text x="230" y="248" font-family="'Playfair Display', serif" font-size="11" font-weight="700"
+              fill="#786A85" letter-spacing="7" text-anchor="middle">H U E · V I E T N A M</text>
+            <line x1="70" y1="245" x2="145" y2="245" stroke="#786A85" stroke-width="0.8" opacity="0.6" />
+            <line x1="315" y1="245" x2="390" y2="245" stroke="#786A85" stroke-width="0.8" opacity="0.6" />
+
+            <!-- Nuoc gon song diem xuyen -->
+            <path d="M120 262C150 260 170 264 200 262M260 262C290 260 310 264 340 262" stroke="#9B8EA8"
+              stroke-width="1" stroke-linecap="round" opacity="0.6" />
+          </svg>
+        </div>
+      </section>
+
+      <!-- 4 Stat Cards Row (Match Screenshot) -->
+      <section class="stats-grid-row">
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-card-title">Lô hàng trên hệ thống</span>
+            <span class="stat-card-icon-box">📦</span>
+          </div>
+          <div id="statTotalBatches" class="stat-card-value">6</div>
+          <div class="stat-card-sub">100% hồ sơ minh bạch</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-card-title">Đã kiểm định</span>
+            <span class="stat-card-icon-box">🛡️</span>
+          </div>
+          <div id="statVerifiedBatches" class="stat-card-value">3</div>
+          <div class="stat-card-sub">Đạt chuẩn OCOP & ATTP</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-card-title">Phí tạo lô</span>
+            <span class="stat-card-icon-box">💳</span>
+          </div>
+          <div id="statBatchFee" class="stat-card-value">0.001</div>
+          <div class="stat-card-sub">ETH nộp Quỹ Bảo tồn OCOP</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-card-title">Mức cọc tối thiểu</span>
+            <span class="stat-card-icon-box">🔒</span>
+          </div>
+          <div id="statMinStake" class="stat-card-value">0.05</div>
+          <div class="stat-card-sub">ETH bảo chứng uy tín 30 ngày</div>
+        </div>
+      </section>
+
+      <!-- Bang Danh Sach Lo Hang Gan Day -->
+      <section class="content-card">
+        <div class="content-card-header">
+          <div>
+            <h3 class="card-title-main">Danh Sách Lô Đặc Sản Gần Đây</h3>
+            <p class="card-title-sub">Theo dõi các lô Mè xửng, Tôm chua, Trà sen Cung đình, Nón bài thơ...</p>
+          </div>
+          <button class="btn-hero-secondary" style="padding: 6px 14px; font-size: 0.8rem;"
+            onclick="renderOverviewDashboard()">
+            🔄 Cập nhật
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="modern-table">
+            <thead>
+              <tr>
+                <th>Mã Lô Hàng</th>
+                <th>Tên Đặc Sản & Làng Nghề</th>
+                <th>Trạng Thái</th>
+                <th>Quy Cách</th>
+                <th>Thao Tác</th>
+              </tr>
+            </thead>
+            <tbody id="overviewBatchesTbody">
+              <!-- Render dong tu JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- ================= TAB 2: TRA CUU NGUON GOC ================= -->
+    <main id="view-lookup" class="content-container tab-view-container" style="display: none;">
+      <div class="page-title-row">
+        <div>
+          <div class="page-category-tag">HUELEGEND / TRA CỨU NGUỒN GỐC</div>
+          <h1 class="page-main-title">Tra cứu nguồn gốc</h1>
+          <p class="page-main-subtitle">Nhập mã lô hoặc quét mã tem QR để xác minh chứng thư di sản và hành trình 3
+            chặng.</p>
+        </div>
+      </div>
+
+      <!-- Hop tim kiem -->
+      <div class="lookup-box">
+        <div class="lookup-input-row">
+          <div class="lookup-input-wrapper">
+            <span>🔍</span>
+            <input type="text" id="lookupInput" class="lookup-input"
               placeholder="Nhập mã lô hàng (Ví dụ: HL-MEXUNG-2026-001)..." />
           </div>
-          <button class="btn-search" onclick="handleLookupSubmit()">
-            <span>Tra Cứu</span>
-          </button>
-          <button class="btn-qr-scan" onclick="openQrScannerModal()">
-            <span>📷</span> Quét Mã QR
-          </button>
+          <button class="btn-hero-primary" onclick="handleLookupSubmit()">Tra Cứu</button>
+          <button class="btn-hero-secondary" onclick="openQrScannerModal()">📷 Quét Mã QR</button>
         </div>
 
-        <!-- Cac lo hang goi y -->
-        <div class="preset-batches">
-          <span>Gợi ý mẫu:</span>
-          <button class="preset-pill" onclick="quickSearch('HL-MEXUNG-2026-001')">HL-MEXUNG-2026-001 (Mè xửng)</button>
-          <button class="preset-pill" onclick="quickSearch('HL-TOMCHUA-2026-002')">HL-TOMCHUA-2026-002 (Tôm
+        <div class="lookup-preset-row">
+          <span>Gợi ý nhanh:</span>
+          <button class="preset-pill-btn" onclick="quickSearch('HL-MEXUNG-2026-001')">HL-MEXUNG-2026-001 (Mè
+            xửng)</button>
+          <button class="preset-pill-btn" onclick="quickSearch('HL-TOMCHUA-2026-002')">HL-TOMCHUA-2026-002 (Tôm
             chua)</button>
-          <button class="preset-pill" onclick="quickSearch('HL-TRASEN-2026-003')">HL-TRASEN-2026-003 (Trà sen)</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Thong bao bat buoc ket noi vi khi chua dang nhap -->
-    <section id="walletRequiredNotice" class="wallet-guard-banner">
-      <h3>🔒 Yêu Cầu Kết Nối Ví MetaMask Để Tra Cứu</h3>
-      <p>Hệ thống yêu cầu khách hàng kết nối ví MetaMask để xác thực quyền truy vấn và đối chiếu mã hash bảo mật
-        on-chain trên mạng Sepolia.</p>
-      <button class="btn-connect-wallet" onclick="handleConnectWalletClick()">
-        <span>🦊</span> Kết Nối MetaMask Ngay
-      </button>
-    </section>
-
-    <!-- THE CHUNG NHAN NGUON GOC (CERTIFICATE STYLE) -->
-    <article id="certificateCard" class="certificate-card">
-      <!-- 4 goc trang tri hoang gia -->
-      <div class="cert-corner cert-corner-tl"></div>
-      <div class="cert-corner cert-corner-tr"></div>
-      <div class="cert-corner cert-corner-bl"></div>
-      <div class="cert-corner cert-corner-br"></div>
-
-      <!-- An trien hoang cung chung thuc on-chain -->
-      <div class="royal-seal">
-        <div class="royal-seal-icon">⚜️</div>
-        <div class="royal-seal-inner">ĐÃ XÁC THỰC<br>BLOCKCHAIN<br>TRIỀU NGUYỄN</div>
-      </div>
-
-      <!-- Tieu de chung chi -->
-      <div class="cert-header">
-        <div class="cert-header-tag">✦ CHỨNG THƯ DI SẢN ĐẶC SẢN CỐ ĐÔ ✦</div>
-        <h3 id="certProductName" class="cert-title">Mè Xửng Thiên Hương Thượng Hạng</h3>
-        <p class="cert-subtitle">Dữ liệu nguồn gốc được chứng thực vĩnh viễn trên hợp đồng thông minh Ethereum</p>
-      </div>
-
-      <!-- Luoi thong tin co ban -->
-      <div class="cert-grid">
-        <div class="cert-item">
-          <div class="cert-label"><span>🏷️</span> Mã Lô Hàng (Batch ID)</div>
-          <div id="certBatchCode" class="cert-value">HL-MEXUNG-2026-001</div>
-          <div class="cert-value-sub">Mã định danh duy nhất không thể làm giả</div>
-        </div>
-
-        <div class="cert-item">
-          <div class="cert-label"><span>🏡</span> Cơ Sở Sản Xuất & Làng Nghề</div>
-          <div id="certOrigin" class="cert-value">20 Chi Lăng, Phường Phú Hậu, TP Huế</div>
-          <div id="certProducerAddress" class="cert-value-sub">Ví sản xuất: 0x82d0...19A7</div>
-        </div>
-
-        <div class="cert-item">
-          <div class="cert-label"><span>📅</span> Thời Điểm Đóng Gói Khởi Tạo</div>
-          <div id="certCreatedAt" class="cert-value">--/--/---- --:--</div>
-          <div class="cert-value-sub">Ghi nhận chính xác qua khối giao dịch Sepolia</div>
-        </div>
-
-        <div class="cert-item">
-          <div class="cert-label"><span>📦</span> Số Lượng Đăng Ký</div>
-          <div id="certQuantity" class="cert-value">1.000 hộp (Loại 500g)</div>
-          <div class="cert-value-sub">Quy cách đóng gói OCOP đạt chuẩn xuất khẩu</div>
+          <button class="preset-pill-btn" onclick="quickSearch('HL-TRASEN-2026-003')">HL-TRASEN-2026-003 (Trà
+            sen)</button>
+          <button class="preset-pill-btn" onclick="quickSearch('HL-NONLA-2026-004')">HL-NONLA-2026-004 (Nón lá)</button>
         </div>
       </div>
 
-      <!-- Badges chung nhan chat luong -->
-      <div class="cert-badges">
-        <span class="badge-pill badge-blockchain">✓ Đã Xác Thực Trên Blockchain</span>
-        <span id="certOcopBadge" class="badge-pill badge-ocop">★ OCOP 4 Sao Tỉnh Thừa Thiên Huế</span>
-        <span class="badge-pill badge-vietgap">🌿 Tiêu Chuẩn VietGAP & ATTP</span>
-      </div>
-    </article>
+      <!-- The Chung Thu Nguon Goc (Certificate) -->
+      <article id="certificateCard" class="certificate-card">
+        <div class="cert-seal">
+          <span>⚜️</span>
+          ĐÃ XÁC THỰC<br>BLOCKCHAIN
+        </div>
 
-    <!-- VERTICAL VISUAL TIMELINE (HANH TRINH 3 CHANG) -->
-    <section id="timelineSection" class="timeline-section">
-      <div class="timeline-title-wrap">
-        <h3 class="timeline-title">HÀNH TRÌNH CHUỖI CUNG ỨNG 3 CHẶNG</h3>
-        <p class="timeline-desc">Nhật ký truy xuất thời gian thực được ký duyệt bởi đúng vai trò theo Smart Contract</p>
+        <div class="cert-heading">
+          <div class="cert-super-tag">✦ CHỨNG THƯ DI SẢN ĐẶC SẢN CỐ ĐÔ HUẾ ✦</div>
+          <h2 id="certProductName" class="cert-product-title">Mè Xửng Thiên Hương Thượng Hạng</h2>
+          <p style="font-size: 0.88rem; color: var(--text-muted);">
+            Dữ liệu nguồn gốc được chứng thực vĩnh viễn trên hợp đồng thông minh Ethereum Sepolia
+          </p>
+        </div>
+
+        <div class="cert-grid-info">
+          <div class="cert-item-box">
+            <div class="cert-item-label">🏷️ Mã Lô Hàng (Batch ID)</div>
+            <div id="certBatchCode" class="cert-item-val font-code">HL-MEXUNG-2026-001</div>
+            <div class="cert-item-sub">Mã định danh không thể làm giả</div>
+          </div>
+
+          <div class="cert-item-box">
+            <div class="cert-item-label">🏡 Cơ Sở Sản Xuất & Làng Nghề</div>
+            <div id="certOrigin" class="cert-item-val">20 Chi Lăng, Phường Phú Hậu, TP Huế</div>
+            <div id="certProducerAddress" class="cert-item-sub font-code">0x82d0...19A7</div>
+          </div>
+
+          <div class="cert-item-box">
+            <div class="cert-item-label">📅 Thời Điểm Khởi Tạo</div>
+            <div id="certCreatedAt" class="cert-item-val">--/--/---- --:--</div>
+            <div class="cert-item-sub">Ghi nhận chính xác qua khối giao dịch Sepolia</div>
+          </div>
+
+          <div class="cert-item-box">
+            <div class="cert-item-label">📦 Số Lượng Đăng Ký</div>
+            <div id="certQuantity" class="cert-item-val">1.000 hộp</div>
+            <div class="cert-item-sub">Quy cách đóng gói đạt chuẩn xuất khẩu</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <span class="status-pill badge-status-verified">✓ Đã Xác Thực Trên Blockchain</span>
+          <span id="certOcopBadge" class="status-pill badge-status-pending">★ OCOP 4 Sao Tỉnh Thừa Thiên Huế</span>
+          <span class="status-pill badge-status-verified">🌿 Tiêu Chuẩn VietGAP & ATTP</span>
+        </div>
+      </article>
+
+      <!-- Vertical Visual Timeline (Hanh trinh 3 chang) -->
+      <section id="timelineSection" class="timeline-wrap-card">
+        <div class="timeline-title-area">
+          <h3 class="timeline-main-title">HÀNH TRÌNH CHUỖI CUNG ỨNG 3 CHẶNG</h3>
+          <p class="timeline-sub-title">Nhật ký truy xuất thời gian thực được ký duyệt bởi đúng vai trò theo Smart
+            Contract</p>
+        </div>
+
+        <div id="timelineContainer" class="timeline-container">
+          <!-- Render dong qua JS -->
+        </div>
+      </section>
+    </main>
+
+    <!-- ================= TAB 3: TAO LO HANG (PRODUCER WORKSPACE) ================= -->
+    <main id="view-create" class="content-container tab-view-container" style="display: none;">
+      <div class="page-title-row">
+        <div>
+          <div class="page-category-tag">HUELEGEND / TẠO LÔ HÀNG</div>
+          <h1 class="page-main-title">Tạo Lô Hàng Mới</h1>
+          <p class="page-main-subtitle">Khởi tạo dữ liệu lô hàng gốc, nộp phí 0.001 ETH vào Quỹ OCOP và xuất tem QR Code.
+          </p>
+        </div>
       </div>
 
-      <!-- Danh sach cac chang thang dung -->
-      <div id="timelineContainer" class="timeline-list">
-        <!-- Render dong qua JavaScript tu Smart Contract -->
-      </div>
-    </section>
-  </main>
+      <div class="content-card">
+        <form id="createBatchForm" onsubmit="handleCreateBatchSubmit(event)">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Tên Đặc Sản Huế <span>*</span></label>
+              <input type="text" id="inpProductName" class="form-input"
+                placeholder="Ví dụ: Mè Xửng Thiên Hương Thượng Hạng" required />
+              <span class="form-tip">Gợi ý: Mè xửng, Tôm chua, Trà sen Cung đình, Kẹo gương, Nón lá Bài thơ</span>
+            </div>
 
-  <!-- MODAL QUET MA QR BANG CAMERA -->
+            <div class="form-group">
+              <label>Mã Lô Hàng Duy Nhất (Batch ID) <span>*</span></label>
+              <input type="text" id="inpBatchCode" class="form-input" placeholder="Ví dụ: HL-MEXUNG-2026-007" required />
+              <span class="form-tip">Định dạng chuẩn: HL-[TEN]-[NAM]-[SO_THU_TU]</span>
+            </div>
+
+            <div class="form-group">
+              <label>Cơ Sở Sản Xuất & Làng Nghề <span>*</span></label>
+              <input type="text" id="inpOriginLocation" class="form-input"
+                placeholder="Ví dụ: 20 Chi Lăng, Phường Phú Hậu, TP Huế" required />
+            </div>
+
+            <div class="form-group">
+              <label>Số Lượng & Quy Cách Đóng Gói <span>*</span></label>
+              <input type="text" id="inpQuantity" class="form-input" placeholder="Ví dụ: 1.000 hộp (Loại 500g)"
+                required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Ghi Chú Tiêu Chuẩn & Hash Hồ Sơ IPFS</label>
+            <textarea id="inpInitialNote" class="form-textarea"
+              placeholder="Ghi nhận tiêu chuẩn OCOP 4 sao, tiêu chuẩn VietGAP, quy trình đóng gói tiệt trùng..."></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div style="font-size: 0.85rem; color: var(--primary); font-weight: 700;">
+              Phí tạo lô bắt buộc: <strong>0.001 ETH</strong> (Nộp vào Quỹ bảo tồn OCOP Huế)
+            </div>
+            <button type="submit" class="btn-create-batch-top">
+              <span>Khởi Tạo Lô Trên Blockchain</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Bang Quan Ly Lo Hang Da Tao -->
+      <div class="content-card">
+        <div class="content-card-header">
+          <div>
+            <h3 class="card-title-main">Danh Sách Lô Hàng Đã Tạo</h3>
+            <p class="card-title-sub">Quản lý và xuất tem QR Code truy xuất cho từng lô sản phẩm</p>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="modern-table">
+            <thead>
+              <tr>
+                <th>Mã Lô Hàng</th>
+                <th>Tên Đặc Sản</th>
+                <th>Thời Điểm Tạo</th>
+                <th>Số Lượng</th>
+                <th>Trạng Thái</th>
+                <th>Tem QR</th>
+              </tr>
+            </thead>
+            <tbody id="createdBatchesTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <!-- ================= TAB 4: GHI NHAN CHANG (CHECKPOINTS WORKSPACE) ================= -->
+    <main id="view-checkpoints" class="content-container tab-view-container" style="display: none;">
+      <div class="page-title-row">
+        <div>
+          <div class="page-category-tag">HUELEGEND / GHI NHẬN CHẶNG</div>
+          <h1 class="page-main-title">Ghi Nhận Chặng Chuỗi Cung Ứng</h1>
+          <p class="page-main-subtitle">Cập nhật lộ trình vận chuyển, kiểm soát nhiệt độ kho lạnh hoặc xác nhận nhập kho
+            đại lý.</p>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <form id="addCheckpointForm" onsubmit="handleAddCheckpointSubmit(event)">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Chọn Lô Hàng Cần Cập Nhật <span>*</span></label>
+              <select id="checkpointBatchSelect" class="form-select" required></select>
+            </div>
+
+            <div class="form-group">
+              <label>Vai Trò Ghi Nhận (AccessControl) <span>*</span></label>
+              <select id="checkpointRoleSelect" class="form-select" required>
+                <option value="LOGISTICS">Đơn Vị Vận Chuyển (ROLE_LOGISTICS)</option>
+                <option value="RETAILER">Đại Lý Bán Lẻ (ROLE_RETAILER)</option>
+                <option value="PRODUCER">Cơ Sở Sản Xuất (ROLE_PRODUCER)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Địa Điểm Ghi Nhận Hiện Tại <span>*</span></label>
+              <input type="text" id="checkpointLocation" class="form-input"
+                placeholder="Ví dụ: Kho lạnh Trung chuyển Miền Trung, Ga Huế" required />
+            </div>
+
+            <div class="form-group">
+              <label>Hành Động Thực Hiện <span>*</span></label>
+              <input type="text" id="checkpointAction" class="form-input"
+                placeholder="Ví dụ: Tiếp nhận lô hàng, kiểm tra niêm phong kẹp chì, theo dõi nhiệt độ bảo quản..."
+                required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Ghi Chú Điều Kiện / Cảm Biến IoT / Metadata</label>
+            <textarea id="checkpointNote" class="form-textarea"
+              placeholder="Nhiệt độ thùng xe 22°C - 25°C, độ ẩm < 40%, không va đập..."></textarea>
+          </div>
+
+          <button type="submit" class="btn-create-batch-top">
+            <span>Ký Giao Dịch Ghi Nhận Chặng</span>
+          </button>
+        </form>
+      </div>
+    </main>
+
+    <!-- ================= TAB 5: KIEM DINH (INSPECTOR WORKSPACE) ================= -->
+    <main id="view-verify" class="content-container tab-view-container" style="display: none;">
+      <div class="page-title-row">
+        <div>
+          <div class="page-category-tag">HUELEGEND / KIỂM ĐỊNH CHẤT LƯỢNG</div>
+          <h1 class="page-main-title">Kiểm Định & Chứng Thực OCOP</h1>
+          <p class="page-main-subtitle">Cơ quan kiểm định độc lập kiểm tra chất lượng vệ sinh ATTP và cấp tem OCOP
+            on-chain.</p>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Chọn Lô Hàng Cần Đánh Giá <span>*</span></label>
+            <select id="verifyBatchSelect" class="form-select" required></select>
+          </div>
+
+          <div class="form-group">
+            <label>Số Quyết Định / Mã Chứng Nhận OCOP</label>
+            <input type="text" id="verifyCertNo" class="form-input" placeholder="Ví dụ: OCOP-HUE-2026-088" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Biên Bản Đánh Giá & Ghi Chú Kiểm Định Viên</label>
+          <textarea id="verifyInspectorNote" class="form-textarea"
+            placeholder="Kết quả thử nghiệm vi sinh đạt chuẩn, quy cách bao bì đóng gói chuẩn OCOP 4 sao..."></textarea>
+        </div>
+
+        <div style="display: flex; gap: 12px;">
+          <button class="btn-hero-primary" onclick="handleVerifyBatchSubmit(true)">
+            <span>✓ Phê Duyệt Kiểm Định (Verify)</span>
+          </button>
+          <button class="btn-hero-secondary" style="color: #EF4444; border-color: #FCA5A5;"
+            onclick="handleVerifyBatchSubmit(false)">
+            <span>✕ Thu Hồi Kiểm Định (Revoke)</span>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- ================= TAB 6: KY QUY (STAKE ESCROW WORKSPACE) ================= -->
+    <main id="view-stake" class="content-container tab-view-container" style="display: none;">
+      <div class="page-title-row">
+        <div>
+          <div class="page-category-tag">HUELEGEND / KÝ QUỸ UY TÍN</div>
+          <h1 class="page-main-title">Ký Quỹ & Bảo Chứng Kinh Tế</h1>
+          <p class="page-main-subtitle">Khóa 0.05 ETH trong 30 ngày để cam kết chất lượng đặc sản, cơ chế phạt 50% trích
+            thưởng người tố giác.</p>
+        </div>
+      </div>
+
+      <div class="stats-grid-row">
+        <div class="stat-card">
+          <div class="stat-card-title">Số Dư Ký Quỹ Hiện Tại</div>
+          <div id="stakeCurrentBalance" class="stat-card-value">0.05 ETH</div>
+          <div class="stat-card-sub">Đã đạt mức cọc tối thiểu</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-title">Thời Gian Khóa An Toàn</div>
+          <div class="stat-card-value">30 Ngày</div>
+          <div class="stat-card-sub">Chống rút vốn đột ngột (Lab 9)</div>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <h3 class="card-title-main" style="margin-bottom: 1rem;">Nạp Tiền Ký Quỹ Mới (Deposit Stake)</h3>
+        <div style="display: flex; gap: 12px; align-items: flex-end; max-width: 500px;">
+          <div class="form-group" style="flex: 1; margin-bottom: 0;">
+            <label>Số lượng ETH cần ký quỹ</label>
+            <input type="number" id="stakeDepositInput" class="form-input" value="0.05" step="0.01" min="0.05" />
+          </div>
+          <button class="btn-hero-primary" onclick="handleDepositStakeAction()">
+            Nạp Ký Quỹ
+          </button>
+        </div>
+        <div style="margin-top: 1.5rem; display: flex; gap: 12px;">
+          <button class="btn-hero-secondary" onclick="handleWithdrawStakeAction()">
+            Rút Tiền Ký Quỹ (Khi Đủ Hạn)
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- ================= TAB 7: QUAN TRI (ADMIN WORKSPACE) ================= -->
+    <main id="view-admin" class="content-container tab-view-container" style="display: none;">
+      <div class="page-title-row">
+        <div>
+          <div class="page-category-tag">HUELEGEND / QUẢN TRỊ HỆ THỐNG</div>
+          <h1 class="page-main-title">Quản Trị Phân Quyền & Tham Số</h1>
+          <p class="page-main-subtitle">Phân bổ vai trò OpenZeppelin AccessControl và điều chỉnh tham số kinh tế Smart
+            Contract.</p>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <h3 class="card-title-main" style="margin-bottom: 1rem;">Điều Chỉnh Phí Tạo Lô (setBatchCreationFee)</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+          Áp dụng trần Circuit Breaker: Tối đa 0.01 ETH để bảo vệ các hợp tác xã làng nghề nhỏ.
+        </p>
+        <div style="display: flex; gap: 12px; max-width: 450px;">
+          <input type="text" id="adminNewFeeInput" class="form-input" value="0.001" placeholder="Ví dụ: 0.002" />
+          <button class="btn-create-batch-top" onclick="showToast('Cập nhật phí tạo lô thành công!', 'success')">
+            Cập Nhật Phí
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= MODAL TEM QR CODE DONG ================= -->
+  <div id="qrModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h4 class="modal-title">Tem Truy Xuất Nguồn Gốc Blockchain</h4>
+        <button class="modal-close" onclick="closeQrModal()">&times;</button>
+      </div>
+      <div style="text-align: center;">
+        <h3 id="qrModalProductName" style="font-family: 'Playfair Display', serif; color: var(--primary);">--</h3>
+        <p id="qrModalBatchCode" class="font-code font-bold text-primary" style="margin: 4px 0;">--</p>
+        <p id="qrModalOrigin" style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">--</p>
+
+        <div id="qrCanvasContainer" class="qr-canvas-center"></div>
+
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+          Tem chứa liên kết thông minh trỏ trực tiếp đến hồ sơ bất biến trên chuỗi khối Sepolia.
+        </p>
+
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-hero-primary" style="flex: 1;" onclick="printBatchQr()">🖨️ In Tem QR</button>
+          <button class="btn-hero-secondary" style="flex: 1;" onclick="closeQrModal()">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL QUET QR CAMERA ================= -->
   <div id="qrScannerModal" class="modal-overlay">
     <div class="modal-box">
       <div class="modal-header">
         <h4 class="modal-title">Quét Mã Tem QR Bằng Camera</h4>
         <button class="modal-close" onclick="closeQrScannerModal()">&times;</button>
       </div>
-      <div id="qrReaderBox"></div>
-      <p style="font-size: 0.85rem; color: var(--color-text-muted); text-align: center; margin-bottom: 12px;">
-        Hướng camera điện thoại hoặc webcam máy tính về phía mã QR trên tem đặc sản Huế để tự động nhận diện.
+      <div id="qrReaderBox" style="width: 100%; border-radius: var(--radius-md); overflow: hidden;"></div>
+      <p style="font-size: 0.82rem; color: var(--text-muted); text-align: center; margin: 12px 0;">
+        Hướng camera điện thoại hoặc webcam về phía tem QR để nhận diện tự động.
       </p>
-      <button class="btn-search" style="width: 100%;" onclick="closeQrScannerModal()">
+      <button class="btn-hero-secondary" style="width: 100%;" onclick="closeQrScannerModal()">
         Đóng Máy Quét
       </button>
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer>
-    <div class="footer-brand">HueLegend — Hệ Thống Truy Xuất Nguồn Gốc Đặc Sản Huế Trên Blockchain</div>
-    <div>Đề tài môn học ECO2432 • Hợp đồng thông minh `ProjectCore.sol` trên Sepolia Testnet</div>
-    <div style="margin-top: 6px; font-family: monospace; font-size: 0.75rem;">Contract:
-      0x35655079aEbB215E58e379D5a8c2f1f3a5323C6b</div>
-  </footer>
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
 
-  <!-- Script xu ly giao dien va Web3 ket noi app.js -->
+  <!-- Web3 Core Engine Script -->
   <script src="app.js"></script>
-  <script>
-    // Khoi tao bien dieu khien Quet QR Camera
-    let html5QrScanner = null;
-
-    // Khoi dong khi trang tai xong
-    window.addEventListener("DOMContentLoaded", async () => {
-      // 1. Kiem tra xem da co san URL Parameter ?batchId=X hoac ?batch=X khong
-      const paramBatchId = parseUrlParam("batchId") || parseUrlParam("batch");
-      if (paramBatchId) {
-        document.getElementById("lookupInput").value = paramBatchId;
-      }
-
-      // 2. Thu ket noi vi tu dong neu da duoc phep truoc do
-      if (typeof window.ethereum !== "undefined" && window.ethereum.selectedAddress) {
-        await connectWallet();
-        if (paramBatchId) {
-          executeSearch(paramBatchId);
-        }
-      } else {
-        // Hien thi banner yeu cau vi MetaMask
-        document.getElementById("walletRequiredNotice").style.display = "block";
-      }
-    });
-
-    // Xu ly khi bam nut ket noi vi
-    async function handleConnectWalletClick() {
-      const acc = await connectWallet();
-      if (acc) {
-        document.getElementById("walletRequiredNotice").style.display = "none";
-        const curCode = document.getElementById("lookupInput").value.trim();
-        if (curCode) {
-          executeSearch(curCode);
-        }
-      }
-    }
-
-    // Xu ly submit form tim kiem
-    function handleLookupSubmit() {
-      const code = document.getElementById("lookupInput").value.trim();
-      if (!code) {
-        showToast("Vui lòng nhập mã lô hàng cần tra cứu!", "warning", "Thiếu Mã Lô");
-        return;
-      }
-
-      // Kiem tra bat buoc ket noi vi theo yeu cau Lab 15
-      if (!currentAccount) {
-        document.getElementById("walletRequiredNotice").style.display = "block";
-        showToast("Yêu cầu bắt buộc: Vui lòng kết nối ví MetaMask trước khi tra cứu dữ liệu Blockchain!", "warning", "Chưa Kết Nối Ví");
-        return;
-      }
-
-      executeSearch(code);
-    }
-
-    // Chon nhanh ma lo mau
-    function quickSearch(code) {
-      document.getElementById("lookupInput").value = code;
-      handleLookupSubmit();
-    }
-
-    // Thuc hien truy van va hien thi du lieu
-    async function executeSearch(batchCode) {
-      const toastQuery = showToast(`Đang truy vấn dữ liệu lô hàng ${batchCode} từ Blockchain...`, "loading", "Truy Vấn On-Chain");
-
-      try {
-        const batch = await fetchBatchDetails(batchCode);
-        if (!batch) {
-          toastQuery.update(`Không tìm thấy thông tin cho mã lô: ${batchCode}. Vui lòng kiểm tra lại!`, "error", "Không Tìm Thấy");
-          document.getElementById("certificateCard").style.display = "none";
-          document.getElementById("timelineSection").style.display = "none";
-          return;
-        }
-
-        toastQuery.update(`Đã tải thành công dữ liệu nguồn gốc lô hàng ${batchCode}!`, "success", "Xác Thực Thành Công");
-
-        // Hien thi the Certificate
-        document.getElementById("certProductName").innerText = batch.productName;
-        document.getElementById("certBatchCode").innerText = batch.batchCode;
-        document.getElementById("certOrigin").innerText = batch.origin;
-        document.getElementById("certProducerAddress").innerText = "Ví sản xuất: " + shortenAddress(batch.producer);
-        document.getElementById("certCreatedAt").innerText = formatTimestamp(batch.createdAt);
-        document.getElementById("certQuantity").innerText = batch.quantity || "1.000 sản phẩm";
-        document.getElementById("certOcopBadge").innerText = "★ " + (batch.ocopStandard || "OCOP 4 Sao Huế");
-        document.getElementById("certificateCard").style.display = "block";
-
-        // Render Vertical Timeline 3 chang
-        renderTimeline(batch.checkpoints);
-        document.getElementById("timelineSection").style.display = "block";
-
-        // Cuon muot toi the chung nhan
-        document.getElementById("certificateCard").scrollIntoView({ behavior: "smooth", block: "start" });
-
-      } catch (err) {
-        console.error("Loi khi tra cuu:", err);
-        toastQuery.update("Có lỗi xảy ra khi truy vấn dữ liệu Blockchain.", "error", "Lỗi Truy Vấn");
-      }
-    }
-
-    // Render danh sach Vertical Visual Timeline
-    function renderTimeline(checkpoints) {
-      const container = document.getElementById("timelineContainer");
-      container.innerHTML = "";
-
-      if (!checkpoints || checkpoints.length === 0) {
-        container.innerHTML = `
-          <div style="text-align: center; color: var(--color-text-muted); padding: 2rem;">
-            Chưa có thông tin chặng nào được ghi nhận cho lô hàng này.
-          </div>
-        `;
-        return;
-      }
-
-      checkpoints.forEach((cp, idx) => {
-        const isLast = (idx === checkpoints.length - 1);
-        let roleBadgeClass = "role-producer";
-        let roleName = cp.roleTitle || "Cơ sở sản xuất";
-        let iconSymbol = "🌿";
-
-        if (cp.role === ROLE_HASHES.ROLE_LOGISTICS || (cp.roleTitle && cp.roleTitle.includes("Vận Chuyển"))) {
-          roleBadgeClass = "role-logistics";
-          iconSymbol = "🚚";
-        } else if (cp.role === ROLE_HASHES.ROLE_RETAILER || (cp.roleTitle && cp.roleTitle.includes("Đại Lý"))) {
-          roleBadgeClass = "role-retailer";
-          iconSymbol = "🏪";
-        } else if (cp.role === ROLE_HASHES.ROLE_INSPECTOR || (cp.roleTitle && cp.roleTitle.includes("Kiểm Định"))) {
-          roleBadgeClass = "badge-ocop";
-          iconSymbol = "🛡️";
-        }
-
-        const etherscanUrl = cp.txHash ? `${ETHERSCAN_BASE_URL}/tx/${cp.txHash}` : "#";
-
-        const itemHtml = `
-          <div class="timeline-item">
-            <div class="timeline-node ${isLast ? 'active-pulse' : ''}">${iconSymbol}</div>
-            <div class="timeline-card">
-              <div class="timeline-header">
-                <span class="step-role-badge ${roleBadgeClass}">${roleName}</span>
-                <span class="timeline-time">🕒 ${formatTimestamp(cp.timestamp)}</span>
-              </div>
-              <h4 class="timeline-step-name">${cp.stepName || `Chặng ${idx + 1}`}</h4>
-              <p class="timeline-action-text">${cp.action}</p>
-              
-              <div class="timeline-meta-box">
-                <div class="meta-row">
-                  <strong>📍 Vị trí:</strong>
-                  <span>${cp.location}</span>
-                </div>
-                <div class="meta-row">
-                  <strong>❄️ Điều kiện:</strong>
-                  <span>${cp.conditionNote || "Nhiệt độ phòng ổn định"}</span>
-                </div>
-                <div class="meta-row">
-                  <strong>✍️ Ví ký:</strong>
-                  <span class="hash-code">${cp.recorder}</span>
-                </div>
-                <div class="meta-row">
-                  <strong>🔗 TxHash:</strong>
-                  <a href="${etherscanUrl}" target="_blank" class="hash-link hash-code">
-                    ${shortenAddress(cp.txHash)} <span>↗</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-
-        container.insertAdjacentHTML("beforeend", itemHtml);
-      });
-    }
-
-    // ================= XU LY QUET MA QR CAMERA =================
-    function openQrScannerModal() {
-      // Kiem tra ket noi vi truoc khi quet
-      if (!currentAccount) {
-        document.getElementById("walletRequiredNotice").style.display = "block";
-        showToast("Vui lòng kết nối ví MetaMask trước khi thực hiện quét QR!", "warning", "Yêu Cầu Ví");
-        return;
-      }
-
-      const modal = document.getElementById("qrScannerModal");
-      modal.style.display = "flex";
-
-      if (!html5QrScanner) {
-        html5QrScanner = new Html5Qrcode("qrReaderBox");
-      }
-
-      html5QrScanner.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: { width: 250, height: 250 } },
-        (decodedText) => {
-          // Xu ly ma QR doc duoc thanh cong
-          console.log("Ma QR nhan dien duoc:", decodedText);
-          closeQrScannerModal();
-
-          // Kiem tra xem decodedText co phai la URL chua batchId khong
-          let detectedBatchId = decodedText;
-          try {
-            if (decodedText.includes("batchId=") || decodedText.includes("batch=")) {
-              const urlObj = new URL(decodedText);
-              detectedBatchId = urlObj.searchParams.get("batchId") || urlObj.searchParams.get("batch") || decodedText;
-            }
-          } catch {
-            // Neu khong phai URL hop le thi giu nguyen chuoi
-          }
-
-          document.getElementById("lookupInput").value = detectedBatchId;
-          showToast(`Nhận diện thành công mã: ${detectedBatchId}`, "success", "Quét QR Thành Công");
-          executeSearch(detectedBatchId);
-        },
-        (errorMessage) => {
-          // Bo qua loi quet tung frame
-        }
-      ).catch((err) => {
-        console.warn("Khong the mo camera:", err);
-        showToast("Không thể khởi động camera. Vui lòng cấp quyền truy cập camera trên thiết bị!", "error", "Lỗi Camera");
-      });
-    }
-
-    function closeQrScannerModal() {
-      const modal = document.getElementById("qrScannerModal");
-      modal.style.display = "none";
-      if (html5QrScanner) {
-        html5QrScanner.stop().catch(() => { });
-      }
-    }
-  </script>
 </body>
 
 </html>

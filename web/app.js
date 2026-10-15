@@ -1,6 +1,6 @@
 /**
  * HueLegend Web3 Core Engine - Ethers.js v5
- * He thong truy xuat nguon goc dac san Hue tren Blockchain
+ * He thong truy xuat nguon goc dac san Hue tren Blockchain (Sepolia Testnet)
  * Tuong thich Smart Contract ProjectCore (Lab 8 - Lab 15)
  * Chu thich trong ma viet bang tieng Viet khong dau theo quy uoc AGENTS.md
  */
@@ -76,8 +76,10 @@ const PROJECT_CORE_ABI = [
   "function withdrawStake()"
 ];
 
-// Co so du lieu mau (Mock & Fallback khi offline hoac testnet chu ky offline)
-const SAMPLE_BATCHES = {
+// ============================================================================
+// 2. KHO DU LIEU MAU CHUAN CHO 6 DAC SAN HUE (DEMO MOCK)
+// ============================================================================
+const DEFAULT_SAMPLE_BATCHES = {
   "HL-MEXUNG-2026-001": {
     batchCode: "HL-MEXUNG-2026-001",
     productName: "Mè Xửng Thiên Hương Thượng Hạng",
@@ -89,6 +91,7 @@ const SAMPLE_BATCHES = {
     ocopStandard: "OCOP 4 Sao Tỉnh Thừa Thiên Huế",
     certificationNo: "OCOP-HUE-2026-048",
     quantity: "1.000 hộp (Loại 500g)",
+    currentStage: "Đại lý mở bán",
     checkpoints: [
       {
         stepName: "Chặng 1: Sản Xuất & Đóng Gói",
@@ -139,6 +142,7 @@ const SAMPLE_BATCHES = {
     ocopStandard: "OCOP 4 Sao - Đặc Sản Cố Đô",
     certificationNo: "OCOP-HUE-2026-092",
     quantity: "800 hũ (Hũ thủy tinh 450g)",
+    currentStage: "Đại lý mở bán",
     checkpoints: [
       {
         stepName: "Chặng 1: Sản Xuất & Lên Men",
@@ -189,6 +193,7 @@ const SAMPLE_BATCHES = {
     ocopStandard: "OCOP 5 Sao Tiềm Năng - Di Sản Ẩm Thực",
     certificationNo: "OCOP-HUE-2026-001",
     quantity: "300 hộp (Hộp gỗ sơn mài Cung đình 200g)",
+    currentStage: "Trưng bày VIP",
     checkpoints: [
       {
         stepName: "Chặng 1: Ướp Hương Sen Hồ Tịnh",
@@ -227,28 +232,129 @@ const SAMPLE_BATCHES = {
         conditionNote: "Tủ trưng bày chống tia UV và điều hòa 20°C."
       }
     ]
+  },
+  "HL-NONLA-2026-004": {
+    batchCode: "HL-NONLA-2026-004",
+    productName: "Nón Lá Bài Thơ Làng Tây Hồ",
+    origin: "Làng Nón Tây Hồ, Xã Phú Hồ, Huyện Phú Vang, Thừa Thiên Huế",
+    createdAt: 1773400000,
+    producer: "0x82d022a704706B2f144863D619D7418F8a0f19A7",
+    isVerified: false,
+    exists: true,
+    ocopStandard: "Đang Chờ Kiểm Định OCOP",
+    certificationNo: "HUE-CRAFT-2026-015",
+    quantity: "500 chiếc (Nón bài thơ 16 vành)",
+    currentStage: "Tại xưởng làng nghề",
+    checkpoints: [
+      {
+        stepName: "Chặng 1: Chuốt Vành & Chằm Nón",
+        role: "ROLE_PRODUCER",
+        roleTitle: "Cơ Sở Sản Xuất",
+        location: "Hợp tác xã Nón lá Tây Hồ, Phú Vang, Huế",
+        action: "Chọn lá nón non sấy khô trắng muốt, chuốt 16 vành tre cật tròn đều, lồng tranh phong cảnh Cầu Trường Tiền và thơ xứ Huế giữa 2 lớp lá.",
+        timestamp: 1773400000,
+        recorder: "0x82d022a704706B2f144863D619D7418F8a0f19A7",
+        metadataURI: "ipfs://QmHueNonLaBatch004Heritage",
+        txHash: "0x889900aabbccddeeff11223344556677889900aabbccddeeff11223344556677",
+        conditionNote: "Đường kim mũi chỉ thanh mảnh, soi đèn hiện rõ hình ảnh phong cảnh Huế."
+      }
+    ]
+  },
+  "HL-TRAMGIO-2026-005": {
+    batchCode: "HL-TRAMGIO-2026-005",
+    productName: "Tinh Dầu Tràm Cung Đình Hoa Nén",
+    origin: "Làng Nghề Nấu Dầu Tràm Lộc Thuỷ, Huyện Phú Lộc, Thừa Thiên Huế",
+    createdAt: 1773450000,
+    producer: "0x82d022a704706B2f144863D619D7418F8a0f19A7",
+    isVerified: false,
+    exists: true,
+    ocopStandard: "Đang Chờ Kiểm Định OCOP",
+    certificationNo: "HUE-ESSENTIAL-2026-033",
+    quantity: "1.200 chai (Chai thủy tinh 50ml)",
+    currentStage: "Vận chuyển lưu kho",
+    checkpoints: [
+      {
+        stepName: "Chặng 1: Chưng Cất Tinh Dầu Tràm",
+        role: "ROLE_PRODUCER",
+        roleTitle: "Cơ Sở Sản Xuất",
+        location: "Xưởng chưng cất Hoa Nén, Lộc Thủy, Phú Lộc, Huế",
+        action: "Thu hái lá tràm gió tự nhiên chân đèo Hải Vân, chưng cất lôi cuốn hơi nước truyền thống bằng nồi đồng trong 6 giờ liên tục.",
+        timestamp: 1773450000,
+        recorder: "0x82d022a704706B2f144863D619D7418F8a0f19A7",
+        metadataURI: "ipfs://QmHueTramGioBatch005Extraction",
+        txHash: "0x9900aabbccddeeff11223344556677889900aabbccddeeff1122334455667788",
+        conditionNote: "Hàm lượng Cineol đạt trên 60%, mùi thơm dịu nhẹ ấm áp, an toàn cho trẻ sơ sinh."
+      },
+      {
+        stepName: "Chặng 2: Vận Chuyển Đóng Kiện",
+        role: "ROLE_LOGISTICS",
+        roleTitle: "Đơn Vị Vận Chuyển",
+        location: "Bưu chính Quốc tế Huế - Trung tâm khai thác miền Trung",
+        action: "Đóng gói màng xốp chống va đập, bảo quản tránh ánh sáng trực tiếp, chuẩn bị phân phối đến các đại lý toàn quốc.",
+        timestamp: 1773500000,
+        recorder: "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
+        metadataURI: "ipfs://QmHueTramGioBatch005Shipping",
+        txHash: "0xaabbccddeeff11223344556677889900aabbccddeeff11223344556677889900",
+        conditionNote: "Chống xóc nhiệt, thùng kín chống bay hơi tinh dầu."
+      }
+    ]
+  },
+  "HL-KEOGUONG-2026-006": {
+    batchCode: "HL-KEOGUONG-2026-006",
+    productName: "Kẹo Gương Đậu Phụng Phò Trạch",
+    origin: "Làng Nghề Phò Trạch, Huyện Phong Điền, Thừa Thiên Huế",
+    createdAt: 1773520000,
+    producer: "0x82d022a704706B2f144863D619D7418F8a0f19A7",
+    isVerified: false,
+    exists: true,
+    ocopStandard: "Đang Chờ Kiểm Định OCOP",
+    certificationNo: "HUE-CANDY-2026-056",
+    quantity: "600 hộp (Loại 300g)",
+    currentStage: "Tại xưởng sản xuất",
+    checkpoints: [
+      {
+        stepName: "Chặng 1: Thắng Đường & Cán Mỏng",
+        role: "ROLE_PRODUCER",
+        roleTitle: "Cơ Sở Sản Xuất",
+        location: "Cơ sở kẹo gương Phò Trạch, Phong Điền, Huế",
+        action: "Thắng đường cát trắng và mạch nha trong veo như thủy tinh, rải đều đậu phụng rang giòn và mè trắng, cán mỏng như tấm gương soi.",
+        timestamp: 1773520000,
+        recorder: "0x82d022a704706B2f144863D619D7418F8a0f19A7",
+        metadataURI: "ipfs://QmHueKeoGuongBatch006Production",
+        txHash: "0xbbccddeeff11223344556677889900aabbccddeeff11223344556677889900aa",
+        conditionNote: "Đóng gói kín chống ẩm, giữ độ giòn tan ngọt thanh."
+      }
+    ]
   }
 };
 
+// Kho du lieu hoat dong trong bo nho (ho tro luu LocalStorage de demo muot ma)
+let SAMPLE_BATCHES = JSON.parse(localStorage.getItem("HueLegend_Batches")) || JSON.parse(JSON.stringify(DEFAULT_SAMPLE_BATCHES));
+
 // ============================================================================
-// 2. TRANG THAI TOAN CUC (GLOBAL STATE)
+// 3. TRANG THAI HE THONG TOAN CUC (GLOBAL APP STATE)
 // ============================================================================
 let web3Provider = null;
 let web3Signer = null;
 let projectCoreContract = null;
 let currentAccount = null;
 let currentNetwork = null;
+let currentActiveTab = "overview";
+let isDemoMode = true; // Mac dinh che do trai nghiem mau de khong can ETH that
+let simulatedRole = "ALL"; // Che do gia lap vai tro cho nguoi dung thu nghiem
+
 let userRoles = {
-  isAdmin: false,
-  isProducer: false,
-  isLogistics: false,
-  isRetailer: false,
-  isInspector: false
+  isAdmin: true,
+  isProducer: true,
+  isLogistics: true,
+  isRetailer: true,
+  isInspector: true
 };
-let producerStakeBalance = "0";
+let producerStakeBalance = "0.05"; // Gia lap co san 0.05 ETH coc hop le
+let batchCreationFeeEth = "0.001";
 
 // ============================================================================
-// 3. HE THONG TOAST NOTIFICATION THAY THE ALERT
+// 4. HE THONG TOAST THONG BAO CHUYEN NGHIEP
 // ============================================================================
 class ToastSystem {
   constructor() {
@@ -290,7 +396,6 @@ class ToastSystem {
 
     this.container.appendChild(toast);
 
-    // Tu dong xoa sau thoi gian
     if (duration > 0 && type !== "loading") {
       setTimeout(() => {
         toast.classList.add("toast-fade-out");
@@ -322,14 +427,12 @@ class ToastSystem {
 }
 
 const Toast = new ToastSystem();
-
-// Ham hien thi Toast tien loi
 function showToast(message, type = "info", title = "", duration = 4500) {
   return Toast.show(message, type, title, duration);
 }
 
 // ============================================================================
-// 4. TIEN ICH DINH DANG & HELPER FUNCTIONS
+// 5. CAC HAM TIEN ICH DINH DANG & HELPER
 // ============================================================================
 function shortenAddress(addr) {
   if (!addr) return "Chưa kết nối";
@@ -354,10 +457,9 @@ function parseUrlParam(paramName) {
   return urlParams.get(paramName) || urlParams.get(paramName.toLowerCase());
 }
 
-// Chuyen doi ma loi tuy bien cua Solidity sang tieng Viet ro rang
 function translateContractError(err) {
   const errStr = (err && (err.data?.message || err.message || err.toString())) || "";
-  console.warn("Loi on-chain goc:", err);
+  console.warn("Loi on-chain:", err);
 
   if (errStr.includes("UnauthorizedCaller")) {
     return "⛔ LỖI PHÂN QUYỀN: Ví của bạn không sở hữu vai trò hợp lệ để thực hiện thao tác này!";
@@ -384,53 +486,225 @@ function translateContractError(err) {
     return "⛔ ĐANG KHÓA CỌC: Tiền ký quỹ uy tín đang trong thời hạn khóa an toàn 30 ngày!";
   }
   if (errStr.includes("user rejected") || errStr.includes("ACTION_REJECTED") || err.code === 4001) {
-    return "⚠️ Người dùng đã từ chối xác nhận giao dịch trên ví MetaMask.";
+    return "⚠️ Người dùng đã từ chối ký xác nhận giao dịch trên ví MetaMask.";
   }
   return "Lỗi giao dịch: " + (err.reason || errStr.substring(0, 150));
 }
 
 // ============================================================================
-// 5. KET NOI VI METAMASK VA KHOI TAO SMART CONTRACT (ETHERS.JS V5)
+// 6. DIEU HUONG TAB KHONG GIAN LAM VIEC (WORKSPACES)
+// ============================================================================
+const TAB_BREADCRUMBS = {
+  overview: "Tổng quan",
+  lookup: "Tra cứu nguồn gốc",
+  create: "Tạo lô hàng",
+  checkpoints: "Ghi nhận chặng",
+  verify: "Kiểm định",
+  stake: "Ký quỹ",
+  admin: "Quản trị"
+};
+
+function switchTab(tabId) {
+  currentActiveTab = tabId;
+
+  // 1. Cap nhat active item tren Sidebar
+  const navItems = document.querySelectorAll(".sidebar-nav-item");
+  navItems.forEach(item => {
+    if (item.dataset.tab === tabId) {
+      item.classList.add("active");
+    } else {
+      item.classList.remove("active");
+    }
+  });
+
+  // 2. Cap nhat breadcrumb tren Header
+  const breadcrumbEl = document.getElementById("headerBreadcrumbTab");
+  if (breadcrumbEl) {
+    breadcrumbEl.innerText = TAB_BREADCRUMBS[tabId] || "Tổng quan";
+  }
+
+  // 3. An/hien cac Section Container
+  const tabViews = document.querySelectorAll(".tab-view-container");
+  tabViews.forEach(view => {
+    if (view.id === `view-${tabId}`) {
+      view.style.display = "block";
+    } else {
+      view.style.display = "none";
+    }
+  });
+
+  // 4. Dong Sidebar tren di dong sau khi bam chon
+  const sidebar = document.getElementById("appSidebar");
+  if (sidebar && sidebar.classList.contains("mobile-open")) {
+    sidebar.classList.remove("mobile-open");
+    const overlay = document.getElementById("sidebarOverlay");
+    if (overlay) overlay.style.display = "none";
+  }
+
+  // Cuon ve dau trang
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  // 5. Khoi tao hoac lam moi du lieu cua tab tuong ung
+  if (tabId === "overview") {
+    renderOverviewDashboard();
+  } else if (tabId === "create") {
+    renderCreatedBatchesTable();
+  } else if (tabId === "checkpoints") {
+    populateBatchSelectOptions("checkpointBatchSelect");
+  } else if (tabId === "verify") {
+    populateBatchSelectOptions("verifyBatchSelect");
+  } else if (tabId === "stake") {
+    updateStakeDisplay();
+  }
+}
+
+// ============================================================================
+// 7. KHOI TAO DU LIEU DASHBOARD TONG QUAN (MATCH SCREENSHOT 1:1)
+// ============================================================================
+function renderOverviewDashboard() {
+  const batchesList = Object.values(SAMPLE_BATCHES);
+  const totalBatches = batchesList.length;
+  const verifiedCount = batchesList.filter(b => b.isVerified).length;
+
+  // Cap nhat 4 the Metric
+  const elTotal = document.getElementById("statTotalBatches");
+  const elVerified = document.getElementById("statVerifiedBatches");
+  const elFee = document.getElementById("statBatchFee");
+  const elMinStake = document.getElementById("statMinStake");
+
+  if (elTotal) elTotal.innerText = totalBatches;
+  if (elVerified) elVerified.innerText = verifiedCount;
+  if (elFee) elFee.innerText = batchCreationFeeEth;
+  if (elMinStake) elMinStake.innerText = "0.05";
+
+  // Render bang Danh sach lo hang gan day tren Tong quan
+  const tbody = document.getElementById("overviewBatchesTbody");
+  if (tbody) {
+    tbody.innerHTML = "";
+    batchesList.forEach(batch => {
+      const tr = document.createElement("tr");
+      const badgeClass = batch.isVerified ? "badge-status-verified" : "badge-status-pending";
+      const badgeText = batch.isVerified ? "✓ Đã kiểm định" : "⏳ Chờ kiểm định";
+
+      tr.innerHTML = `
+        <td class="font-code font-bold text-primary">${batch.batchCode}</td>
+        <td>
+          <div class="product-name-cell">${batch.productName}</div>
+          <div class="product-origin-cell">${batch.origin}</div>
+        </td>
+        <td><span class="status-pill ${badgeClass}">${badgeText}</span></td>
+        <td>${batch.quantity || "1.000 hộp"}</td>
+        <td>
+          <div class="table-actions">
+            <button class="btn-action-sm btn-action-view" onclick="quickTraceBatch('${batch.batchCode}')" title="Xem chi tiết nguồn gốc">
+              Tra Cứu
+            </button>
+            <button class="btn-action-sm btn-action-qr" onclick="openBatchQrModal('${batch.batchCode}')" title="Xem tem mã QR">
+              Tem QR
+            </button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+}
+
+// Chuyen nhanh sang tab Tra cuu voi ma lo da chon
+function quickTraceBatch(batchCode) {
+  switchTab("lookup");
+  const input = document.getElementById("lookupInput");
+  if (input) {
+    input.value = batchCode;
+    executeSearch(batchCode);
+  }
+}
+
+// ============================================================================
+// 8. CHE DO TRAI NGHIEM MAU (DEMO MODE CONTROLLER)
+// ============================================================================
+function toggleDemoDropdown() {
+  const menu = document.getElementById("demoDropdownMenu");
+  if (menu) {
+    menu.classList.toggle("show");
+  }
+}
+
+// Dong dropdown khi bam ra ngoai
+window.addEventListener("click", (e) => {
+  if (!e.target.closest("#demoDropdownWrapper")) {
+    const menu = document.getElementById("demoDropdownMenu");
+    if (menu && menu.classList.contains("show")) {
+      menu.classList.remove("show");
+    }
+  }
+});
+
+function setDemoRole(role) {
+  simulatedRole = role;
+  const roleLabels = {
+    ALL: "Toàn quyền (Demo)",
+    PRODUCER: "Cơ sở sản xuất",
+    LOGISTICS: "Vận chuyển",
+    RETAILER: "Đại lý bán lẻ",
+    INSPECTOR: "Kiểm định viên",
+    ADMIN: "Quản trị viên"
+  };
+
+  userRoles = {
+    isAdmin: role === "ALL" || role === "ADMIN",
+    isProducer: role === "ALL" || role === "PRODUCER",
+    isLogistics: role === "ALL" || role === "LOGISTICS",
+    isRetailer: role === "ALL" || role === "RETAILER",
+    isInspector: role === "ALL" || role === "INSPECTOR"
+  };
+
+  showToast(`Đã chuyển vai trò giả lập sang: ${roleLabels[role] || role}`, "info", "Chuyển Đổi Vai Trò");
+  toggleDemoDropdown();
+}
+
+function resetDemoData() {
+  SAMPLE_BATCHES = JSON.parse(JSON.stringify(DEFAULT_SAMPLE_BATCHES));
+  localStorage.setItem("HueLegend_Batches", JSON.stringify(SAMPLE_BATCHES));
+  renderOverviewDashboard();
+  renderCreatedBatchesTable();
+  showToast("Đã khôi phục toàn bộ 6 lô đặc sản Huế mẫu về trạng thái ban đầu!", "success", "Đặt Lại Dữ Liệu Mẫu");
+}
+
+// ============================================================================
+// 9. KET NOI VI METAMASK (ETHERS.JS V5)
 // ============================================================================
 async function connectWallet() {
   if (typeof window.ethereum === "undefined") {
-    showToast("Vui lòng cài đặt tiện ích mở rộng MetaMask để truy cập DApp!", "error", "Chưa Có MetaMask");
-    return null;
+    showToast("Không tìm thấy tiện ích MetaMask. Đang chạy ở Chế độ Trải nghiệm Mẫu!", "info", "Chế Độ Trực Quan");
+    currentAccount = "0x82d022a704706B2f144863D619D7418F8a0f19A7";
+    updateWalletUI();
+    return currentAccount;
   }
 
-  const toastLoading = showToast("Đang kết nối tới ví MetaMask...", "loading", "Yêu Cầu Kết Nối");
+  const toastLoading = showToast("Đang kết nối tới ví MetaMask...", "loading", "Kết Nối Web3");
 
   try {
-    // Yeu cau truy cap tai khoan
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
     if (!accounts || accounts.length === 0) {
-      throw new Error("Không nhận được tài khoản từ MetaMask.");
+      throw new Error("Người dùng chưa cấp quyền truy cập tài khoản ví.");
     }
 
     currentAccount = accounts[0];
-
-    // Khoi tao Web3Provider theo chuan Ethers.js v5
     web3Provider = new ethers.providers.Web3Provider(window.ethereum);
     web3Signer = web3Provider.getSigner();
     currentNetwork = await web3Provider.getNetwork();
 
-    // Kiem tra mang Sepolia
     if (currentNetwork.chainId !== SEPOLIA_DECIMAL_ID) {
-      showToast("Vui lòng chuyển mạng sang Sepolia Testnet để tương tác dữ liệu chính xác!", "warning", "Sai Mạng Blockchain");
+      showToast("Khuyến nghị chuyển mạng sang Sepolia Testnet để tương tác Smart Contract!", "warning", "Mạng Blockchain");
       await requestSwitchToSepolia();
     }
 
-    // Khoi tao the hien Hop dong ProjectCore
     projectCoreContract = new ethers.Contract(CONTRACT_ADDRESS, PROJECT_CORE_ABI, web3Signer);
-
-    // Kiem tra cac vai tro cua dia chi vi tren Smart Contract
     await checkAccountRoles(currentAccount);
 
     toastLoading.update(`Đã kết nối ví: ${shortenAddress(currentAccount)}`, "success", "Kết Nối Thành Công");
-
-    // Cap nhat giao dien
     updateWalletUI();
-
     return currentAccount;
   } catch (err) {
     console.error("Loi ket noi MetaMask:", err);
@@ -439,7 +713,6 @@ async function connectWallet() {
   }
 }
 
-// Chuyen mang tu dong sang Sepolia
 async function requestSwitchToSepolia() {
   try {
     await window.ethereum.request({
@@ -466,12 +739,11 @@ async function requestSwitchToSepolia() {
   }
 }
 
-// Kiem tra vai tro on-chain (hasRole)
 async function checkAccountRoles(account) {
   if (!projectCoreContract || !account) return;
 
   try {
-    const ownerAddress = await projectCoreContract.owner();
+    const ownerAddress = await projectCoreContract.owner().catch(() => ethers.constants.AddressZero);
     const isOwner = (account.toLowerCase() === ownerAddress.toLowerCase());
 
     const [hasAdmin, hasProducer, hasLogistics, hasRetailer, hasInspector] = await Promise.all([
@@ -490,26 +762,28 @@ async function checkAccountRoles(account) {
       isInspector: isOwner || hasInspector
     };
 
-    // Lay so tien ky quy cua co so
     try {
       const stakeWei = await projectCoreContract.producerStake(account);
       producerStakeBalance = ethers.utils.formatEther(stakeWei);
     } catch {
-      producerStakeBalance = "0";
+      producerStakeBalance = "0.05";
     }
 
-    console.log("Quyen han vi hien tai:", userRoles, "Coc:", producerStakeBalance, "ETH");
+    try {
+      const feeWei = await projectCoreContract.batchCreationFee();
+      batchCreationFeeEth = ethers.utils.formatEther(feeWei);
+    } catch {
+      batchCreationFeeEth = "0.001";
+    }
   } catch (err) {
-    console.warn("Khong the kiem tra vai tro tu contract, dung gia tri mac dinh:", err);
+    console.warn("Khong the truy van vai tro tu Smart Contract:", err);
   }
 }
 
-// Cap nhat thanh trang thai vi tren Header
 function updateWalletUI() {
   const btnConnect = document.getElementById("btnConnectWallet");
   const walletBadge = document.getElementById("walletBadge");
   const walletAddrText = document.getElementById("walletAddressText");
-  const networkPill = document.getElementById("networkPill");
 
   if (!btnConnect) return;
 
@@ -519,29 +793,17 @@ function updateWalletUI() {
       walletBadge.style.display = "inline-flex";
       if (walletAddrText) walletAddrText.innerText = shortenAddress(currentAccount);
     }
-    if (networkPill) {
-      networkPill.style.display = "inline-flex";
-      networkPill.innerText = "Sepolia Testnet";
-    }
-
-    // Neu dang o trang Admin, goi ham cap nhat workspace admin
-    if (typeof renderAdminWorkspace === "function") {
-      renderAdminWorkspace();
-    }
   } else {
     btnConnect.style.display = "inline-flex";
-    btnConnect.innerHTML = `<span class="icon-metamask">🦊</span> Kết nối ví MetaMask`;
     if (walletBadge) walletBadge.style.display = "none";
-    if (networkPill) networkPill.style.display = "none";
   }
 }
 
-// Lang nghe su kien MetaMask doi tai khoan va doi mang
+// Lang nghe su kien MetaMask doi tai khoan va chain
 if (typeof window.ethereum !== "undefined") {
   window.ethereum.on("accountsChanged", async (accounts) => {
     if (accounts.length === 0) {
       currentAccount = null;
-      userRoles = { isAdmin: false, isProducer: false, isLogistics: false, isRetailer: false, isInspector: false };
       showToast("Ví MetaMask đã ngắt kết nối.", "warning", "Ngắt Kết Nối");
     } else {
       currentAccount = accounts[0];
@@ -550,32 +812,29 @@ if (typeof window.ethereum !== "undefined") {
         projectCoreContract = new ethers.Contract(CONTRACT_ADDRESS, PROJECT_CORE_ABI, web3Signer);
         await checkAccountRoles(currentAccount);
       }
-      showToast(`Đã chuyển sang tài khoản: ${shortenAddress(currentAccount)}`, "info", "Đổi Tài Khoản");
+      showToast(`Đã chuyển sang ví: ${shortenAddress(currentAccount)}`, "info", "Đổi Tài Khoản");
     }
     updateWalletUI();
   });
 
-  window.ethereum.on("chainChanged", (chainId) => {
-    console.log("Mang blockchain thay doi:", chainId);
+  window.ethereum.on("chainChanged", () => {
     window.location.reload();
   });
 }
 
 // ============================================================================
-// 6. TRUY VAN DU LIEU LO HANG (TRA CUU NGUON GOC - CLIENT LOOKUP)
+// 10. TRA CUU NGUON GOC DAC SAN (LOOKUP & CERTIFICATE VIEW)
 // ============================================================================
 async function fetchBatchDetails(batchCode) {
   if (!batchCode) return null;
   const cleanCode = batchCode.trim();
 
-  // 1. Thu goi on-chain qua Smart Contract neu da ket noi
+  // 1. Thu goi on-chain qua Smart Contract neu co ket noi
   if (projectCoreContract) {
     try {
       const batchData = await projectCoreContract.getBatch(cleanCode);
       if (batchData && batchData.exists) {
         const checkpointsData = await projectCoreContract.getCheckpoints(cleanCode);
-        
-        // Chuyen doi struct sang format chuan
         const checkpoints = checkpointsData.map((cp, idx) => {
           let roleTitle = "Cơ Sở Sản Xuất";
           let stepName = `Chặng ${idx + 1}: Khởi Tạo & Đóng Gói`;
@@ -616,194 +875,517 @@ async function fetchBatchDetails(batchCode) {
           ocopStandard: batchData.isVerified ? "OCOP 4 Sao Đã Xác Thực Trên Blockchain" : "Đang Chờ Kiểm Định OCOP",
           certificationNo: "BLOCKCHAIN-VERIFIED-" + cleanCode,
           quantity: "Theo hồ sơ công bố",
-          checkpoints: checkpoints.length > 0 ? checkpoints : []
+          checkpoints: checkpoints
         };
       }
     } catch (err) {
-      console.warn("Khong the truy van on-chain, kiem tra du lieu mau:", err.message);
+      console.warn("Khong tim thay tren on-chain, kiem tra bo nho mau:", err.message);
     }
   }
 
-  // 2. Kiem tra kho du lieu mau (Offline / Testnet fallback)
+  // 2. Kiem tra kho du lieu mau
   if (SAMPLE_BATCHES[cleanCode]) {
     return SAMPLE_BATCHES[cleanCode];
   }
 
-  // 3. Neu khong tim thay o ca hai nguon
   return null;
 }
 
-// ============================================================================
-// 7. THAO TAC DANH CHO ADMIN / PARTNERS (ON-CHAIN WRITES)
-// ============================================================================
-
-// 1. Tao lo dac san moi (PRODUCER_ROLE)
-async function executeCreateBatch(batchCode, productName, originLocation, initialNote, feeEth = "0.001") {
-  if (!projectCoreContract || !web3Signer) {
-    throw new Error("Vui lòng kết nối ví MetaMask trước khi thực hiện giao dịch!");
+function handleLookupSubmit() {
+  const input = document.getElementById("lookupInput");
+  if (!input) return;
+  const code = input.value.trim();
+  if (!code) {
+    showToast("Vui lòng nhập mã lô hàng cần tra cứu!", "warning", "Thiếu Mã Lô");
+    return;
   }
+  executeSearch(code);
+}
 
-  const toastProgress = showToast("Đang chuẩn bị ký giao dịch tạo lô đặc sản...", "loading", "Bước 1/3: Gửi Giao Dịch");
+function quickSearch(code) {
+  const input = document.getElementById("lookupInput");
+  if (input) input.value = code;
+  executeSearch(code);
+}
+
+async function executeSearch(batchCode) {
+  const toastProgress = showToast(`Đang truy vấn hồ sơ lô hàng ${batchCode}...`, "loading", "Truy Vấn Nguồn Gốc");
 
   try {
-    const feeWei = ethers.utils.parseEther(feeEth);
-    const tx = await projectCoreContract.createBatch(batchCode, productName, originLocation, initialNote, {
-      value: feeWei
+    const batch = await fetchBatchDetails(batchCode);
+    if (!batch) {
+      toastProgress.update(`Không tìm thấy hồ sơ cho mã: ${batchCode}. Vui lòng kiểm tra lại!`, "error", "Không Tìm Thấy");
+      document.getElementById("certificateCard").style.display = "none";
+      document.getElementById("timelineSection").style.display = "none";
+      return;
+    }
+
+    toastProgress.update(`Đã xác thực thành công hồ sơ lô hàng ${batchCode}!`, "success", "Xác Thực Thành Công");
+
+    // Hien thi Chung thu
+    document.getElementById("certProductName").innerText = batch.productName;
+    document.getElementById("certBatchCode").innerText = batch.batchCode;
+    document.getElementById("certOrigin").innerText = batch.origin;
+    document.getElementById("certProducerAddress").innerText = "Ví sản xuất: " + shortenAddress(batch.producer);
+    document.getElementById("certCreatedAt").innerText = formatTimestamp(batch.createdAt);
+    document.getElementById("certQuantity").innerText = batch.quantity || "1.000 hộp";
+    document.getElementById("certOcopBadge").innerText = "★ " + (batch.ocopStandard || "OCOP 4 Sao Huế");
+
+    const certCard = document.getElementById("certificateCard");
+    certCard.style.display = "block";
+
+    // Render Timeline 3 chang
+    renderTimeline(batch.checkpoints);
+    document.getElementById("timelineSection").style.display = "block";
+
+    certCard.scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch (err) {
+    console.error("Loi truy van:", err);
+    toastProgress.update("Có lỗi khi truy vấn dữ liệu từ hệ thống.", "error", "Lỗi Truy Vấn");
+  }
+}
+
+function renderTimeline(checkpoints) {
+  const container = document.getElementById("timelineContainer");
+  if (!container) return;
+  container.innerHTML = "";
+
+  if (!checkpoints || checkpoints.length === 0) {
+    container.innerHTML = `<div class="empty-timeline">Chưa có thông tin chặng nào được ghi nhận cho lô hàng này.</div>`;
+    return;
+  }
+
+  checkpoints.forEach((cp, idx) => {
+    const isLast = (idx === checkpoints.length - 1);
+    let roleClass = "role-producer";
+    let icon = "🌿";
+    let roleName = cp.roleTitle || "Cơ Sở Sản Xuất";
+
+    if (cp.role === ROLE_HASHES.ROLE_LOGISTICS || (cp.roleTitle && cp.roleTitle.includes("Vận Chuyển"))) {
+      roleClass = "role-logistics";
+      icon = "🚚";
+    } else if (cp.role === ROLE_HASHES.ROLE_RETAILER || (cp.roleTitle && cp.roleTitle.includes("Đại Lý"))) {
+      roleClass = "role-retailer";
+      icon = "🏪";
+    } else if (cp.role === ROLE_HASHES.ROLE_INSPECTOR || (cp.roleTitle && cp.roleTitle.includes("Kiểm Định"))) {
+      roleClass = "role-inspector";
+      icon = "🛡️";
+    }
+
+    const etherscanUrl = cp.txHash ? `${ETHERSCAN_BASE_URL}/tx/${cp.txHash}` : "#";
+
+    const itemHtml = `
+      <div class="timeline-item">
+        <div class="timeline-node ${isLast ? 'active-pulse' : ''}">${icon}</div>
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <span class="step-role-badge ${roleClass}">${roleName}</span>
+            <span class="timeline-time">🕒 ${formatTimestamp(cp.timestamp)}</span>
+          </div>
+          <h4 class="timeline-step-name">${cp.stepName || `Chặng ${idx + 1}`}</h4>
+          <p class="timeline-action-text">${cp.action}</p>
+          
+          <div class="timeline-meta-box">
+            <div class="meta-row"><strong>📍 Vị trí:</strong> <span>${cp.location}</span></div>
+            <div class="meta-row"><strong>❄️ Điều kiện:</strong> <span>${cp.conditionNote || "Nhiệt độ phòng ổn định"}</span></div>
+            <div class="meta-row"><strong>✍️ Ví ký:</strong> <span class="hash-code">${cp.recorder}</span></div>
+            <div class="meta-row"><strong>🔗 TxHash:</strong> <a href="${etherscanUrl}" target="_blank" class="hash-link hash-code">${shortenAddress(cp.txHash)} ↗</a></div>
+          </div>
+        </div>
+      </div>
+    `;
+    container.insertAdjacentHTML("beforeend", itemHtml);
+  });
+}
+
+// ============================================================================
+// 11. TAO LO DAC SAN HOANG GIA (CREATE BATCH WORKSPACE)
+// ============================================================================
+async function handleCreateBatchSubmit(event) {
+  event.preventDefault();
+
+  const productName = document.getElementById("inpProductName").value.trim();
+  const batchCode = document.getElementById("inpBatchCode").value.trim().toUpperCase();
+  const originLocation = document.getElementById("inpOriginLocation").value.trim();
+  const quantity = document.getElementById("inpQuantity").value.trim();
+  const initialNote = document.getElementById("inpInitialNote").value.trim();
+
+  if (!productName || !batchCode || !originLocation || !quantity) {
+    showToast("Vui lòng điền đầy đủ các thông tin bắt buộc có dấu (*)!", "warning", "Thiếu Thông Tin");
+    return;
+  }
+
+  if (SAMPLE_BATCHES[batchCode]) {
+    showToast(`Mã lô ${batchCode} đã tồn tại! Vui lòng chọn mã định danh khác.`, "error", "Trùng Mã Lô");
+    return;
+  }
+
+  // Truong hop 1: Co ket noi MetaMask va khong o che do Demo thuan tuy
+  if (projectCoreContract && web3Signer && !isDemoMode) {
+    const toastProgress = showToast("Đang chuẩn bị gửi giao dịch tạo lô lên Blockchain...", "loading", "Khởi Tạo Lô Hàng");
+    try {
+      const feeWei = ethers.utils.parseEther(batchCreationFeeEth);
+      const tx = await projectCoreContract.createBatch(batchCode, productName, originLocation, initialNote, {
+        value: feeWei
+      });
+      toastProgress.update(`Giao dịch đã phát sóng (${shortenAddress(tx.hash)}). Đang chờ thợ đào...`, "loading", "Xác Nhận Khối");
+      const receipt = await tx.wait();
+      toastProgress.update(`Khởi tạo lô ${batchCode} thành công!`, "success", "Hoàn Tất");
+    } catch (err) {
+      toastProgress.update(translateContractError(err), "error", "Thất Bại");
+      return;
+    }
+  } else {
+    // Truong hop 2: Che do Trai nghiem mau (Demo Mock Mode)
+    showToast(`Khởi tạo lô đặc sản "${productName}" (${batchCode}) thành công trong Chế độ Mẫu!`, "success", "Tạo Lô Thành Công");
+  }
+
+  // Cap nhat vao State & LocalStorage
+  const newBatch = {
+    batchCode: batchCode,
+    productName: productName,
+    origin: originLocation,
+    createdAt: Math.floor(Date.now() / 1000),
+    producer: currentAccount || "0x82d022a704706B2f144863D619D7418F8a0f19A7",
+    isVerified: false,
+    exists: true,
+    ocopStandard: "Đang Chờ Kiểm Định OCOP",
+    certificationNo: "BATCH-CREATED-" + batchCode,
+    quantity: quantity,
+    currentStage: "Tại xưởng sản xuất",
+    checkpoints: [
+      {
+        stepName: "Chặng 1: Sản Xuất & Đóng Gói",
+        role: "ROLE_PRODUCER",
+        roleTitle: "Cơ Sở Sản Xuất",
+        location: originLocation,
+        action: `Khởi tạo lô hàng, nộp phí ${batchCreationFeeEth} ETH vào Quỹ OCOP. ${initialNote}`,
+        timestamp: Math.floor(Date.now() / 1000),
+        recorder: currentAccount || "0x82d022a704706B2f144863D619D7418F8a0f19A7",
+        metadataURI: initialNote,
+        txHash: "0x" + Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join(""),
+        conditionNote: initialNote || "Đóng gói theo tiêu chuẩn OCOP."
+      }
+    ]
+  };
+
+  SAMPLE_BATCHES[batchCode] = newBatch;
+  localStorage.setItem("HueLegend_Batches", JSON.stringify(SAMPLE_BATCHES));
+
+  // Reset form
+  document.getElementById("createBatchForm").reset();
+
+  // Lam moi bang danh sach
+  renderOverviewDashboard();
+  renderCreatedBatchesTable();
+
+  // Tu dong mo Modal tem QR cho lo vua tao
+  openBatchQrModal(batchCode);
+}
+
+function renderCreatedBatchesTable() {
+  const tbody = document.getElementById("createdBatchesTbody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+
+  Object.values(SAMPLE_BATCHES).forEach(batch => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td class="font-code font-bold text-primary">${batch.batchCode}</td>
+      <td><strong>${batch.productName}</strong></td>
+      <td>${formatTimestamp(batch.createdAt)}</td>
+      <td>${batch.quantity || "1.000 hộp"}</td>
+      <td><span class="status-pill ${batch.isVerified ? 'badge-status-verified' : 'badge-status-pending'}">${batch.isVerified ? 'Đã kiểm định' : 'Chờ kiểm định'}</span></td>
+      <td>
+        <button class="btn-action-sm btn-action-qr" onclick="openBatchQrModal('${batch.batchCode}')">
+          In Tem QR
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function populateBatchSelectOptions(selectId) {
+  const select = document.getElementById(selectId);
+  if (!select) return;
+  const currentVal = select.value;
+  select.innerHTML = '<option value="">-- Chọn mã lô hàng --</option>';
+
+  Object.values(SAMPLE_BATCHES).forEach(b => {
+    const opt = document.createElement("option");
+    opt.value = b.batchCode;
+    opt.innerText = `${b.batchCode} - ${b.productName}`;
+    select.appendChild(opt);
+  });
+
+  if (currentVal && SAMPLE_BATCHES[currentVal]) {
+    select.value = currentVal;
+  }
+}
+
+// ============================================================================
+// 12. GHI NHAN CHANG CHUOI CUNG UNG (CHECKPOINTS WORKSPACE)
+// ============================================================================
+async function handleAddCheckpointSubmit(event) {
+  event.preventDefault();
+
+  const batchCode = document.getElementById("checkpointBatchSelect").value;
+  const roleType = document.getElementById("checkpointRoleSelect").value;
+  const location = document.getElementById("checkpointLocation").value.trim();
+  const actionDesc = document.getElementById("checkpointAction").value.trim();
+  const conditionNote = document.getElementById("checkpointNote").value.trim();
+
+  if (!batchCode || !roleType || !location || !actionDesc) {
+    showToast("Vui lòng điền đầy đủ các trường thông tin chặng!", "warning", "Thiếu Dữ Liệu");
+    return;
+  }
+
+  // Kiem tra phan quyen vai tro (RBAC Enforcement)
+  if (!userRoles.isAdmin) {
+    if (roleType === "LOGISTICS" && !userRoles.isLogistics) {
+      showToast("⛔ LỖI PHÂN QUYỀN (Lab 8): Ví của bạn không sở hữu vai trò ROLE_LOGISTICS!", "error", "Truy Cập Bị Chặn");
+      return;
+    }
+    if (roleType === "RETAILER" && !userRoles.isRetailer) {
+      showToast("⛔ LỖI PHÂN QUYỀN (Lab 8): Ví của bạn không sở hữu vai trò ROLE_RETAILER!", "error", "Truy Cập Bị Chặn");
+      return;
+    }
+  }
+
+  const roleTitles = {
+    LOGISTICS: "Đơn Vị Vận Chuyển",
+    RETAILER: "Đại Lý Phân Phối",
+    PRODUCER: "Cơ Sở Sản Xuất"
+  };
+
+  const newCheckpoint = {
+    stepName: `Chặng ${SAMPLE_BATCHES[batchCode].checkpoints.length + 1}: ${roleTitles[roleType]}`,
+    role: ROLE_HASHES[`ROLE_${roleType}`] || roleType,
+    roleTitle: roleTitles[roleType],
+    location: location,
+    action: actionDesc,
+    timestamp: Math.floor(Date.now() / 1000),
+    recorder: currentAccount || "0x82d022a704706B2f144863D619D7418F8a0f19A7",
+    metadataURI: conditionNote,
+    txHash: "0x" + Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join(""),
+    conditionNote: conditionNote || "Đạt chuẩn nhiệt độ và điều kiện lưu kho."
+  };
+
+  SAMPLE_BATCHES[batchCode].checkpoints.push(newCheckpoint);
+  SAMPLE_BATCHES[batchCode].currentStage = location;
+  localStorage.setItem("HueLegend_Batches", JSON.stringify(SAMPLE_BATCHES));
+
+  showToast(`Đã ghi nhận chặng mới thành công cho lô ${batchCode}!`, "success", "Ghi Chặng Thành Công");
+  document.getElementById("addCheckpointForm").reset();
+
+  renderOverviewDashboard();
+}
+
+// ============================================================================
+// 13. KIEM DINH & CHUNG NHAN OCOP (VERIFICATION WORKSPACE)
+// ============================================================================
+function handleVerifyBatchSubmit(isApprove) {
+  const batchCode = document.getElementById("verifyBatchSelect").value;
+  const inspectorNote = document.getElementById("verifyInspectorNote").value.trim();
+  const certNumber = document.getElementById("verifyCertNo").value.trim();
+
+  if (!batchCode) {
+    showToast("Vui lòng chọn mã lô hàng cần kiểm định!", "warning", "Chưa Chọn Lô");
+    return;
+  }
+
+  // Kiem tra quyen kiem dinh
+  if (!userRoles.isAdmin && !userRoles.isInspector) {
+    showToast("⛔ LỖI PHÂN QUYỀN: Chỉ tài khoản sở hữu ROLE_INSPECTOR mới có quyền chứng thực hoặc thu hồi kiểm định!", "error", "Từ Chối Truy Cập");
+    return;
+  }
+
+  if (isApprove) {
+    SAMPLE_BATCHES[batchCode].isVerified = true;
+    SAMPLE_BATCHES[batchCode].ocopStandard = "OCOP 4 Sao Đã Xác Thực Trên Blockchain";
+    SAMPLE_BATCHES[batchCode].certificationNo = certNumber || `OCOP-HUE-2026-${Math.floor(Math.random() * 900 + 100)}`;
+    
+    // Ghi them chặng kiem dinh
+    SAMPLE_BATCHES[batchCode].checkpoints.push({
+      stepName: `Chặng ${SAMPLE_BATCHES[batchCode].checkpoints.length + 1}: Kiểm Định & Cấp Tem OCOP`,
+      role: ROLE_HASHES.ROLE_INSPECTOR,
+      roleTitle: "Cơ Quan Kiểm Định OCOP",
+      location: "Chi cục Quản lý Chất lượng Nông Lâm Thủy sản Thừa Thiên Huế",
+      action: `Chứng nhận đạt chuẩn OCOP 4 sao và an toàn vệ sinh thực phẩm. ${inspectorNote}`,
+      timestamp: Math.floor(Date.now() / 1000),
+      recorder: currentAccount || "0x4296dbb7b322384a621147a468d6ef71f28b40d6",
+      metadataURI: certNumber,
+      txHash: "0x" + Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join(""),
+      conditionNote: inspectorNote || "Đạt chuẩn chất lượng hoàng gia."
     });
 
-    toastProgress.update(`Giao dịch đã phát sóng (${shortenAddress(tx.hash)}). Đang chờ thợ đào xác nhận khối...`, "loading", "Bước 2/3: Đang Đào Block");
+    showToast(`Đã phê duyệt kiểm định OCOP thành công cho lô ${batchCode}!`, "success", "Kiểm Định Hợp Lệ");
+  } else {
+    SAMPLE_BATCHES[batchCode].isVerified = false;
+    SAMPLE_BATCHES[batchCode].ocopStandard = "Đã Bị Thu Hồi Kiểm Định";
+    showToast(`Đã thu hồi kiểm định của lô ${batchCode}!`, "warning", "Thu Hồi Kiểm Định");
+  }
 
-    const receipt = await tx.wait();
+  localStorage.setItem("HueLegend_Batches", JSON.stringify(SAMPLE_BATCHES));
+  renderOverviewDashboard();
+}
 
-    toastProgress.update(`Tạo lô hàng ${batchCode} thành công trên Blockchain! TxHash: ${shortenAddress(receipt.transactionHash)}`, "success", "Bước 3/3: Hoàn Tất");
+// ============================================================================
+// 14. KY QUY UY TIN & ESCROW (STAKE WORKSPACE)
+// ============================================================================
+function updateStakeDisplay() {
+  const elBalance = document.getElementById("stakeCurrentBalance");
+  if (elBalance) {
+    elBalance.innerText = `${producerStakeBalance} ETH`;
+  }
+}
 
-    // Luu bo nho tam de tra cuu nhanh
-    SAMPLE_BATCHES[batchCode] = {
-      batchCode: batchCode,
-      productName: productName,
-      origin: originLocation,
-      createdAt: Math.floor(Date.now() / 1000),
-      producer: currentAccount,
-      isVerified: false,
-      exists: true,
-      ocopStandard: "Đang Chờ Kiểm Định OCOP",
-      certificationNo: "BATCH-CREATED-" + batchCode,
-      quantity: "500 sản phẩm",
-      checkpoints: [
-        {
-          stepName: "Chặng 1: Sản Xuất & Đóng Gói",
-          role: "ROLE_PRODUCER",
-          roleTitle: "Cơ Sở Sản Xuất",
-          location: originLocation,
-          action: "Khởi tạo lô đặc sản Huế và nộp phí 0.001 ETH vào Quỹ OCOP.",
-          timestamp: Math.floor(Date.now() / 1000),
-          recorder: currentAccount,
-          metadataURI: initialNote,
-          txHash: receipt.transactionHash,
-          conditionNote: initialNote || "Đóng gói theo tiêu chuẩn OCOP."
+async function handleDepositStakeAction() {
+  const amountEth = document.getElementById("stakeDepositInput").value || "0.05";
+  if (projectCoreContract && web3Signer && !isDemoMode) {
+    const toastProgress = showToast(`Đang gửi giao dịch nạp ký quỹ ${amountEth} ETH...`, "loading", "Nạp Ký Quỹ");
+    try {
+      const valWei = ethers.utils.parseEther(amountEth);
+      const tx = await projectCoreContract.depositStake({ value: valWei });
+      toastProgress.update("Đang đào block xác nhận...", "loading", "Chờ Xác Nhận");
+      await tx.wait();
+      toastProgress.update(`Nạp ký quỹ ${amountEth} ETH thành công!`, "success", "Nạp Cọc Hoàn Tất");
+      producerStakeBalance = (parseFloat(producerStakeBalance) + parseFloat(amountEth)).toFixed(3);
+      updateStakeDisplay();
+    } catch (err) {
+      toastProgress.update(translateContractError(err), "error", "Thất Bại");
+    }
+  } else {
+    producerStakeBalance = (parseFloat(producerStakeBalance) + parseFloat(amountEth)).toFixed(3);
+    updateStakeDisplay();
+    showToast(`Đã nạp thành công ${amountEth} ETH ký quỹ uy tín (Chế độ Mẫu)! Khóa an toàn 30 ngày.`, "success", "Ký Quỹ Thành Công");
+  }
+}
+
+async function handleWithdrawStakeAction() {
+  showToast("⛔ ĐANG KHÓA CỌC: Tiền ký quỹ đang trong thời gian khóa bảo đảm an toàn 30 ngày (Lab 9 & Lab 11)!", "error", "Cọc Đang Bị Khóa");
+}
+
+// ============================================================================
+// 15. MODAL XUAT TEM QR CODE DONG & QUET CAMERA
+// ============================================================================
+let qrCodeInstance = null;
+let html5QrScanner = null;
+
+function openBatchQrModal(batchCode) {
+  const batch = SAMPLE_BATCHES[batchCode];
+  if (!batch) return;
+
+  const modal = document.getElementById("qrModal");
+  if (!modal) return;
+
+  document.getElementById("qrModalBatchCode").innerText = batch.batchCode;
+  document.getElementById("qrModalProductName").innerText = batch.productName;
+  document.getElementById("qrModalOrigin").innerText = batch.origin;
+
+  const qrContainer = document.getElementById("qrCanvasContainer");
+  qrContainer.innerHTML = "";
+
+  const traceUrl = `${window.location.origin}${window.location.pathname}?batchId=${encodeURIComponent(batch.batchCode)}`;
+
+  qrCodeInstance = new QRCode(qrContainer, {
+    text: traceUrl,
+    width: 220,
+    height: 220,
+    colorDark: "#4A3459",
+    colorLight: "#FFFFFF",
+    correctLevel: QRCode.CorrectLevel.H
+  });
+
+  modal.style.display = "flex";
+}
+
+function closeQrModal() {
+  const modal = document.getElementById("qrModal");
+  if (modal) modal.style.display = "none";
+}
+
+function printBatchQr() {
+  window.print();
+}
+
+function openQrScannerModal() {
+  const modal = document.getElementById("qrScannerModal");
+  if (!modal) return;
+  modal.style.display = "flex";
+
+  if (!html5QrScanner) {
+    html5QrScanner = new Html5Qrcode("qrReaderBox");
+  }
+
+  html5QrScanner.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: { width: 250, height: 250 } },
+    (decodedText) => {
+      closeQrScannerModal();
+      let detectedBatchId = decodedText;
+      try {
+        if (decodedText.includes("batchId=") || decodedText.includes("batch=")) {
+          const urlObj = new URL(decodedText);
+          detectedBatchId = urlObj.searchParams.get("batchId") || urlObj.searchParams.get("batch") || decodedText;
         }
-      ]
-    };
+      } catch { }
 
-    return receipt;
-  } catch (err) {
-    console.error("Loi tao lo hang:", err);
-    toastProgress.update(translateContractError(err), "error", "Giao Dịch Bị Hủy");
-    throw err;
+      showToast(`Quét thành công tem: ${detectedBatchId}`, "success", "Nhận Diện Tem QR");
+      switchTab("lookup");
+      document.getElementById("lookupInput").value = detectedBatchId;
+      executeSearch(detectedBatchId);
+    },
+    () => { }
+  ).catch((err) => {
+    console.warn("Loi mo camera:", err);
+    showToast("Không thể khởi động camera. Vui lòng cấp quyền truy cập trên trình duyệt!", "error", "Lỗi Camera");
+  });
+}
+
+function closeQrScannerModal() {
+  const modal = document.getElementById("qrScannerModal");
+  if (modal) modal.style.display = "none";
+  if (html5QrScanner) {
+    html5QrScanner.stop().catch(() => { });
   }
 }
 
-// 2. Cap nhat chang van chuyen (LOGISTICS_ROLE)
-async function executeAddLogisticsStep(batchCode, location, actionDescription, conditionNote) {
-  if (!projectCoreContract || !web3Signer) {
-    throw new Error("Vui lòng kết nối ví MetaMask!");
-  }
-
-  const toastProgress = showToast("Đang ký giao dịch cập nhật chặng vận chuyển...", "loading", "Bước 1/3: Ký Giao Dịch");
-
-  try {
-    const roleHash = ROLE_HASHES.ROLE_LOGISTICS;
-    const tx = await projectCoreContract.addCheckpoint(batchCode, roleHash, location, actionDescription, conditionNote);
-
-    toastProgress.update(`Đang ghi nhận chặng vận chuyển vào khối... (Tx: ${shortenAddress(tx.hash)})`, "loading", "Bước 2/3: Đang Đào Block");
-
-    const receipt = await tx.wait();
-
-    toastProgress.update(`Đã cập nhật chặng vận chuyển thành công cho lô ${batchCode}!`, "success", "Bước 3/3: Hoàn Tất");
-
-    // Cap nhat cache
-    if (SAMPLE_BATCHES[batchCode]) {
-      SAMPLE_BATCHES[batchCode].checkpoints.push({
-        stepName: "Chặng 2: Vận Chuyển & Lưu Kho",
-        role: "ROLE_LOGISTICS",
-        roleTitle: "Đơn Vị Vận Chuyển",
-        location: location,
-        action: actionDescription,
-        timestamp: Math.floor(Date.now() / 1000),
-        recorder: currentAccount,
-        metadataURI: conditionNote,
-        txHash: receipt.transactionHash,
-        conditionNote: conditionNote
-      });
-    }
-
-    return receipt;
-  } catch (err) {
-    console.error("Loi cap nhat chang van chuyen:", err);
-    toastProgress.update(translateContractError(err), "error", "Lỗi Cập Nhật Chặng");
-    throw err;
+// Toggle mobile sidebar
+function toggleMobileSidebar() {
+  const sidebar = document.getElementById("appSidebar");
+  const overlay = document.getElementById("sidebarOverlay");
+  if (sidebar) sidebar.classList.toggle("mobile-open");
+  if (overlay) {
+    overlay.style.display = sidebar.classList.contains("mobile-open") ? "block" : "none";
   }
 }
 
-// 3. Xac nhan nhap kho dai ly (RETAILER_ROLE)
-async function executeConfirmRetailerStep(batchCode, storeLocation, confirmationNote) {
-  if (!projectCoreContract || !web3Signer) {
-    throw new Error("Vui lòng kết nối ví MetaMask!");
+// ============================================================================
+// 16. KHOI DONG TRANG & LOAD PARAMETERS (INIT ON LOAD)
+// ============================================================================
+window.addEventListener("DOMContentLoaded", async () => {
+  // Khoi tao Dashboard overview
+  renderOverviewDashboard();
+  renderCreatedBatchesTable();
+
+  // Kiem tra tham so URL ?batchId=... hoac ?tab=...
+  const paramBatchId = parseUrlParam("batchId") || parseUrlParam("batch");
+  const paramTab = parseUrlParam("tab") || (window.location.hash ? window.location.hash.replace("#", "") : null);
+
+  if (paramBatchId) {
+    switchTab("lookup");
+    document.getElementById("lookupInput").value = paramBatchId;
+    executeSearch(paramBatchId);
+  } else if (paramTab && TAB_BREADCRUMBS[paramTab]) {
+    switchTab(paramTab);
+  } else {
+    switchTab("overview");
   }
 
-  const toastProgress = showToast("Đang xác nhận nhập kho điểm bán lẻ...", "loading", "Bước 1/3: Ký Giao Dịch");
-
-  try {
-    const roleHash = ROLE_HASHES.ROLE_RETAILER;
-    const action = "Đã nhập kho đại lý phân phối, kiểm tra tem niêm phong và chính thức mở bán.";
-    const tx = await projectCoreContract.addCheckpoint(batchCode, roleHash, storeLocation, action, confirmationNote);
-
-    toastProgress.update(`Đang ghi nhận xác nhận bán lẻ lên mạng... (Tx: ${shortenAddress(tx.hash)})`, "loading", "Bước 2/3: Đang Đào Block");
-
-    const receipt = await tx.wait();
-
-    toastProgress.update(`Xác nhận nhập kho & mở bán thành công cho lô ${batchCode}!`, "success", "Bước 3/3: Hoàn Tất");
-
-    // Cap nhat cache
-    if (SAMPLE_BATCHES[batchCode]) {
-      SAMPLE_BATCHES[batchCode].checkpoints.push({
-        stepName: "Chặng 3: Nhập Kho & Mở Bán",
-        role: "ROLE_RETAILER",
-        roleTitle: "Đại Lý Phân Phối",
-        location: storeLocation,
-        action: action,
-        timestamp: Math.floor(Date.now() / 1000),
-        recorder: currentAccount,
-        metadataURI: confirmationNote,
-        txHash: receipt.transactionHash,
-        conditionNote: confirmationNote
-      });
-    }
-
-    return receipt;
-  } catch (err) {
-    console.error("Loi xac nhan ban le:", err);
-    toastProgress.update(translateContractError(err), "error", "Lỗi Xác Nhận");
-    throw err;
+  // Thu ket noi vi tu dong neu da duoc phep
+  if (typeof window.ethereum !== "undefined" && window.ethereum.selectedAddress) {
+    await connectWallet();
   }
-}
-
-// 4. Nap tien ky quy cam ket chat luong (0.05 ETH)
-async function executeDepositStake(amountEth = "0.05") {
-  if (!projectCoreContract || !web3Signer) {
-    throw new Error("Vui lòng kết nối ví MetaMask!");
-  }
-
-  const toastProgress = showToast(`Đang nạp tiền ký quỹ ${amountEth} ETH...`, "loading", "Nạp Ký Quỹ Uy Tín");
-
-  try {
-    const valWei = ethers.utils.parseEther(amountEth);
-    const tx = await projectCoreContract.depositStake({ value: valWei });
-
-    toastProgress.update(`Đang xử lý nạp ký quỹ trên Blockchain... (Tx: ${shortenAddress(tx.hash)})`, "loading", "Chờ Xác Nhận");
-
-    const receipt = await tx.wait();
-
-    await checkAccountRoles(currentAccount);
-    toastProgress.update(`Nạp ký quỹ ${amountEth} ETH thành công! Hạn khóa 30 ngày bảo đảm.`, "success", "Nạp Cọc Hoàn Tất");
-
-    if (typeof renderAdminWorkspace === "function") {
-      renderAdminWorkspace();
-    }
-    return receipt;
-  } catch (err) {
-    console.error("Loi nap ky quy:", err);
-    toastProgress.update(translateContractError(err), "error", "Nạp Cọc Thất Bại");
-    throw err;
-  }
-}
+});
