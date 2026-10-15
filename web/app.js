@@ -1362,8 +1362,91 @@ function toggleMobileSidebar() {
   }
 }
 
+// Ham dien nhanh mau dac san Hue cho form tao lo
+function fillProductPreset(type) {
+  const presets = {
+    mexung: {
+      name: "Mè Xửng Thiên Hương Thượng Hạng",
+      code: "HL-MEXUNG-2026-" + Math.floor(100 + Math.random() * 900),
+      origin: "20 Chi Lăng, Phường Phú Hậu, TP Huế",
+      quantity: "1.000 hộp (Loại 500g)",
+      note: "Tiêu chuẩn OCOP 4 sao, mè trắng Vĩnh Linh, mạch nha gia truyền, bao bì hút chân không tiệt trùng."
+    },
+    tomchua: {
+      name: "Tôm Chua Trọng Đức Gia Truyền",
+      code: "HL-TOMCHUA-2026-" + Math.floor(100 + Math.random() * 900),
+      origin: "103 Đặng Thái Thân, Phường Thuận Thành, TP Huế",
+      quantity: "500 hũ (Loại 450g)",
+      note: "Tôm đất phá Tam Giang ủ men tự nhiên cùng măng tươi, củ riềng, ớt cay chỉ thiên và tỏi thơm."
+    },
+    trasen: {
+      name: "Trà Sen Cung Đình Đức Phượng",
+      code: "HL-TRASEN-2026-" + Math.floor(100 + Math.random() * 900),
+      origin: "24 Nguyễn Huệ, Phường Vĩnh Ninh, TP Huế",
+      quantity: "300 hộp (Loại 250g)",
+      note: "Hương hoa sen hồ Tịnh Tâm ướp trà tuyết san cổ thụ, thảo mộc hoàng gia đạt chuẩn VietGAP."
+    },
+    dautram: {
+      name: "Tinh Dầu Tràm Gió Lộc Thủy",
+      code: "HL-DAUTRAM-2026-" + Math.floor(100 + Math.random() * 900),
+      origin: "Thôn Thủy Yên, Xã Lộc Thủy, Huyện Phú Lộc, TT Huế",
+      quantity: "1.200 chai (Loại 50ml)",
+      note: "Chưng cất thủ công truyền thống 100% từ lá tràm tự nhiên, hàm lượng Cineol đạt chuẩn dược liệu."
+    },
+    nonla: {
+      name: "Nón Lá Bài Thơ Làng Tây Hồ",
+      code: "HL-NONLA-2026-" + Math.floor(100 + Math.random() * 900),
+      origin: "Làng Nón Tây Hồ, Xã Phú Hồ, Huyện Phú Vang, TT Huế",
+      quantity: "200 chiếc (Loại 16 vành)",
+      note: "Lá nón rừng non sấy khô ép phẳng, lồng câu thơ và hình ảnh Ngọ Môn chùa Thiên Mụ danh tiếng."
+    }
+  };
+
+  const data = presets[type];
+  if (!data) return;
+
+  const inpName = document.getElementById("inpProductName");
+  const inpCode = document.getElementById("inpBatchCode");
+  const inpOrigin = document.getElementById("inpOriginLocation");
+  const inpQty = document.getElementById("inpQuantity");
+  const inpNote = document.getElementById("inpInitialNote");
+
+  if (inpName) inpName.value = data.name;
+  if (inpCode) inpCode.value = data.code;
+  if (inpOrigin) inpOrigin.value = data.origin;
+  if (inpQty) inpQty.value = data.quantity;
+  if (inpNote) inpNote.value = data.note;
+
+  showToast(`Đã tự động điền thông tin: ${data.name}`, "info", "Mẫu Đặc Sản");
+}
+
+function generateRandomBatchCode() {
+  const inpName = document.getElementById("inpProductName");
+  let prefix = "HL-DACSAN";
+  if (inpName && inpName.value) {
+    const val = inpName.value.toUpperCase();
+    if (val.includes("MÈ") || val.includes("ME")) prefix = "HL-MEXUNG";
+    else if (val.includes("TÔM") || val.includes("TOM")) prefix = "HL-TOMCHUA";
+    else if (val.includes("TRÀ") || val.includes("TRA")) prefix = "HL-TRASEN";
+    else if (val.includes("TRÀM") || val.includes("TRAM")) prefix = "HL-DAUTRAM";
+    else if (val.includes("NÓN") || val.includes("NON")) prefix = "HL-NONLA";
+  }
+  const randomNum = Math.floor(100 + Math.random() * 900);
+  const code = `${prefix}-2026-${randomNum}`;
+  const inpCode = document.getElementById("inpBatchCode");
+  if (inpCode) inpCode.value = code;
+  showToast(`Đã sinh mã định danh duy nhất: ${code}`, "info", "Sinh Mã Lô");
+}
+
+function fillCheckpointQuickAction(actionText, locText) {
+  const inpAct = document.getElementById("checkpointAction");
+  const inpLoc = document.getElementById("checkpointLocation");
+  if (inpAct && actionText) inpAct.value = actionText;
+  if (inpLoc && locText) inpLoc.value = locText;
+}
+
 // ============================================================================
-// 16. KHOI DONG TRANG & LOAD PARAMETERS (INIT ON LOAD)
+// 16. KHOI DONG TRANG & LOAD PARAMETERS (INIT ON LOAD - KHONG TU DONG DANG NHAP)
 // ============================================================================
 window.addEventListener("DOMContentLoaded", async () => {
   // Khoi tao Dashboard overview
@@ -1384,8 +1467,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     switchTab("overview");
   }
 
-  // Thu ket noi vi tu dong neu da duoc phep
-  if (typeof window.ethereum !== "undefined" && window.ethereum.selectedAddress) {
-    await connectWallet();
-  }
+  // KHONG tu dong ket noi vi (De nguyen trang thai khach vang lai / khach mua)
+  // Nguoi dung chi ket noi khi chu dong bam nut "Ket noi vi" tren Header
+  updateWalletUI();
 });
