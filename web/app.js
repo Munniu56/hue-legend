@@ -597,10 +597,10 @@ function renderOverviewDashboard() {
         <td>
           <div class="table-actions">
             <button class="btn-action-sm btn-action-view" onclick="quickTraceBatch('${batch.batchCode}')" title="Xem chi tiết nguồn gốc">
-              Tra Cứu
+              <span>🔍</span> Tra Cứu
             </button>
             <button class="btn-action-sm btn-action-qr" onclick="openBatchQrModal('${batch.batchCode}')" title="Xem tem mã QR">
-              Tem QR
+              <span>🏷️</span> Tem QR
             </button>
           </div>
         </td>
@@ -1098,7 +1098,7 @@ function renderCreatedBatchesTable() {
       <td><span class="status-pill ${batch.isVerified ? 'badge-status-verified' : 'badge-status-pending'}">${batch.isVerified ? 'Đã kiểm định' : 'Chờ kiểm định'}</span></td>
       <td>
         <button class="btn-action-sm btn-action-qr" onclick="openBatchQrModal('${batch.batchCode}')">
-          In Tem QR
+          <span>🖨️</span> In Tem QR
         </button>
       </td>
     `;

@@ -57,6 +57,33 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    /* Quy tac co ban cho tat ca nut bam tren DApp */
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      user-select: none;
+      border: none;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    button:focus-visible {
+      outline: 2px solid var(--royal-gold);
+      outline-offset: 2px;
+    }
+
+    button:active {
+      transform: translateY(1px) scale(0.985);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
     body {
       font-family: 'Be Vietnam Pro', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background-color: var(--bg-body);
@@ -145,36 +172,41 @@
       font-size: 0.9rem;
       font-weight: 600;
       text-decoration: none;
-      border: none;
+      border: 1px solid transparent;
       background: none;
       width: 100%;
       text-align: left;
       cursor: pointer;
       position: relative;
-      transition: all 0.15s ease;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .sidebar-nav-item:hover {
       background: #EFF3EF;
       color: var(--primary);
+      border-color: #E2ECE5;
+      transform: translateX(4px);
     }
 
     .sidebar-nav-item.active {
-      background: var(--primary-light);
-      color: #224335;
+      background: linear-gradient(135deg, #E0ECE4 0%, #D4E5DA 100%);
+      color: #1c382b;
       font-weight: 700;
+      border-color: #C3D8CB;
+      box-shadow: 0 2px 8px rgba(38, 73, 57, 0.08);
     }
 
     .sidebar-nav-item.active::after {
       content: "";
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: var(--primary);
       position: absolute;
       right: 14px;
       top: 50%;
       transform: translateY(-50%);
+      box-shadow: 0 0 6px rgba(38, 73, 57, 0.4);
     }
 
     .nav-svg-icon {
@@ -281,21 +313,32 @@
     }
 
     .btn-dropdown-demo {
-      background: none;
-      border: none;
-      display: flex;
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-color);
+      display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #3B4D43;
+      gap: 7px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text-body);
       cursor: pointer;
-      padding: 6px 8px;
-      border-radius: var(--radius-sm);
+      padding: 0.48rem 0.95rem;
+      border-radius: 999px;
+      box-shadow: 0 1px 3px rgba(38, 73, 57, 0.05);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .btn-dropdown-demo:hover {
+      border-color: var(--primary);
       color: var(--primary);
+      background: var(--primary-tint);
+      box-shadow: 0 3px 10px rgba(38, 73, 57, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .btn-dropdown-demo:active {
+      transform: translateY(0) scale(0.98);
+      box-shadow: none;
     }
 
     .dropdown-menu-box {
@@ -348,37 +391,54 @@
       letter-spacing: 0.5px;
     }
 
-    /* Nut ket noi vi */
+    /* Nut ket noi vi Web3 MetaMask */
     .btn-connect-wallet {
-      background: var(--primary);
+      background: linear-gradient(135deg, #264939 0%, #173326 100%);
       color: #FFFFFF;
-      border: none;
-      padding: 0.65rem 1.25rem;
-      border-radius: 10px;
-      font-size: 0.85rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.65rem 1.35rem;
+      border-radius: 999px;
+      font-size: 0.86rem;
       font-weight: 700;
+      letter-spacing: 0.2px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(38, 73, 57, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .btn-connect-wallet:hover {
-      background: var(--primary-hover);
+      background: linear-gradient(135deg, #2f5a45 0%, #1c3b2c 100%);
+      border-color: rgba(194, 155, 56, 0.6);
+      box-shadow: 0 6px 18px rgba(38, 73, 57, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      transform: translateY(-1.5px);
+    }
+
+    .btn-connect-wallet:active {
+      transform: translateY(0) scale(0.985);
+      box-shadow: 0 2px 4px rgba(38, 73, 57, 0.2);
     }
 
     .wallet-connected-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: var(--primary-light);
-      padding: 0.45rem 1rem;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--primary-border);
+      background: #FFFFFF;
+      padding: 0.5rem 1.15rem;
+      border-radius: 999px;
+      border: 1.5px solid var(--primary-border);
       font-size: 0.85rem;
       font-weight: 700;
       color: var(--primary);
+      box-shadow: 0 2px 6px rgba(38, 73, 57, 0.05);
+      transition: all 0.2s ease;
+    }
+
+    .wallet-connected-badge:hover {
+      border-color: var(--primary);
+      box-shadow: 0 3px 10px rgba(38, 73, 57, 0.1);
     }
 
     .online-dot {
@@ -419,17 +479,34 @@
       font-weight: 700;
     }
 
+    /* Nut dat lai du lieu mau tren thanh thong bao */
     .btn-reset-link {
-      background: none;
-      border: none;
-      color: #4F6055;
+      background: #FFFFFF;
+      border: 1px solid #D6CEBE;
+      color: #3F5247;
       cursor: pointer;
-      font-size: 0.78rem;
-      text-decoration: underline;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      transition: all 0.2s ease;
     }
 
     .btn-reset-link:hover {
-      color: var(--primary);
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #FFFFFF;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(38, 73, 57, 0.15);
+    }
+
+    .btn-reset-link:active {
+      transform: translateY(0) scale(0.98);
     }
 
     /* ================= MAIN CONTENT ================= */
@@ -470,24 +547,34 @@
       margin-top: 5px;
     }
 
+    /* Nut khoi tao lo hang tren header va nut submit bieu mau */
     .btn-create-batch-header {
-      background: var(--primary);
+      background: linear-gradient(135deg, #264939 0%, #173326 100%);
       color: #FFFFFF;
-      border: none;
-      padding: 0.65rem 1.35rem;
-      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.72rem 1.45rem;
+      border-radius: 12px;
       font-size: 0.88rem;
       font-weight: 700;
+      letter-spacing: 0.2px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 8px;
       white-space: nowrap;
-      transition: all 0.2s;
+      box-shadow: 0 3px 12px rgba(38, 73, 57, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .btn-create-batch-header:hover {
-      background: var(--primary-hover);
+      background: linear-gradient(135deg, #2f5a45 0%, #1b3d2d 100%);
+      box-shadow: 0 6px 18px rgba(38, 73, 57, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+
+    .btn-create-batch-header:active {
+      transform: translateY(0) scale(0.985);
+      box-shadow: 0 2px 6px rgba(38, 73, 57, 0.2);
     }
 
     /* ================= HERO CARD (MATCH SCREENSHOT 1:1) ================= */
@@ -539,46 +626,67 @@
       flex-wrap: wrap;
     }
 
+    /* Nut hanh dong chinh (Primary Hero Button) */
     .btn-hero-primary {
-      background: var(--primary);
+      background: linear-gradient(135deg, #264939 0%, #183528 100%);
       color: #FFFFFF;
-      border: none;
-      padding: 0.75rem 1.65rem;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 0.8rem 1.75rem;
       border-radius: 999px;
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       font-weight: 700;
+      letter-spacing: 0.2px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
-      transition: all 0.2s;
-      box-shadow: 0 2px 8px rgba(38, 73, 57, 0.15);
+      box-shadow: 0 4px 14px rgba(38, 73, 57, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .btn-hero-primary:hover {
-      background: var(--primary-hover);
-      transform: translateY(-1px);
+      background: linear-gradient(135deg, #305c47 0%, #1c3d2d 100%);
+      box-shadow: 0 8px 22px rgba(38, 73, 57, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
     }
 
+    .btn-hero-primary:active {
+      transform: translateY(0) scale(0.985);
+      box-shadow: 0 2px 6px rgba(38, 73, 57, 0.2);
+    }
+
+    /* Nut hanh dong phu (Secondary Hero Button) */
     .btn-hero-secondary {
-      background: #FAF9F5;
+      background: #FFFFFF;
       color: var(--primary);
-      border: 1px solid #CCD8CF;
-      padding: 0.75rem 1.5rem;
+      border: 1.5px solid #CCD8CF;
+      padding: 0.8rem 1.6rem;
       border-radius: 999px;
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       font-weight: 700;
+      letter-spacing: 0.2px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
-      transition: all 0.2s;
+      box-shadow: 0 2px 6px rgba(38, 73, 57, 0.05);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .btn-hero-secondary:hover {
+      background: #F3F7F4;
       border-color: var(--primary);
-      background: #FFFFFF;
-      transform: translateY(-1px);
+      color: #173326;
+      box-shadow: 0 6px 16px rgba(38, 73, 57, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .btn-hero-secondary:active {
+      transform: translateY(0) scale(0.985);
+      box-shadow: 0 1px 3px rgba(38, 73, 57, 0.05);
+      background: #E8F0EA;
     }
 
     /* Khung tranh minh hoa hoang thanh Ngo Mon Hue */
@@ -762,55 +870,109 @@
       color: var(--primary);
     }
 
-    .status-badge {
+    /* The trang thai kiem dinh trong bang */
+    .status-badge,
+    .status-pill {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 4px 10px;
-      border-radius: 20px;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 999px;
       font-size: 0.75rem;
       font-weight: 700;
+      letter-spacing: 0.2px;
     }
 
-    .badge-verified {
+    .badge-verified,
+    .badge-status-verified {
       background: #ECFDF5;
       color: #047857;
       border: 1px solid #A7F3D0;
+      box-shadow: 0 1px 2px rgba(16, 185, 129, 0.08);
     }
 
-    .badge-pending {
+    .badge-pending,
+    .badge-status-pending {
       background: #FFFBEB;
       color: #B45309;
       border: 1px solid #FDE68A;
+      box-shadow: 0 1px 2px rgba(245, 158, 11, 0.08);
     }
 
-    .btn-sm-action {
-      border: none;
-      padding: 5px 11px;
-      border-radius: var(--radius-sm);
-      font-size: 0.78rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .btn-sm-view {
-      background: var(--primary-light);
-      color: var(--primary);
-    }
-
-    .btn-sm-view:hover {
-      background: var(--primary);
-      color: #FFFFFF;
-    }
-
-    .btn-sm-qr {
-      background: #F1F5F9;
+    .product-name-cell {
+      font-weight: 700;
       color: var(--text-main);
+      font-size: 0.88rem;
+      line-height: 1.35;
     }
 
+    .product-origin-cell {
+      font-size: 0.77rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Cum nut hanh dong trong bang du lieu */
+    .table-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-action-sm,
+    .btn-sm-action {
+      border: 1.5px solid transparent;
+      padding: 6px 13px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-action-view,
+    .btn-sm-view {
+      background: #E8F2EC;
+      color: #1F4533;
+      border-color: #C3DCCE;
+      box-shadow: 0 1px 3px rgba(38, 73, 57, 0.05);
+    }
+
+    .btn-action-view:hover,
+    .btn-sm-view:hover {
+      background: linear-gradient(135deg, #264939 0%, #1a3628 100%);
+      color: #FFFFFF;
+      border-color: #264939;
+      box-shadow: 0 4px 12px rgba(38, 73, 57, 0.25);
+      transform: translateY(-1.5px);
+    }
+
+    .btn-action-qr,
+    .btn-sm-qr {
+      background: #FEFAF0;
+      color: #8C6D1F;
+      border-color: #EBD9A7;
+      box-shadow: 0 1px 3px rgba(194, 155, 56, 0.08);
+    }
+
+    .btn-action-qr:hover,
     .btn-sm-qr:hover {
-      background: #E2E8F0;
+      background: linear-gradient(135deg, #C29B38 0%, #A88124 100%);
+      color: #FFFFFF;
+      border-color: #C29B38;
+      box-shadow: 0 4px 12px rgba(194, 155, 56, 0.3);
+      transform: translateY(-1.5px);
+    }
+
+    .btn-action-sm:active,
+    .btn-sm-action:active {
+      transform: translateY(0) scale(0.97);
     }
 
     /* Forms */
@@ -889,6 +1051,7 @@
     @media (min-width: 640px) {
       .lookup-row {
         flex-direction: row;
+        align-items: stretch;
       }
     }
 
@@ -908,19 +1071,32 @@
 
     .lookup-input {
       width: 100%;
+      height: 100%;
+      min-height: 48px;
       padding: 0.85rem 1rem 0.85rem 2.8rem;
       border: 1.5px solid var(--border-color);
-      border-radius: var(--radius-md);
+      border-radius: 12px;
       font-size: 0.95rem;
       font-family: inherit;
       outline: none;
       background: #FAFAFC;
+      transition: all 0.2s ease;
     }
 
     .lookup-input:focus {
       border-color: var(--primary);
       background: #FFFFFF;
-      box-shadow: 0 0 0 3px rgba(74, 53, 90, 0.08);
+      box-shadow: 0 0 0 3px rgba(38, 73, 57, 0.1);
+    }
+
+    /* Dinh dang nut bam trong thanh tra cuu lookup */
+    .lookup-row .btn-hero-primary,
+    .lookup-row .btn-hero-secondary {
+      border-radius: 12px;
+      padding: 0 1.5rem;
+      min-height: 48px;
+      font-size: 0.9rem;
+      white-space: nowrap;
     }
 
     .preset-pill-row {
@@ -933,21 +1109,34 @@
       color: var(--text-muted);
     }
 
+    /* Nut goi y chon nhanh tra cuu */
     .preset-btn {
-      background: var(--primary-light);
-      border: 1px solid var(--primary-border);
-      color: var(--primary);
-      padding: 4px 12px;
-      border-radius: 16px;
+      background: #FFFFFF;
+      border: 1.5px solid #CCD8CF;
+      color: var(--text-body);
+      padding: 5px 13px;
+      border-radius: 999px;
       font-size: 0.78rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 1px 3px rgba(38, 73, 57, 0.04);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .preset-btn:hover {
-      background: var(--primary);
-      color: #FFFFFF;
+      background: #EFF5F1;
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-1.5px);
+      box-shadow: 0 4px 10px rgba(38, 73, 57, 0.12);
+    }
+
+    .preset-btn:active {
+      transform: translateY(0) scale(0.98);
+      box-shadow: none;
     }
 
     /* Certificate Card */
@@ -1278,12 +1467,32 @@
       color: var(--primary);
     }
 
+    /* Nut dong cua so modal */
     .modal-close-btn {
-      background: none;
-      border: none;
-      font-size: 24px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      background: #FAF9F5;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      line-height: 1;
       cursor: pointer;
       color: var(--text-muted);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-close-btn:hover {
+      background: #EBE5D8;
+      border-color: #D6CEBE;
+      color: var(--text-main);
+      transform: rotate(90deg);
+    }
+
+    .modal-close-btn:active {
+      transform: rotate(90deg) scale(0.92);
     }
 
     .qr-canvas-center-wrap {
@@ -1404,14 +1613,31 @@
       }
     }
 
-    /* Mobile */
+    /* Nut mo menu tren thiet bi di dong */
     .mobile-menu-toggle {
       display: none;
-      background: none;
-      border: none;
-      font-size: 1.4rem;
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-color);
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      font-size: 1.25rem;
       cursor: pointer;
       color: var(--primary);
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 3px rgba(38, 73, 57, 0.05);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .mobile-menu-toggle:hover {
+      background: var(--primary-tint);
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .mobile-menu-toggle:active {
+      transform: translateY(0) scale(0.96);
     }
 
     .mobile-backdrop {
@@ -1454,7 +1680,7 @@
       }
 
       .mobile-menu-toggle {
-        display: block;
+        display: inline-flex;
       }
 
       .stats-row {
@@ -1493,24 +1719,35 @@
       gap: 6px;
     }
 
+    /* Nut chon mau nhanh san pham va chang van chuyen */
     .btn-preset-item {
-      padding: 6px 13px;
+      padding: 6px 14px;
       background: #FFFFFF;
-      border: 1.5px solid var(--border-color);
-      border-radius: 20px;
+      border: 1.5px solid #CCD8CF;
+      border-radius: 999px;
       font-size: 0.8rem;
       font-weight: 600;
       color: var(--text-body);
       cursor: pointer;
-      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 1px 3px rgba(38, 73, 57, 0.04);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       font-family: inherit;
     }
 
     .btn-preset-item:hover {
       border-color: var(--primary);
       color: var(--primary);
-      background: var(--primary-light);
-      transform: translateY(-1px);
+      background: #EFF5F1;
+      transform: translateY(-1.5px);
+      box-shadow: 0 4px 10px rgba(38, 73, 57, 0.12);
+    }
+
+    .btn-preset-item:active {
+      transform: translateY(0) scale(0.98);
+      box-shadow: none;
     }
 
     .input-with-action {
@@ -1518,8 +1755,9 @@
       gap: 8px;
     }
 
+    /* Nut hanh dong inline canh o input (vi du sinh ma) */
     .btn-inline-action {
-      padding: 0 14px;
+      padding: 0 16px;
       background: #FFFFFF;
       border: 1.5px solid var(--border-color);
       border-radius: var(--radius-md);
@@ -1528,13 +1766,44 @@
       color: var(--primary);
       cursor: pointer;
       white-space: nowrap;
-      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      transition: all 0.2s ease;
       font-family: inherit;
     }
 
     .btn-inline-action:hover {
-      background: var(--primary-light);
+      background: var(--primary-tint);
       border-color: var(--primary);
+      color: #173326;
+      box-shadow: 0 3px 8px rgba(38, 73, 57, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .btn-inline-action:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    /* Nut thu hoi kiem dinh dang canh bao nguy hiem */
+    .btn-danger-outline {
+      background: #FFF5F5 !important;
+      color: #DC2626 !important;
+      border: 1.5px solid #FCA5A5 !important;
+      box-shadow: 0 2px 6px rgba(220, 38, 38, 0.06) !important;
+    }
+
+    .btn-danger-outline:hover {
+      background: #DC2626 !important;
+      color: #FFFFFF !important;
+      border-color: #DC2626 !important;
+      box-shadow: 0 6px 16px rgba(220, 38, 38, 0.28) !important;
+      transform: translateY(-2px) !important;
+    }
+
+    .btn-danger-outline:active {
+      transform: translateY(0) scale(0.985) !important;
     }
 
     /* ================= QUY TRINH COT LOI 3 BUOC ================= */
@@ -2164,9 +2433,9 @@
             <h3 class="card-title-lg">Danh Sách Lô Đặc Sản Gần Đây</h3>
             <p class="card-title-muted">Theo dõi các lô Mè xửng, Tôm chua, Trà sen Cung đình, Nón bài thơ...</p>
           </div>
-          <button class="btn-hero-secondary" style="padding: 6px 14px; font-size: 0.8rem;"
+          <button class="btn-hero-secondary" style="padding: 6px 15px; font-size: 0.8rem; border-radius: 999px;"
             onclick="renderOverviewDashboard()">
-            🔄 Cập nhật
+            <span>🔄</span> Cập nhật
           </button>
         </div>
 
@@ -2474,7 +2743,7 @@
           <button class="btn-hero-primary" onclick="handleVerifyBatchSubmit(true)">
             <span>✓ Phê Duyệt Kiểm Định (Verify)</span>
           </button>
-          <button class="btn-hero-secondary" style="color: #EF4444; border-color: #FCA5A5;"
+          <button class="btn-hero-secondary btn-danger-outline"
             onclick="handleVerifyBatchSubmit(false)">
             <span>✕ Thu Hồi Kiểm Định (Revoke)</span>
           </button>
@@ -2517,13 +2786,13 @@
             <label>Số lượng ETH cần ký quỹ</label>
             <input type="number" id="stakeDepositInput" class="form-input" value="0.05" step="0.01" min="0.05" />
           </div>
-          <button class="btn-hero-primary" onclick="handleDepositStakeAction()">
-            Nạp Ký Quỹ
+          <button class="btn-hero-primary" style="border-radius: 12px; padding: 0.75rem 1.5rem;" onclick="handleDepositStakeAction()">
+            <span>🔒</span> Nạp Ký Quỹ
           </button>
         </div>
         <div style="margin-top: 1.5rem; display: flex; gap: 12px;">
-          <button class="btn-hero-secondary" onclick="handleWithdrawStakeAction()">
-            Rút Tiền Ký Quỹ (Khi Đủ Hạn)
+          <button class="btn-hero-secondary" style="border-radius: 12px; padding: 0.75rem 1.5rem;" onclick="handleWithdrawStakeAction()">
+            <span>🔓</span> Rút Tiền Ký Quỹ (Khi Đủ Hạn)
           </button>
         </div>
       </div>
@@ -2548,7 +2817,7 @@
         <div style="display: flex; gap: 12px; max-width: 450px;">
           <input type="text" id="adminNewFeeInput" class="form-input" value="0.001" placeholder="Ví dụ: 0.002" />
           <button class="btn-create-batch-header" onclick="showToast('Cập nhật phí tạo lô thành công!', 'success')">
-            Cập Nhật Phí
+            <span>⚙️</span> Cập Nhật Phí
           </button>
         </div>
       </div>
